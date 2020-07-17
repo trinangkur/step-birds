@@ -1,0 +1,292 @@
+storyId : 1, name: githubAuth
+
+As a user 
+I want to login
+So That I can operate my account
+
+Business Context:
+  Problem: User wants to login so users can see and tweet micro blogs.
+  Solutions: user can go to login page and login via their github account.
+
+Acceptance Criteria:
+
+- [x] Given the url
+      When the user hits the url
+      Then they should be able to see the login page.
+
+- [x] Given the user is in login page
+      When they click on login 
+      Then they should redirect to home page.
+
+- [x] Given the user has logged in earlier
+      When they login again
+      Then they should be able to see their tweets
+
+storyId: 2, name: tweet
+
+As a user
+I want to post or delete my tweet
+So that I can share my blog.
+
+Business Context:
+  Problem: User wants to share or delete tweets.
+  Solutions: From his timeline user have option to tweet and he can delete one particular tweet.
+
+out of scope:
+  Hash tags and mentions.
+
+Acceptance Criteria:
+
+- [x] Given the user is in home page
+      When user write his blog
+      Then they should be able to share it.
+
+- [x] Given the user has posted a tweet
+      When they want to delete their post
+      Then they should be able to delete it.
+
+storyId : 3, name: searchUser
+
+As a tweeter
+I want to search other tweeters
+So that I can visit their profile
+
+Business Context:
+  Problem: Tweeter wants to visit other tweeters' profile.
+  Solutions: Tweeter can search by their name or userId.
+
+Out of scope:
+  search by hashTags.
+
+Acceptance Criteria:
+
+- [x] Given the tweeter on home page
+      When users search someone by their name
+      then users should be able to visit their profile.
+
+- [x] Given the tweeter on home page
+      When users search someone by their userId
+      then users should be able to visit their profile.
+
+storyId: 4, name: follow/unfollow
+
+As a tweeter
+I want to follow or unfollow someone
+So that I can or cannot see their tweets.
+
+Business Context:
+  Problem: tweeter wants to follow/unfollow other tweeters
+  Solutions: Being in other tweeters' profile they can choose to follow/unfollow them.
+
+Acceptance Criteria:
+
+- [x] Given the user is on other tweeters' profile
+      When users wants to follow them
+      Then they should be able to follow them.
+
+- [x] Given the user is on other tweeters' profile
+      When users wants to unfollow them
+      Then they should be able to unfollow them.
+
+- [x] Given the user has followed someone
+      When users is in home page
+      Then users should be able to see their tweets.
+
+- [x] Given the user has unfollowed someone
+      When users is in home page
+      Then their tweets no longer appear in their home screen.
+
+storyId: 5, name: reply
+
+As a tweeter
+I should be able to reply to one's tweet
+So that I can share my thought on that tweet
+
+Business Context:
+  Problem: Tweeter wants to comment on someones tweet
+  Solutions: Tweeter can reply on tweet
+
+out of scope:
+  Using hashTags and mentions in reply
+
+Acceptance Criteria:
+
+- [x] Given user is on someones tweet
+      When users want to comment on that
+      Then users can reply to that particular tweet.
+
+- [x] Given a user replied on a tweet
+      When anyone visit that tweet
+      Then they should be able to see user's reply.
+
+- [x] Given user has replied on a tweet.
+      When users is in  their profile
+      Then users should see their reply on tweets&replies referring to that tweet.
+
+- [x] Given user has replied on a tweet.
+      When users decides to delete their reply
+      Then ->
+      [x] users should be able to delete their reply.
+      [x] replies should no longer appear on tweets&replies in their profile.
+      [x] replies should no longer appear in the tweet itself.
+
+storyId: 6, name: like/unlike
+
+As a tweeter
+I should be able to like/unlike post
+So that I can express my thought on it.
+
+Business Context:
+  Problem: User want to express their opinion without saying anything.
+  Solutions: User can like that post.
+
+Acceptance Criteria:
+
+- [x] Given user seeing someones tweet
+      When user wants to like/unlike that tweet
+      Then ->
+      [x]user can like it.
+      [x]user can unlike it.
+
+- [x] Given a user on someones tweet
+      When user has liked it
+      Then like symbol should indicate it.
+
+- [x] Given a user is on someones tweet
+      When user wants to see who all liked it
+      Then ->
+      [x] user can see total liked count
+      [x] user can see the userIds of people who all liked it.
+
+storyId : 7, name: retweet
+
+As a user
+I want to retweet a tweet
+So that I can also share the same content.
+
+Business Context:
+  Problem: User wants to share a tweet.
+  Solutions: User can retweet one particular tweet.
+
+out of scope:
+  Using hashTags and mentions
+
+Acceptance Criteria:
+
+- [x] Given a user on a tweet.
+      When he wants to retweet
+      Then he should be able to retweet with/without any comment.
+
+- [x] Given a user has retweeted.
+      When user's follower visit home page
+      Then follower can see users retweet.
+
+- [x] Given a user has retweeted.
+      When users visit their profile
+      Then users can see their retweet in tweets section.
+
+- [x] Given a tweeter has retweeted.
+      When tweeter wants to delete the retweet.
+      Then ->
+      [x] User should be able to delete
+      [x] It should no longer appear on user's profile
+      [x] It should no longer appear on home page of user's follower.
+
+storyId: 8. name: UsingHashtag
+
+As a user
+I want to use hashTags
+So that I can connect it with one particular topic
+
+Business Context
+  Problem: 1. User wants to start/support any trend.
+           2. User wants to search any trend.
+  Solutions: User can use hashTags.
+
+in scope: 1. Using hashTags in tweets (out of scope of storyId: 2)
+          2. search tweet using hashTags (out of scope of storyId: 3)
+          3. Using hashTags in replies (out of scope of storyId: 5)
+          4. Using hashTags in retweet (out of scope of storyId: 7)
+
+Acceptance Criteria:
+
+- [x] Given a user is tweeting/ retweeting/ replying
+      When user wants to start/support any topic
+      Then User can use hashTags
+
+- [x] Given user has a option to search
+      When user search a topic using hashTag
+      Then User can see tweets having that hashTag
+
+storyId: 9. name: mentioningSomeone
+
+As a user
+I want to mention someone in tweet
+So that I can relate them with that tweet
+
+Business Context
+  Problem: User wants to mention someone in their tweet
+  Solutions: User can use '@' with userId
+
+in scope: 1. Using mentions in tweets (out of scope of storyId: 2)
+          2. Using mentions in replies (out of scope of storyId: 5)
+          3. Using mentions in retweet (out of scope of storyId: 7)
+
+Acceptance Criteria:
+
+- [x] Given a user is tweeting/ retweeting/ replying
+      When user wants to mention someone.
+      Then User can use @[userId]
+
+storyId: 10, name: bookmark
+
+As a user
+I want to bookmark a tweet
+So that I can refer to it later
+
+Business Context:
+  Problem: User wants to save some tweets to refer it later.
+  Solutions: User can bookmark any tweet.
+
+Acceptance Criteria:
+
+- [x] Given user is on a tweet
+      When user wants save it
+      Then user should be able to bookmark it.
+
+- [x] Given a user has bookmarked some tweets
+      When user wants to refer to those tweets
+      Then they should be able to see it on bookmarks.
+
+storyId: 11, name: edit profile
+
+As a user
+I want to edit my profile.
+So that people can know more about me.
+
+Business Context:
+  Problem: User wants to update their profile info
+  Solutions: user can edit their profile info
+
+Acceptance Criteria:
+
+- [x] Given user is on his profile
+      When he wants to update some info
+      Then they should be able to edit and save it.
+
+storyId: 12, name: logout
+
+As a user
+I want to logout
+So that I can leave the platform for a while
+
+Business Context:
+  Problem: User wants to leave platform for a while
+  Solutions: user can logout
+
+Acceptance Criteria:
+
+- [x] Given users is in their profile
+      When they want to leave the platform
+      Then they should be able to logout
+
