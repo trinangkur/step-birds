@@ -10,9 +10,13 @@
     "express": "^4.17.1",
     "node-fetch": "^2.6.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "mocha": "^8.0.1",
+    "nyc": "^15.1.0",
+    "supertest": "^4.0.2"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha spikes/ci/testServer.js"
   },
   "keywords": [],
   "author": "",
