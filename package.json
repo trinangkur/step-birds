@@ -6,6 +6,11 @@
   "directories": {
     "doc": "docs"
   },
+  "scripts": {
+    "start": "echo 'starting app'",
+    "lint": "npx eslint .",
+    "test": "nyc mocha --recursive"
+  },
   "dependencies": {
     "express": "^4.17.1",
     "node-fetch": "^2.6.0",
@@ -15,9 +20,6 @@
     "mocha": "^8.0.1",
     "nyc": "^15.1.0",
     "supertest": "^4.0.2"
-  },
-  "scripts": {
-    "test": "echo 'test running'"
   },
   "keywords": [],
   "author": "",
