@@ -1,5 +1,4 @@
 node_modules
-.vscode
 database
 .nyc_output/
 commit-template
