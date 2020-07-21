@@ -1,10 +1,12 @@
 echo "running tests...";
 nyc mocha --recursive; 
 testStatus=$?;
-if [ $testStatus == 0 ]; then
+npm run lint;
+lintStatus=$?;
+if [ $testStatus == 0 && lintStatus == 0 ]; then
   echo "\n commiting your code"
   exit 0;
 else 
-echo "\n tests are failing..."
+echo "\n failing test or lint error"
   exit 1;
 fi
