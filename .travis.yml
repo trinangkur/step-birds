@@ -1,0 +1,8 @@
+language: node_js
+node_js:
+  - 12
+
+test:
+  adapter: sqlite3
+  database: ':memory:'
+  timeout: 500
