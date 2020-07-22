@@ -7,8 +7,8 @@
     "doc": "docs"
   },
   "scripts": {
-    "select-test-db": "exports DATABASE='db/step-birds-test.db'",
-    "select-production-db": "exports DATABASE='db/step-birds.db'",
+    "select-test-db": "export STEP_BIRDS_DATABASE='db/step-birds-test.db'",
+    "select-production-db": "export STEP_BIRDS_DATABASE='db/step-birds.db'",
     "start": "npm run select-production-db; node server.js",
     "test": "npm run select-test-db; nyc mocha --recursive",
     "lint": "npx eslint ."
