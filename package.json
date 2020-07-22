@@ -7,10 +7,8 @@
     "doc": "docs"
   },
   "scripts": {
-    "select-test-db": "export STEP_BIRDS_DATABASE='db/step-birds-test.db'",
-    "select-production-db": "export STEP_BIRDS_DATABASE='db/step-birds.db'",
-    "start": "npm run select-production-db; node server.js",
-    "test": "npm run select-test-db; nyc mocha --recursive",
+    "start": "export STEP_BIRDS_DATABASE='db/step-birds.db'; node server.js",
+    "test": "sqlite3 test/db/step-birds.db < test/db/schema.sql && sqlite3 test/db/step-birds.db < test/db/data.sql && export STEP_BIRDS_DATABASE='test/db/step-birds.db' && nyc mocha --recursive",
     "lint": "npx eslint ."
   },
   "dependencies": {
