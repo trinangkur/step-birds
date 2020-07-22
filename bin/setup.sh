@@ -11,3 +11,5 @@ else
   mkdir db;
   echo "db directory created";
 fi
+
+git config --global commit.template ./commit-template

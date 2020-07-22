@@ -3,7 +3,7 @@ nyc mocha --recursive;
 testStatus=$?;
 npm run lint;
 lintStatus=$?;
-if [ $testStatus == 0 && lintStatus == 0 ]; then
+if [ $testStatus == 0 ] && [ $lintStatus == 0 ]; then
   echo "\n commiting your code"
   exit 0;
 else 

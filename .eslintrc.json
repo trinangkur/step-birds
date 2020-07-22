@@ -79,7 +79,7 @@
   },
   "overrides": [
     {
-      "files": ["test/**/test*.js"],
+      "files": ["test/*.js"],
       "rules": {
         "max-len": "warn",
         "max-statements": "off",
@@ -87,10 +87,16 @@
       }
     },
     {
-      "files": ["**/js/*.js"],
+      "files": ["public/js/*.js"],
       "rules": {
         "no-unused-vars": "off",
         "no-undef": "off"
+      }
+    },
+    {
+      "files": ["server.js"],
+      "rules": {
+        "no-console": "off"
       }
     }
   ]
