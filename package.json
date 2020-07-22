@@ -7,9 +7,11 @@
     "doc": "docs"
   },
   "scripts": {
-    "start": "echo 'starting app'",
-    "lint": "npx eslint .",
-    "test": "nyc mocha --recursive"
+    "select-test-db": "exports DATABASE='db/step-birds-test.db'",
+    "select-production-db": "exports DATABASE='db/step-birds.db'",
+    "start": "npm run select-production-db; node server.js",
+    "test": "npm run select-test-db; nyc mocha --recursive",
+    "lint": "npx eslint ."
   },
   "dependencies": {
     "cookie-parser": "^1.4.5",
