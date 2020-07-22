@@ -1,4 +1,4 @@
 node_modules
-db/step-birds.db
+db
 .nyc_output/
 commit-template
