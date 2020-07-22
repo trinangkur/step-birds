@@ -9,7 +9,8 @@
   "dependencies": {
     "express": "^4.17.1",
     "node-fetch": "^2.6.0",
-    "pug": "^3.0.0"
+    "pug": "^3.0.0",
+    "sqlite3": "^5.0.0"
   },
   "devDependencies": {
     "mocha": "^8.0.1",
@@ -17,7 +18,7 @@
     "supertest": "^4.0.2"
   },
   "scripts": {
-    "test": "sqlite3 spikes/db/spike.db < spikes/db/schema.sql && mocha spikes/ci/testServer.js"
+    "test": "sqlite3 spikes/db/spike.db < spikes/db/schema.sql && sqlite3 spikes/db/spike.db < spikes/db/data.sql && mocha spikes/ci/testServer.js"
   },
   "keywords": [],
   "author": "",
