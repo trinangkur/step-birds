@@ -6,7 +6,6 @@ INSERT INTO Tweeter (id, name, joiningDate, dob, bio, followersCount, followingC
 ('rahit','Rahit Kar', '11/06/2020', '09/09/1998', 'Enjoy Netflix', 0, 0),
 ('vikram','Vikram Singh', '11/06/2018', '09/09/2000', 'My feets are not on ground', 0, 0);
 
-
 INSERT INTO Tweet (id, _type, userId, content, reference) VALUES
 (?,'tweet', 'revathi', 'Nice weather',?),
 (?,'reply', 'trinangkur', 'Happy for you :)', 1),
@@ -19,3 +18,4 @@ INSERT INTO Tweet (id, _type, userId, content, reference) VALUES
 
 INSERT INTO Tweet (id, _type, userId, content, reference) VALUES
 (?,'reply', 'revathi', 'Nice weather',1);
+

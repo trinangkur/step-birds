@@ -1,7 +1,6 @@
 const {
   getInsertionSql,
   getSelectSql,
-  enableForeignKeySql
 } = require('../queries/sqlStringGenerator');
 
 const runSql = (sql, params, runner) => {
@@ -22,15 +21,14 @@ class DataStore {
 
   postTweet(details) {
     const {userId, type, content} = details;
-    const columns = 'userId, _type, content';
-    const values = `${userId}, "${type}", "${content}"`;
-    let sql = enableForeignKeySql();
-    sql += getInsertionSql('Tweet', columns, values);
-    return runSql(sql, [], this.db.run.bind(this.db));
+    const columns = 'id ,userId, _type, content,reference';
+    const values = `?,"${userId}", "${type}", "${content}",NULL`;
+    const sql = getInsertionSql('Tweet', columns, values);
+    return runSql(sql, [], this.db.all.bind(this.db));
   }
 
-  getTweet() {
-    const sql = getSelectSql('Tweet', {columns: ['*']});
+  getTweet(details) {
+    const sql = getSelectSql('Tweet', details);
     return runSql(sql, [], this.db.all.bind(this.db));
   }
 }
