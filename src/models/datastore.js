@@ -1,6 +1,7 @@
 const {
   getInsertionSql,
   getSelectSql,
+  getDeleteSql
 } = require('../queries/sqlStringGenerator');
 
 const runSql = (sql, params, runner) => {
@@ -29,6 +30,12 @@ class DataStore {
 
   getTweet(details) {
     const sql = getSelectSql('Tweet', details);
+    return runSql(sql, [], this.db.all.bind(this.db));
+  }
+
+  deleteTweet(details) {
+    const {tweetId} = details;
+    const sql = getDeleteSql('Tweet', `id = "${tweetId}"`);
     return runSql(sql, [], this.db.all.bind(this.db));
   }
 }

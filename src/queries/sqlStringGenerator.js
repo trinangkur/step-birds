@@ -9,4 +9,8 @@ const getSelectSql = function(table, {columns, where}) {
   return query;
 };
 
-module.exports = {getInsertionSql, getSelectSql};
+const getDeleteSql = function(table, condition) {
+  return `DELETE FROM ${table} WHERE ${condition}`;
+};
+
+module.exports = {getInsertionSql, getSelectSql, getDeleteSql};

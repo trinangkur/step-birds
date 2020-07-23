@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { redirectToGitLogin, getUserDetails } = require('./handler');
+const {redirectToGitLogin, getUserDetails} = require('./handler');
 
 const app = express();
 
@@ -20,4 +20,4 @@ app.get('/loginUser', redirectToGitLogin);
 
 app.get('/user', getUserDetails);
 
-module.exports = { app };
+module.exports = {app};
