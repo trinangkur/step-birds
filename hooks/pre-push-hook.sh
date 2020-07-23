@@ -1,5 +1,5 @@
 echo "running tests";
-nyc mocha --recursive; 
+npm test; 
 testStatus=$?;
 if [ $testStatus == 0 ]; then
   echo "\n pushing code"
