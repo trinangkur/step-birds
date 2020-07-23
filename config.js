@@ -1,7 +1,7 @@
-const { env } = process;
+const {env} = process;
 
 const getDB = () => {
-  return env.STEP_BIRDS_DATABASE;
+  return env.STEP_BIRDS_DATABASE || 'db/step-birds.db';
 };
 
-module.exports = { getDB };
+module.exports = {getDB};

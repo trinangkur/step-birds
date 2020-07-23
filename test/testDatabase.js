@@ -3,7 +3,6 @@ const sqlite3 = require('sqlite3').verbose();
 const {getDB} = require('../config.js');
 
 const dbPath = getDB();
-
 describe('db', () => {
   it('testing query with test data', done => {
     const db = new sqlite3.Database(dbPath);

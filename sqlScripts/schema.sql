@@ -1,0 +1,62 @@
+DROP TABLE IF EXISTS Tweeter;
+CREATE TABLE Tweeter (
+  id VARCHAR(20) PRIMARY KEY,
+  name VARCHAR(30) NOT NULL,
+  joiningDate DATE NOT NULL DEFAULT CURRENT_DATE,
+  image_url VARCHAR(200),
+  dob DATE,
+  bio VARCHAR(80),
+  followersCount NUMERIC(5) NOT NULL DEFAULT 0,
+  followingCount NUMERIC(5) NOT NULL DEFAULT 0
+);
+
+
+CREATE TABLE IF NOT EXISTS Tweet (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  _type VARCHAR(8) NOT NULL,
+  userId VARCHAR(20) NOT NULL,
+  content VARCHAR(180) NOT NULL,
+  timeStamp DATE(30) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  likeCount NUMERIC(5) NOT NULL DEFAULT 0,
+  replyCount NUMERIC(5) NOT NULL DEFAULT 0,
+  reference NUMERIC(5),
+  FOREIGN KEY(userId) REFERENCES Tweeter(id),
+  FOREIGN KEY(reference) REFERENCES Tweet(id)
+);
+
+CREATE TABLE IF NOT EXISTS Followers (
+  followerId VARCHAR(20) NOT NULL,
+  followingId VARCHAR(20) NOT NULL,
+  PRIMARY KEY (followerId, followingId),
+  FOREIGN KEY (followerId) REFERENCES Tweeter(id),
+  FOREIGN KEY (followingId) REFERENCES Tweeter(id)
+);
+
+CREATE TABLE IF NOT EXISTS Likes (
+  tweetId NUMERIC(10) NOT NULL,
+  userId VARCHAR(20) NOT NULL,
+  PRIMARY KEY (tweetId, userId),
+  FOREIGN KEY (userId) REFERENCES Tweeter(id),
+  FOREIGN KEY (tweetId) REFERENCES Tweet(id)
+);
+
+CREATE TABLE IF NOT EXISTS Hashes (
+  tweetId NUMERIC(10) NOT NULL,
+  tag VARCHAR(30) NOT NULL,
+  FOREIGN KEY (tweetId) REFERENCES Tweet(id)
+);
+
+CREATE TABLE IF NOT EXISTS Mentions (
+  userId VARCHAR(20) NOT NULL,
+  tweetId NUMERIC(10) NOT NULL,
+  FOREIGN KEY (userId) REFERENCES Tweeter(id),
+  FOREIGN KEY (tweetId) REFERENCES Tweet(id)
+);
+
+CREATE TABLE IF NOT EXISTS Bookmarks (
+  userId VARCHAR(20) NOT NULL,
+  tweetId NUMERIC(10) NOT NULL,
+  PRIMARY KEY(userId, tweetId),
+  FOREIGN KEY (userId) REFERENCES Tweeter(id),
+  FOREIGN KEY (tweetId) REFERENCES Tweet(id)
+);
