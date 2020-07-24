@@ -7,14 +7,18 @@ const db = new Sqlite3.Database(getDB());
 
 describe('postTweet', () => {
   it('should be able to post a new tweet', done => {
-    const body = JSON.stringify({content: 'new tweet', userId: 'revathi'});
+    before(() => {
+      const sessions = {getUserId: () => 'revathi'};
+      app.locals.sessions = sessions;
+    });
+    app.locals.dataStore = new DataStore(db);
+    const body = JSON.stringify({content: 'new tweet'});
     const expected = {message: 'successful'};
     const expectedJson = JSON.stringify(expected);
-    app.locals.dataStore = new DataStore(db);
     request(app)
-      .post('/postTweet')
+      .post('/user/postTweet')
       .set('Content-Type', 'application/json')
-      .send(body)
+      .send({body, userId: 'revathi'})
       .expect(200)
       .expect(expectedJson, done);
   });
@@ -22,14 +26,17 @@ describe('postTweet', () => {
 
 describe('deleteTweet', () => {
   it('should be able to delete a new tweet', done => {
-    const body = JSON.stringify({tweetId: '1', userId: 'revathi'});
+    before(() => {
+      const sessions = {getUserId: () => 'revathi'};
+      app.locals.sessions = sessions;
+    });
+    const body = JSON.stringify({tweetId: '1'});
     const expected = {message: 'successful'};
     const expectedJson = JSON.stringify(expected);
-    app.locals.dataStore = new DataStore(db);
     request(app)
-      .post('/deleteTweet')
+      .post('/user/deleteTweet')
       .set('Content-Type', 'application/json')
-      .send(body)
+      .send({body, userId: 'revathi'})
       .expect(200)
       .expect(expectedJson, done);
   });

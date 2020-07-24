@@ -4,13 +4,7 @@ const {userRouter} = require('./userRouter');
 const {DataStore} = require('../models/datastore');
 const {db} = require('./database');
 
-const {
-  redirectToGitLogin,
-  getUserDetails,
-  postTweet,
-  deleteTweet,
-  addUser
-} = require('./handler');
+const {redirectToGitLogin, getUserDetails, addUser} = require('./handler');
 
 const app = express();
 app.locals.dataStore = new DataStore(db);
@@ -32,12 +26,8 @@ app.get('/loginUser', redirectToGitLogin);
 
 app.get('/verify', getUserDetails, addUser);
 
-app.post('/postTweet', postTweet);
-
-app.post('/deleteTweet', deleteTweet);
-
 app.get('/', (req, res) => {
   res.redirect('/user/home');
 });
 
-module.exports = { app };
+module.exports = {app};

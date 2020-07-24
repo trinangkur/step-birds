@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    meta(http-equiv="X-UA-Compatible", content="ie=edge")
+    link(rel="stylesheet", href="../css/home.css")
+    script(src="../js/home.js")
+    script(src="../js/request.js")
+    title 'twitter'
+  body
+    div#container()
+      div#sideBar()
+        div#logo()
+          img(src="../assets/logo.jpg", alt="step-birds" height="80px",width="80px")
+        div#menu()
+          div#homeLogo()
+          div#tweetLogo()
+      div#tweetPart()
+        div#header()
+          span HOME
+        div#tweetBLog()
+          div#tweetBox
+            input#tweetText(type="text" name="name" maxlength=180 placeholder="write your tweet...")
+          div#tweetButton
+            button.primary-btn(onclick='postTweet()') Tweet
+        div#tweets()

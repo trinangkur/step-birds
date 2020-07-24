@@ -1,11 +1,15 @@
 const express = require('express');
-const { authorizeUser } = require('./userHandler');
+const {authorizeUser, postTweet, deleteTweet} = require('./userHandler');
 
 const userRouter = express.Router();
 userRouter.use(authorizeUser);
 userRouter.get('/home', (req, res) => {
-  res.write(`<h1>Welcome to home page ${req.userId}</h1>`);
+  res.render('home', {});
   res.end();
 });
 
-module.exports = { userRouter };
+userRouter.post('/postTweet', postTweet);
+
+userRouter.post('/deleteTweet', deleteTweet);
+
+module.exports = {userRouter};
