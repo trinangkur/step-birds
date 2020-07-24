@@ -1,16 +1,16 @@
 const express = require('express');
-
-const {redirectToGitLogin, getUserDetails} = require('./handler');
+const cookieParser = require('cookie-parser');
+const { redirectToGitLogin, getUserDetails, addUser } = require('./handler');
+const { userRouter } = require('./userRouter');
 
 const app = express();
 
 app.set('view engine', 'pug');
+app.use(cookieParser());
+app.use(express.json());
 app.use(express.static('public'));
 
-app.get('/', (req, res) => {
-  res.sendStatus(200);
-  res.end();
-});
+app.use('/user', userRouter);
 
 app.get('/login.html', (req, res) => {
   res.render('login', {});
@@ -18,6 +18,6 @@ app.get('/login.html', (req, res) => {
 
 app.get('/loginUser', redirectToGitLogin);
 
-app.get('/user', getUserDetails);
+app.get('/verify', getUserDetails, addUser);
 
-module.exports = {app};
+module.exports = { app };
