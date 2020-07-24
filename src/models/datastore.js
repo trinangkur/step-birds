@@ -20,13 +20,24 @@ class DataStore {
     this.db = db;
   }
 
+  runSql(sql, params) {
+    return new Promise((res, rej) => {
+      this.db.run(sql, params, (err) => {
+        if (err) {
+          rej(err);
+        }
+        res('OK');
+      });
+    });
+  }
+
   addTweeter(details) {
     const { login, avatar_url, name } = details;
     const columns = 'id, image_url, name';
     const values = `"${login}", "${avatar_url}", "${name}"`;
     const sql = getInsertionSql('Tweeter', columns, values);
     return new Promise((res, rej) => {
-      runSql(sql, [], this.db.run.bind(this.db))
+      this.runSql(sql, [])
         .then(res)
         .catch((err) => {
           if (err.code === 'SQLITE_CONSTRAINT') {
