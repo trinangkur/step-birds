@@ -95,12 +95,7 @@
     {
       "files": ["server.js"],
       "rules": {
-        "no-console": "off"
-      }
-    },
-    {
-      "files": ["src/js/oAuthUtil.js"],
-      "rules": {
+        "no-console": "off",
         "no-process-env": "off"
       }
     }
