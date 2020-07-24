@@ -36,4 +36,8 @@ app.post('/postTweet', postTweet);
 
 app.post('/deleteTweet', deleteTweet);
 
-module.exports = {app};
+app.get('/', (req, res) => {
+  res.redirect('/user/home');
+});
+
+module.exports = { app };
