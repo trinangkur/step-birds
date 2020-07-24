@@ -1,96 +1,81 @@
-const { assert } = require('chai');
+const {assert} = require('chai');
 const sinon = require('sinon');
-const sqlite3 = require('sqlite3').verbose();
-const { getDB } = require('../config');
-const { DataStore } = require('../src/models/datastore');
-const dbFilePath = getDB();
+const {DataStore} = require('../src/models/datastore');
 
-const db = new sqlite3.Database(dbFilePath);
-db.run('SAVEPOINT initialDB');
-
-describe('postTweet', function() {
-  it('should post the tweet', async function() {
-    db.run('ROLLBACK TO initialDB');
-
-    const dataStore = new DataStore(db);
+describe('postTweet', () => {
+  it('should add tweet in database', done => {
+    const run = sinon.stub().yields(null);
+    const dataStore = new DataStore({run});
     const details = {
       userId: 'vikram',
       content: 'Testing tweet',
-      type: 'tweet',
+      type: 'tweet'
     };
-    const status = await dataStore.postTweet(details);
-    const tweetDetails = {
-      columns: ['content'],
-      where: 'userId="vikram" and content="Testing tweet"',
-    };
-    const [tweet] = await dataStore.getTweet(tweetDetails);
-    assert.deepStrictEqual(tweet.content, details.content);
-    assert.deepStrictEqual(status, []);
+    dataStore.postTweet(details).then(message => {
+      assert.strictEqual(message, 'OK');
+      done();
+    });
   });
 });
 
 describe('deleteTweet', function() {
-  it('should delete the tweet', async function() {
-    db.run('ROLLBACK TO initialDB');
-
-    const dataStore = new DataStore(db);
+  it('should delete the tweet', done => {
+    const run = sinon.stub().yields(null);
+    const dataStore = new DataStore({run});
     const details = {
       tweetId: 1,
+      userId: 'revathi'
     };
-    const status = await dataStore.deleteTweet(details);
-    const tweetDetails = {
-      columns: ['*'],
-      where: 'id=1',
-    };
-    const tweet = await dataStore.getTweet(tweetDetails);
-    assert.deepStrictEqual(tweet, []);
-    assert.deepStrictEqual(status, []);
+    dataStore.deleteTweet(details).then(message => {
+      assert.strictEqual(message, 'OK');
+      done();
+    });
   });
 });
 
 describe('addTweeter', () => {
-  it('should add a new tweeter in database', (done) => {
+  it('should add a new tweeter in database', done => {
     const run = sinon.stub().yields(null);
-    const dataStore = new DataStore({ run });
+    const dataStore = new DataStore({run});
     dataStore
       .addTweeter({
         login: 'abc',
         avatar_url: 'https://url',
-        name: 'abc',
+        name: 'abc'
       })
-      .then((message) => {
+      .then(message => {
         assert.strictEqual(message, 'OK');
         done();
       });
   });
 
-  it('should should handle err of sql constrain', (done) => {
+  it('should should handle err of sql constrain', done => {
     const err = new Error();
     err.code = 'SQLITE_CONSTRAINT';
     const run = sinon.stub().yields(err);
-    const dataStore = new DataStore({ run });
+    const dataStore = new DataStore({run});
     dataStore
       .addTweeter({
         login: 'abc',
         avatar_url: 'https://url',
-        name: 'abc',
+        name: 'abc'
       })
-      .then((message) => {
+      .then(message => {
         assert.strictEqual(message, 'already have an account');
         done();
       });
   });
 
-  it('should should throw err other than sql constrain', (done) => {
+  it('should should throw err other than sql constrain', done => {
     const run = sinon.stub().yields(new Error());
-    const dataStore = new DataStore({ run });
+    const dataStore = new DataStore({run});
     dataStore
       .addTweeter({
         login: 'abc',
         avatar_url: 'https://url',
-        name: 'abc',
+        name: 'abc'
       })
-      .catch((err) => {
+      .catch(err => {
         assert.isNotNull(err);
         done();
       });
