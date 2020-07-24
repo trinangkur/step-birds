@@ -1,7 +1,7 @@
 const {
   getInsertionSql,
   getSelectSql,
-  getDeleteSql
+  getDeleteSql,
 } = require('../queries/sqlStringGenerator');
 
 const runSql = (sql, params, runner) => {
@@ -20,8 +20,25 @@ class DataStore {
     this.db = db;
   }
 
+  addTweeter(details) {
+    const { login, avatar_url, name } = details;
+    const columns = 'id, image_url, name';
+    const values = `"${login}", "${avatar_url}", "${name}"`;
+    const sql = getInsertionSql('Tweeter', columns, values);
+    return new Promise((res, rej) => {
+      runSql(sql, [], this.db.run.bind(this.db))
+        .then(res)
+        .catch((err) => {
+          if (err.code === 'SQLITE_CONSTRAINT') {
+            return res('already have an account');
+          }
+          rej(err);
+        });
+    });
+  }
+
   postTweet(details) {
-    const {userId, type, content} = details;
+    const { userId, type, content } = details;
     const columns = 'id ,userId, _type, content,reference';
     const values = `?,"${userId}", "${type}", "${content}",NULL`;
     const sql = getInsertionSql('Tweet', columns, values);
@@ -34,10 +51,10 @@ class DataStore {
   }
 
   deleteTweet(details) {
-    const {tweetId} = details;
+    const { tweetId } = details;
     const sql = getDeleteSql('Tweet', `id = "${tweetId}"`);
     return runSql(sql, [], this.db.all.bind(this.db));
   }
 }
 
-module.exports = {DataStore};
+module.exports = { DataStore };
