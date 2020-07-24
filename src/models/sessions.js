@@ -14,9 +14,6 @@ class Sessions {
   getUserId(cookie) {
     return this.sessions[cookie];
   }
-  isSessionAlive(cookie) {
-    return Object.keys(this.sessions).includes(cookie);
-  }
   clearSession(cookie) {
     delete this.sessions[cookie];
   }
