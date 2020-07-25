@@ -1,4 +1,4 @@
-const createTweetHtml = function(tweet, userInfo) {
+const createTweetHtml = function (tweet, userInfo) {
   const { content, id } = tweet;
   const { image_url, name } = userInfo;
   return `<div class="userId">
@@ -17,12 +17,13 @@ const createTweetHtml = function(tweet, userInfo) {
           <div class="content">
             <p>${content}</p>
           </div>
-          <div class="options" id="tweetId-${id}" onmouseleave="hideOptions(${id})" >
+          <div class="options" id="tweetId-${id}" 
+          onmouseleave="hideOptions(${id})" >
             <span  onclick="deleteTweet(${id})">Delete</span>
           </div>`;
 };
 
-const showTweet = function(tweet) {
+const showTweet = function (tweet) {
   const url = '/user/getUserInfo';
   sendGETRequest(url, ({ message, userInfo }) => {
     if (message === 'successful') {
@@ -36,7 +37,7 @@ const showTweet = function(tweet) {
   });
 };
 
-const getLatestTweet = function(res) {
+const getLatestTweet = function (res) {
   if (res.message === 'successful') {
     const url = '/user/getLatestTweet';
     sendGETRequest(url, ({ message, tweet }) => {
@@ -58,7 +59,7 @@ const postTweet = function (boxId) {
   }
 };
 
-const getAllTweets = function() {
+const getAllTweets = function () {
   const url = '/user/getTweets';
   sendGETRequest(url, ({ message, tweets }) => {
     if (message === 'successful') {
@@ -75,37 +76,47 @@ const getAllTweets = function() {
   });
 };
 
-const showTweetOptions = function(id) {
+const showTweetOptions = function (id) {
   document.getElementById(`tweetId-${id}`).style.display = 'block';
 };
 
-const updateTweets = function(id, { message }) {
+const updateTweets = function (id, { message }) {
   if (message === 'successful') {
     const element = document.getElementById(id);
     element.parentNode.removeChild(element);
   }
 };
 
-const deleteTweet = function(tweetId) {
+const deleteTweet = function (tweetId) {
   const url = '/user/deleteTweet';
   const body = { tweetId };
   sendPOSTRequest(url, body, (res) => updateTweets(tweetId, res));
 };
 
-const searchOnEnter = function(name) {
+const searchOnEnter = function (name) {
   if (event.keyCode === 13) {
     sendPOSTRequest('/user/searchProfile', { name }, (profiles) => {
       const contentBox = document.getElementById('contentBox');
-      contentBox.innerHTML = profiles.reduce(
-        (html, { id, name, image_url }) => {
+      contentBox.innerHTML =
+        profiles.reduce((html, { id, name, image_url }) => {
           return (
             html +
             `<h1>${id}, ${name}</h1>
         <img src="${image_url}"/>`
           );
-        },
-        ''
-      );
+        }, '');
     });
   }
+};
+
+const hideOptions = function (id) {
+  document.getElementById(`tweetId-${id}`).style.display = 'none';
+};
+
+const showTweetPopUp = function () {
+  document.getElementById('tweetPopUp').style.display = 'block';
+};
+
+const closeTweetPopUp = function () {
+  document.getElementById('tweetPopUp').style.display = 'none';
 };
