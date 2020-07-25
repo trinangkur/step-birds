@@ -64,3 +64,16 @@
   background-color: white;
   border-right: solid 0.5px lightgray;
 }
+
+#tweetLogo {
+  background-color: #4a61c8;
+  color: white;
+  width: 161%;
+  height: 60%;
+  cursor: pointer;
+  padding-left: 47%;
+  padding-top: 10%;
+  border-radius: 50px;
+  margin-left: 10%;
+  font-weight: 100;
+}

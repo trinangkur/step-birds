@@ -1,13 +1,17 @@
 body {
-  height: 100vh;
+  height: 98vh;
   width: 100vw;
   font-family: sans-serif;
   position: absolute;
   background-color: whitesmoke;
+  margin: 0;
+  padding: 0;
 }
 
 #container {
   height: 100%;
+  margin: 0;
+  padding: 0;
   width: 100%;
   display: flex;
 }
@@ -21,12 +25,13 @@ body {
 }
 
 #header {
-  border-bottom: 0.1vw solid black;
+  border-bottom: solid 0.5px lightgray;
   height: 7%;
+  margin-top: 1.5vw;
   width: 100%;
 }
 #tweetBLog {
-  border-bottom: 0.1vw solid black;
+  border-bottom: solid 0.5px lightgray;
   height: 18%;
   width: 100%;
   display: flex;
@@ -38,21 +43,29 @@ body {
 }
 
 #header > span {
-  font-weight: bold;
+  font-weight: 500;
   font-size: 2vw;
   margin: 1vw;
 }
 
 #tweetBox {
+  display: flex;
   margin-top: 5%;
   margin-left: 5%;
 }
 
-#tweetBox > input {
+#tweetBox img {
+  width: 40px;
+  border-radius: 50%;
+}
+
+#tweetBox * input {
+  border: none;
+  border-bottom: 0.1vw solid grey;
   width: 50vw;
   height: 5vh;
   font-size: 1.5vw;
-  margin: 0;
+  margin-left: 1vw;
 }
 
 #tweetButton > button {
@@ -60,6 +73,10 @@ body {
   width: 7vw;
   font-size: 1.5vw;
   cursor: pointer;
+  background-color: #4a61c8;
+  border-radius: 50px;
+  color: white;
+  border: none;
 }
 
 #tweetButton {
@@ -72,7 +89,11 @@ body {
 .tweet {
   height: 20%;
   width: 100%;
-  border-bottom: 0.1vw solid black;
+  border-bottom: solid 0.5px lightgray;
+}
+
+.tweet:hover {
+  background-color: #d0cccc29;
 }
 
 .userId {
@@ -135,4 +156,72 @@ body {
   position: relative;
   top: 18%;
   margin: 2vw;
+}
+
+#tweetPopUp {
+  background-color: white;
+  display: none;
+  top: 50px;
+  left: 70px;
+  right: 0;
+  margin: auto;
+  position: absolute;
+  height: 15vw;
+  width: 37vw;
+  border: 0.1px solid black;
+  border-radius: 10px;
+  box-shadow: 1px 1px 1px 3px lightgrey;
+}
+
+#closeTweetPopUp {
+  height: 10%;
+  width: 96%;
+  border-bottom: 0.1vw solid grey;
+  padding: 2% 2%;
+}
+
+#closeTweetPopUp > span {
+  cursor: pointer;
+}
+
+#tweetArea {
+  height: 60%;
+  display: flex;
+  width: 100%;
+  border-bottom: 0.1vw solid grey;
+}
+
+#tweetArea img {
+  width: 40px;
+  margin-top: 1vw;
+  margin-left: 1vw;
+  border-radius: 50%;
+}
+
+#tweetArea input {
+  border: none;
+  border-bottom: 0.1vw solid gray;
+  width: 28vw;
+  text-decoration: none;
+  margin-top: 1.5vw;
+  margin-left: 1vw;
+  font-size: 1.5vw;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+}
+
+#popUpFooter button {
+  position: relative;
+  font-size: 1.2vw;
+  left: 83%;
+  border: none;
+  color: white;
+  background-color: #4a61c8;
+  border-radius: 50px;
+  margin-top: 1.5%;
+  height: 80%;
 }

@@ -17,8 +17,8 @@ const createTweetHtml = function(tweet, userInfo) {
           <div class="content">
             <p>${content}</p>
           </div>
-          <div class="options" id="tweetId-${id}">
-            <span onclick="deleteTweet(${id})">Delete</span>
+          <div class="options" id="tweetId-${id}" onmouseleave="hideOptions(${id})" >
+            <span  onclick="deleteTweet(${id})">Delete</span>
           </div>`;
 };
 
@@ -47,12 +47,15 @@ const getLatestTweet = function(res) {
   }
 };
 
-const postTweet = function() {
-  const tweetText = document.getElementById('tweetText');
+const postTweet = function (boxId) {
+  const tweetText = document.getElementById(`tweetText${boxId}`);
   const url = '/user/postTweet';
-  const body = { content: tweetText.value };
-  sendPOSTRequest(url, body, getLatestTweet);
-  tweetText.value = '';
+  if (tweetText.value) {
+    const body = { content: tweetText.value };
+    sendPOSTRequest(url, body, getLatestTweet);
+    tweetText.value = '';
+    closeTweetPopUp();
+  }
 };
 
 const getAllTweets = function() {
@@ -60,6 +63,14 @@ const getAllTweets = function() {
   sendGETRequest(url, ({ message, tweets }) => {
     if (message === 'successful') {
       tweets.forEach(showTweet);
+    }
+  });
+  sendGETRequest('/user/getUserInfo', ({ message, userInfo }) => {
+    if (message === 'successful') {
+      const profiles = document.getElementsByClassName('profileIcon');
+      Array.from(profiles).forEach((profile) => {
+        profile.src = userInfo[0].image_url;
+      });
     }
   });
 };

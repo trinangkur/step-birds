@@ -12,7 +12,7 @@ const {
 const userRouter = express.Router();
 userRouter.use(authorizeUser);
 userRouter.get('/home', (req, res) => {
-  res.render('home', {});
+  res.render('home', { title: 'Twitter' });
   res.end();
 });
 
