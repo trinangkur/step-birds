@@ -12,23 +12,23 @@ html(lang="en")
   body(onload="getAllTweets()")
     div#container()
       div#sideBar()
-        img#logo(src="../assets/logo.jpg", alt="step-birds")
+        img#logo(src="../assets/logo.png", alt="step-birds")
         div(class="sideBarElements")
-          div(class="homeIcon")
-            img(src="../assets/home.png", alt="step-birds")
-          div(class="home")
-            h2 HOME
+          input(id="search-box" type="text" placeholder="search")
         div(class="sideBarElements")
-          div(class="homeIcon")
-            img(src="../assets/search.png", alt="step-birds")
-          div(class="home")
-            h2 SEARCH
+          div(class="rapper")
+            div(class="icon")
+              svg(viewBox="0 0 30 30" width="30px" height="30px" class="svg-icon")
+                path(d="M 12 2.0996094 L 1 12 L 4 12 L 4 21 L 10 21 L 10 15 L 14 15 L 14 21 L 20 21 L 20 12 L 23 12 L 12 2.0996094 z")
+            h2#home Home
         div(class="sideBarElements")
-          div(class="homeIcon")
-            img(src="../assets/profileIcon.png", alt="step-birds")
-          div(class="home")
-            h2 PROFILE
-      div#tweetPart()
+          div(class="rapper")
+            div(class="icon")
+              svg(x="0px" y="0px" width="30" height="30" viewBox="0 0 30 30" class="svg-icon")
+                path(d="M 15 3 C 11.686 3 9 5.686 9 9 L 9 10 C 9 13.314 11.686 16 15 16 C 18.314 16 21 13.314 21 10 L 21 9 C 21 5.686 18.314 3 15 3 z M 14.998047 19 C 10.992047 19 5.8520469 21.166844 4.3730469 23.089844 C 3.4590469 24.278844 4.329125 26 5.828125 26 L 24.169922 26 C 25.668922 26 26.539 24.278844 25.625 23.089844 C 24.146 21.167844 19.004047 19 14.998047 19 z")
+            h2#home Profile
+
+      div#contentBox()
         div#header()
           span HOME
         div#tweetBLog()
@@ -37,30 +37,3 @@ html(lang="en")
           div#tweetButton
             button.primary-btn(onclick='postTweet()') Tweet
         div#tweets()
-
-//- <!DOCTYPE html>
-//- <html lang="en">
-//-   <head>
-//-     <meta charset="UTF-8" />
-//-     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-//-     <title>Document</title>
-//-     <link rel="stylesheet" href="./css/style.css" />
-//-   </head>
-//-   <body>
-//-     <div id="sideBar">
-//-       <img id="logo" src="./images/logo.jpg" alt="step-birds" />
-//-       <div class=(class="sideBarElements")
-//-         <div class="icon"></div>
-//-         <h2 id="home">Home</h2>
-//-       </div>
-//-       <div class=(class="sideBarElements")
-//-         <div class="icon"></div>
-//-         <h2 id="home">Profile</h2>
-//-       </div>
-//-       <div class=(class="sideBarElements")
-//-         <div class="icon"></div>
-//-         <h2 id="home">Bookmark</h2>
-//-       </div>
-//-     </div>
-//-   </body>
-//- </html>

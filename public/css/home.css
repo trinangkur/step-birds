@@ -1,17 +1,25 @@
-#container {
-  border: 0.1vw solid black;
-  height: 84vw;
-  width: 98vw;
-  display: flex;
+body {
+  height: 100vh;
+  width: 100vw;
   font-family: sans-serif;
   position: absolute;
+  background-color: whitesmoke;
 }
 
-#tweetPart {
-  border: 0.1vw solid black;
+#container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+}
+
+#contentBox {
   height: 100%;
   width: 75%;
+  background-color: white;
+  border: solid 0.5px lightgray;
+  margin-left: 10px;
 }
+
 #header {
   border-bottom: 0.1vw solid black;
   height: 7%;
@@ -19,7 +27,7 @@
 }
 #tweetBLog {
   border-bottom: 0.1vw solid black;
-  height: 12%;
+  height: 18%;
   width: 100%;
   display: flex;
 }
@@ -36,14 +44,14 @@
 }
 
 #tweetBox {
-  margin-top: 30px;
-  margin-left: 50px;
+  margin-top: 5%;
+  margin-left: 5%;
 }
 
 #tweetBox > input {
   width: 50vw;
-  height: 5vw;
-  font-size: 2.2vw;
+  height: 5vh;
+  font-size: 1.5vw;
   margin: 0;
 }
 
