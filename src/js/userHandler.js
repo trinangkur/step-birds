@@ -1,6 +1,7 @@
-const authorizeUser = function (req, res, next) {
+const authorizeUser = function(req, res, next) {
   const { sessions } = req.app.locals;
   const userId = sessions.getUserId(req.cookies._SID);
+
   if (userId) {
     req.userId = userId;
     return next();
@@ -8,7 +9,7 @@ const authorizeUser = function (req, res, next) {
   res.redirect('/login.html');
 };
 
-const postTweet = function (req, res) {
+const postTweet = function(req, res) {
   const { content } = req.body;
   const { dataStore } = req.app.locals;
   const postDetails = { userId: req.userId, content, type: 'tweet' };
@@ -22,7 +23,7 @@ const postTweet = function (req, res) {
     });
 };
 
-const deleteTweet = function (req, res) {
+const deleteTweet = function(req, res) {
   const { tweetId } = req.body;
   const { dataStore } = req.app.locals;
   const tweetDetails = { userId: req.userId, tweetId };
@@ -36,8 +37,9 @@ const deleteTweet = function (req, res) {
     });
 };
 
-const getLatestTweet = function (req, res) {
+const getLatestTweet = function(req, res) {
   const { dataStore } = req.app.locals;
+
   dataStore
     .getLatestTweet(req.userId)
     .then((tweets) => {
@@ -48,8 +50,9 @@ const getLatestTweet = function (req, res) {
     });
 };
 
-const getTweets = function (req, res) {
+const getTweets = function(req, res) {
   const { dataStore } = req.app.locals;
+
   dataStore
     .getTweets(req.userId)
     .then((tweets) => {
@@ -60,13 +63,16 @@ const getTweets = function (req, res) {
     });
 };
 
-const searchProfile = function (req, res) {
+const searchProfile = function(req, res) {
   const { dataStore } = req.app.locals;
   const { name } = req.body;
-  dataStore.getUserProfiles(name).then((profiles) => res.json(profiles));
+  dataStore.getUserProfiles(name).then((profiles) => {
+
+    res.json(profiles);
+  });
 };
 
-const getUserInfo = function (req, res) {
+const getUserInfo = function(req, res) {
   const { dataStore } = req.app.locals;
   dataStore
     .getUserInfo(req.userId)
