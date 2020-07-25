@@ -182,6 +182,8 @@ body {
   width: 96%;
   border-bottom: 0.1vw solid grey;
   padding: 2% 2%;
+  display: flex;
+  justify-content: space-between;
 }
 
 #closeTweetPopUp > span {
@@ -228,4 +230,20 @@ select:focus {
   border-radius: 50px;
   margin-top: 1.5%;
   height: 80%;
+}
+
+.profileLink {
+  height: 20%;
+  width: 20%;
+  margin: 2% 0% 0% 2%;
+  cursor: pointer;
+}
+
+.profileLink > img {
+  border-radius: 50%;
+  height: 60%;
+}
+
+.profileLink > p {
+  color: rgb(135, 132, 132);
 }
