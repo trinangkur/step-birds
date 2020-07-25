@@ -1,0 +1,39 @@
+#box {
+  height: 100px;
+  width: 100px;
+  background-color: black;
+}
+
+#logo {
+  height: 10%;
+  margin: 10% 0% 0% 20%;
+  border-radius: 50%;
+  border: solid 0.5px white;
+}
+.icon {
+  height: 5%;
+  width: 5%;
+  background-color: black;
+  display: flex;
+}
+.sideBarElements {
+  margin: 0;
+  font-weight: bold;
+  display: flex;
+  margin-left: 5vw;
+}
+.home {
+  color: steelblue;
+  font-weight: bolder;
+  margin-left: 1vw;
+}
+#sideBar {
+  height: 100%;
+  width: 25%;
+  background-color: white;
+  border-right: solid 0.5px lightgray;
+}
+.someBox {
+  box-shadow: blue;
+  color: white;
+}

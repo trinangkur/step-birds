@@ -6,52 +6,25 @@
   font-family: sans-serif;
   position: absolute;
 }
-#sideBar {
-  border: 0.1vw solid black;
-  height: 100%;
-  width: 30%;
-}
 
-#logo {
-  border: 0.1vw solid black;
-  height: 10%;
-  width: 100%;
-}
-
-#menu {
-  border: 0.1vw solid black;
-  height: 50%;
-  width: 100%;
-}
-#homeLogo {
-  border: 0.1vw solid black;
-  height: 20%;
-  width: 100%;
-}
-
-#tweetLogo {
-  border: 0.1vw solid black;
-  height: 20%;
-  width: 100%;
-}
 #tweetPart {
   border: 0.1vw solid black;
   height: 100%;
-  width: 70%;
+  width: 75%;
 }
 #header {
-  border: 0.1vw solid black;
+  border-bottom: 0.1vw solid black;
   height: 7%;
   width: 100%;
 }
 #tweetBLog {
-  border: 0.1vw solid black;
+  border-bottom: 0.1vw solid black;
   height: 12%;
   width: 100%;
   display: flex;
 }
 #tweets {
-  border: 0.1vw solid black;
+  /* border: 0.1vw solid black; */
   height: 81%;
   width: 100%;
   overflow: scroll;
@@ -91,7 +64,7 @@
 .tweet {
   height: 20%;
   width: 100%;
-  border: 0.1vw solid black;
+  border-bottom: 0.1vw solid black;
 }
 
 .userId {
@@ -102,7 +75,7 @@
 .content {
   font-weight: lighter;
   font-size: 1.5vw;
-  margin-left: 4vw;
+  margin-left: 5vw;
 }
 
 .userId span {
@@ -111,6 +84,13 @@
 }
 
 .userId img {
+  height: 40px;
+  width: 40px;
+  margin-top: 1vw;
+  margin-left: 1vw;
+}
+
+.homeIcon img {
   height: 40px;
   width: 40px;
   margin-top: 1vw;

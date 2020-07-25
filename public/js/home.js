@@ -1,6 +1,6 @@
 const createTweetHtml = function(content, userId) {
   return `<div class="userId">
-  <div><img src="/assets/profile.png" alt="not found"/></div>
+  <div><img src="/assets/profileIcon.png" alt="not found"/></div>
   <div class="userName"><span> ${userId}</span></div>
   </div>
    <div class="content"><p>${content}</p></div>`;
@@ -14,7 +14,7 @@ const showTweet = function({message, tweets}) {
     element.className = 'tweet';
     element.innerHTML = createTweetHtml(tweet.content, tweet.userId);
     const allTweets = document.getElementById('tweets');
-    allTweets.appendChild(element);
+    allTweets.prepend(element);
   }
 };
 

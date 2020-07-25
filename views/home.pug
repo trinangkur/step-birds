@@ -5,17 +5,29 @@ html(lang="en")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     meta(http-equiv="X-UA-Compatible", content="ie=edge")
     link(rel="stylesheet", href="../css/home.css")
+    link(rel="stylesheet", href="../css/sideBar.css")
     script(src="../js/home.js")
     script(src="../js/request.js")
     title 'twitter'
   body(onload="showTweets()")
     div#container()
       div#sideBar()
-        div#logo()
-          img(src="../assets/logo.jpg", alt="step-birds" height="80px",width="80px")
-        div#menu()
-          div#homeLogo()
-          div#tweetLogo()
+        img#logo(src="../assets/logo.jpg", alt="step-birds")
+        div(class="sideBarElements")
+          div(class="homeIcon")
+            img(src="../assets/home.png", alt="step-birds")
+          div(class="home")
+            h2 HOME
+        div(class="sideBarElements")
+          div(class="homeIcon")
+            img(src="../assets/search.png", alt="step-birds")
+          div(class="home")
+            h2 SEARCH
+        div(class="sideBarElements")
+          div(class="homeIcon")
+            img(src="../assets/profileIcon.png", alt="step-birds")
+          div(class="home")
+            h2 PROFILE
       div#tweetPart()
         div#header()
           span HOME
@@ -25,4 +37,30 @@ html(lang="en")
           div#tweetButton
             button.primary-btn(onclick='postTweet()') Tweet
         div#tweets()
-        
+
+//- <!DOCTYPE html>
+//- <html lang="en">
+//-   <head>
+//-     <meta charset="UTF-8" />
+//-     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+//-     <title>Document</title>
+//-     <link rel="stylesheet" href="./css/style.css" />
+//-   </head>
+//-   <body>
+//-     <div id="sideBar">
+//-       <img id="logo" src="./images/logo.jpg" alt="step-birds" />
+//-       <div class=(class="sideBarElements")
+//-         <div class="icon"></div>
+//-         <h2 id="home">Home</h2>
+//-       </div>
+//-       <div class=(class="sideBarElements")
+//-         <div class="icon"></div>
+//-         <h2 id="home">Profile</h2>
+//-       </div>
+//-       <div class=(class="sideBarElements")
+//-         <div class="icon"></div>
+//-         <h2 id="home">Bookmark</h2>
+//-       </div>
+//-     </div>
+//-   </body>
+//- </html>
