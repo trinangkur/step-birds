@@ -3,7 +3,8 @@ const {
   authorizeUser,
   postTweet,
   deleteTweet,
-  getLatestTweet
+  getLatestTweet,
+  searchProfile,
 } = require('./userHandler');
 
 const userRouter = express.Router();
@@ -13,10 +14,12 @@ userRouter.get('/home', (req, res) => {
   res.end();
 });
 
+userRouter.post('/searchProfile', searchProfile);
+
 userRouter.post('/postTweet', postTweet);
 
 userRouter.post('/deleteTweet', deleteTweet);
 
 userRouter.get('/getLatestTweet', getLatestTweet);
 
-module.exports = {userRouter};
+module.exports = { userRouter };
