@@ -1,9 +1,15 @@
-const createTweetHtml = function(content, userId) {
+const createTweetHtml = function(content, userId, id) {
   return `<div class="userId">
+  <div class="profilePart">
   <div><img src="/assets/profileIcon.png" alt="not found"/></div>
-  <div class="userName"><span> ${userId}</span></div>
+  <div class="userName"><span> ${userId}</span></div></div>
+  <div class="optionsButton">
+  <img src="/assets/options.jpeg" onclick="showTweetOptions(${id})"/>
   </div>
-   <div class="content"><p>${content}</p></div>`;
+  </div>
+   <div class="content"><p>${content}</p></div>
+   <div class="options" id="tweetId-${id}">
+   <span onclick="deleteTweet(${id})">Delete</span></div>`;
 };
 
 const showTweet = function({message, tweets}) {
@@ -12,7 +18,7 @@ const showTweet = function({message, tweets}) {
     const element = document.createElement('div');
     element.id = tweet.id;
     element.className = 'tweet';
-    element.innerHTML = createTweetHtml(tweet.content, tweet.userId);
+    element.innerHTML = createTweetHtml(tweet.content, tweet.userId, tweet.id);
     const allTweets = document.getElementById('tweets');
     allTweets.prepend(element);
   }
@@ -35,4 +41,21 @@ const postTweet = function() {
 
 const showTweets = function() {
   getLatestTweet({message: 'successful'});
+};
+
+const showTweetOptions = function(id) {
+  document.getElementById(`tweetId-${id}`).style.display = 'block';
+};
+
+const updateTweets = function(id, {message}) {
+  if (message === 'successful') {
+    const element = document.getElementById(id);
+    element.parentNode.removeChild(element);
+  }
+};
+
+const deleteTweet = function(tweetId) {
+  const url = '/user/deleteTweet';
+  const body = {tweetId};
+  sendPOSTRequest(url, body, res => updateTweets(tweetId, res));
 };
