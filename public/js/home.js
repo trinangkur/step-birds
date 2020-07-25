@@ -109,13 +109,6 @@ const searchOnEnter = function(name) {
         <img src="${image_url}"/>`
         );
       }, '');
-      contentBox.innerHTML = profiles.reduce((html, {id, name, image_url}) => {
-        return (
-          html +
-          `<h1>${id}, ${name}</h1>
-        <img src="${image_url}"/>`
-        );
-      }, '');
     });
   }
 };
