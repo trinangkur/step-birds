@@ -83,6 +83,14 @@ class DataStore {
     const sql = getProfileSearchSql(name);
     return this.getAllRows(sql, []);
   }
+
+  getUserInfo(userId) {
+    const sql = getSelectSql('Tweeter', {
+      columns: ['name', 'image_url'],
+      where: `id=${userId}`,
+    });
+    return this.getAllRows(sql, []);
+  }
 }
 
 module.exports = { DataStore };

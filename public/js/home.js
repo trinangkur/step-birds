@@ -1,15 +1,17 @@
-const createTweetHtml = function (content, userId, id) {
+const createTweetHtml = function (tweet, userInfo) {
+  const { content, id } = tweet;
+  const { image_url, name } = userInfo;
   return `<div class="userId">
             <div class="profilePart">
                 <div>
-                  <img src="/assets/profileIcon.png" alt="not found"/>
+                  <img src="${image_url}" alt="not found"/>
                 </div>
                 <div class="userName">
-                  <span> ${userId}</span>
+                  <span> ${name} </span>
                 </div>
             </div>
             <div class="optionsButton">
-              <img src="/assets/options.jpeg" onclick="showTweetOptions(${id})"/>
+             <img src="/assets/options.jpeg" onclick="showTweetOptions(${id})"/>
             </div>
           </div>
           <div class="content">
@@ -21,12 +23,17 @@ const createTweetHtml = function (content, userId, id) {
 };
 
 const showTweet = function (tweet) {
-  const element = document.createElement('div');
-  element.id = tweet.id;
-  element.className = 'tweet';
-  element.innerHTML = createTweetHtml(tweet.content, tweet.userId, tweet.id);
-  const allTweets = document.getElementById('tweets');
-  allTweets.prepend(element);
+  const url = '/user/getUserInfo';
+  sendGETRequest(url, ({ message, userInfo }) => {
+    if (message === 'successful') {
+      const element = document.createElement('div');
+      element.id = tweet.id;
+      element.className = 'tweet';
+      element.innerHTML = createTweetHtml(tweet, userInfo[0]);
+      const allTweets = document.getElementById('tweets');
+      allTweets.prepend(element);
+    }
+  });
 };
 
 const getLatestTweet = function (res) {

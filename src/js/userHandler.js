@@ -66,6 +66,18 @@ const searchProfile = function (req, res) {
   dataStore.getUserProfiles(name).then((profiles) => res.json(profiles));
 };
 
+const getUserInfo = function (req, res) {
+  const { dataStore } = req.app.locals;
+  dataStore
+    .getUserInfo(req.userId)
+    .then((userInfo) => {
+      res.end(JSON.stringify({ message: 'successful', userInfo }));
+    })
+    .catch(() => {
+      res.end(JSON.stringify({ message: 'failed' }));
+    });
+};
+
 module.exports = {
   authorizeUser,
   postTweet,
@@ -73,4 +85,5 @@ module.exports = {
   searchProfile,
   getLatestTweet,
   getTweets,
+  getUserInfo,
 };
