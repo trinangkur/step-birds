@@ -8,7 +8,7 @@ html(lang="en")
     script(src="../js/home.js")
     script(src="../js/request.js")
     title 'twitter'
-  body
+  body(onload="showTweets()")
     div#container()
       div#sideBar()
         div#logo()
@@ -25,3 +25,4 @@ html(lang="en")
           div#tweetButton
             button.primary-btn(onclick='postTweet()') Tweet
         div#tweets()
+        

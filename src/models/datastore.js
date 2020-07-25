@@ -1,6 +1,7 @@
 const {
   getInsertionSql,
-  getDeleteSql
+  getDeleteSql,
+  getSelectSql
 } = require('../queries/sqlStringGenerator');
 
 class DataStore {
@@ -19,7 +20,7 @@ class DataStore {
     });
   }
 
-  all(sql, params) {
+  getAllRows(sql, params) {
     return new Promise((resolve, reject) => {
       this.db.all(sql, params, (err, rows) => {
         if (err) {
@@ -59,6 +60,14 @@ class DataStore {
     const {tweetId} = details;
     const sql = getDeleteSql('Tweet', `id = "${tweetId}"`);
     return this.runSql(sql, []);
+  }
+
+  getLatestTweet(userId) {
+    const sql = getSelectSql('Tweet', {
+      columns: ['*', 'max(id)'],
+      condition: `userId="${userId}"`
+    });
+    return this.getAllRows(sql, []);
   }
 }
 

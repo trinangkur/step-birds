@@ -36,4 +36,16 @@ const deleteTweet = function(req, res) {
     });
 };
 
-module.exports = {authorizeUser, postTweet, deleteTweet};
+const getLatestTweet = function(req, res) {
+  const {dataStore} = req.app.locals;
+  dataStore
+    .getLatestTweet(req.userId)
+    .then(tweets => {
+      res.end(JSON.stringify({message: 'successful', tweets}));
+    })
+    .catch(() => {
+      res.end(JSON.stringify({message: 'failed'}));
+    });
+};
+
+module.exports = {authorizeUser, postTweet, deleteTweet, getLatestTweet};
