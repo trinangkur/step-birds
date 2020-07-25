@@ -57,6 +57,21 @@ UPDATE Tweeter
 
 COMMIT;
 
+BEGIN TRANSACTION;
+
+INSERT INTO Followers (followerId, followingId) VALUES
+('revathi', 'vikram');
+
+UPDATE Tweeter
+	SET followersCount = followersCount + 1
+	WHERE id is 'virkam';
+
+UPDATE Tweeter
+	SET followingCount = followingCount + 1
+	WHERE id is 'revathi';
+
+COMMIT;
+
 SELECT * FROM Followers;
 SELECT * FROM Tweeter;
 
@@ -77,6 +92,28 @@ SELECT * FROM Tweet;
 SELECT * FROM Likes;
 
 
+
+
+select  Tweet.id as id
+, Tweet.timeStamp as time
+, Tweet.userId as abc
+, Tweet.content as content
+, Tweeter.id as userId
+, Tweeter.name as userName
+  from Tweet
+  left join Tweeter
+    on Tweet.userId = Tweeter.id
+		where userId is 'rahit';
+
+WITH homeDetails as (
+	SELECT * From Tweet
+	LEFT JOIN Followers
+	on Tweet.userId = Followers.followingId
+	WHERE Followers.followerId = 'revathi'
+) 
+SELECT *
+ FROM homeDetails LEFT JOIN Tweeter
+ ON homeDetails.userId = Tweeter.id;
 
 -- BEGIN TRANSACTION;
 
