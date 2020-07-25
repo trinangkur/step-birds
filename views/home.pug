@@ -8,12 +8,12 @@ html(lang="en")
     link(rel="stylesheet", href="../css/sideBar.css")
     script(src="../js/home.js")
     script(src="../js/request.js")
-    title #{title}
+    title=title
   body(onload="getAllTweets()")
     div#container()
       div#tweetPopUp()
-        div#closeTweetPopUp(onclick="closeTweetPopUp()")
-          span X
+        div#closeTweetPopUp
+          span(onclick="closeTweetPopUp()") X
           span#user-id
         div#tweetArea()
           div()

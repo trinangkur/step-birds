@@ -14,8 +14,8 @@ html(lang="en")
   body(onload="profileMain()")
     div#container()
       div#tweetPopUp()
-        div#closeTweetPopUp(onclick="closeTweetPopUp()")
-          span X
+        div#closeTweetPopUp
+          span(onclick="closeTweetPopUp()") X
           span#user-id
         div#tweetArea()
           div()
@@ -46,7 +46,7 @@ html(lang="en")
 
       div#contentBox()
         div#profile-icon
-          img#profile-pic(src="", alt="")
+          img#profile-pic(src=url, alt="")
 
         h2#profile-name= profile
         p#profile-id @#{id}
