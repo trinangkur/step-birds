@@ -86,10 +86,10 @@ class DataStore {
 
   getUserInfo(userId) {
     const sql = getSelectSql('Tweeter', {
-      columns: ['name', 'image_url'],
+      columns: ['name', 'image_url', 'id'],
       condition: `id="${userId}"`,
     });
-    
+
     return this.getAllRows(sql, []);
   }
 }

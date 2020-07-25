@@ -1,0 +1,20 @@
+#option-bar {
+  display: flex;
+  justify-content: space-around;
+}
+
+#profile-icon {
+  height: 25%;
+}
+
+#profile-name,
+#user-id {
+  margin-left: 2%;
+}
+
+.profile-pic {
+  height: 70%;
+  margin: 2% 0% 0% 4%;
+  border-radius: 50%;
+  border: solid 0.5px white;
+}

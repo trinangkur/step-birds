@@ -93,18 +93,24 @@ const deleteTweet = function (tweetId) {
   sendPOSTRequest(url, body, (res) => updateTweets(tweetId, res));
 };
 
+const getUserProfile = function (id) {
+  location.assign(`/user/profile/${id}`);
+};
+
 const searchOnEnter = function (name) {
   if (event.keyCode === 13) {
     sendPOSTRequest('/user/searchProfile', { name }, (profiles) => {
       const contentBox = document.getElementById('contentBox');
-      contentBox.innerHTML =
-        profiles.reduce((html, { id, name, image_url }) => {
+      contentBox.innerHTML = profiles.reduce(
+        (html, { id, name, image_url }) => {
           return (
             html +
-            `<h1>${id}, ${name}</h1>
+            `<h1 onclick="getUserProfile('${id}')">${id}, ${name}</h1>
         <img src="${image_url}"/>`
           );
-        }, '');
+        },
+        ''
+      );
     });
   }
 };

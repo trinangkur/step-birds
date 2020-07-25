@@ -7,6 +7,8 @@ const {
   searchProfile,
   getTweets,
   getUserInfo,
+  serveProfile,
+  serveUserTweets,
 } = require('./userHandler');
 
 const userRouter = express.Router();
@@ -18,6 +20,8 @@ userRouter.get('/home', (req, res) => {
 
 userRouter.post('/searchProfile', searchProfile);
 
+userRouter.get('/profile/:userId', serveProfile);
+
 userRouter.post('/postTweet', postTweet);
 
 userRouter.post('/deleteTweet', deleteTweet);
@@ -27,5 +31,7 @@ userRouter.get('/getLatestTweet', getLatestTweet);
 userRouter.get('/getTweets', getTweets);
 
 userRouter.get('/getUserInfo', getUserInfo);
+
+userRouter.post('/getUserTweets', serveUserTweets);
 
 module.exports = { userRouter };
