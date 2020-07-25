@@ -33,6 +33,13 @@ body {
   width: 25%;
   background-color: white;
   border-right: solid 0.5px lightgray;
+  /* position: absolute; */
+}
+
+#content {
+  height: 100%;
+  width: 100%;
+  display: flex;
 }
 .someBox {
   box-shadow: blue;
