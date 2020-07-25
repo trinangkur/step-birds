@@ -41,6 +41,18 @@ const getLatestTweet = function (req, res) {
   dataStore
     .getLatestTweet(req.userId)
     .then((tweets) => {
+      res.end(JSON.stringify({ message: 'successful', tweet: tweets[0] }));
+    })
+    .catch(() => {
+      res.end(JSON.stringify({ message: 'failed' }));
+    });
+};
+
+const getTweets = function (req, res) {
+  const { dataStore } = req.app.locals;
+  dataStore
+    .getTweets(req.userId)
+    .then((tweets) => {
       res.end(JSON.stringify({ message: 'successful', tweets }));
     })
     .catch(() => {
@@ -60,4 +72,5 @@ module.exports = {
   deleteTweet,
   searchProfile,
   getLatestTweet,
+  getTweets,
 };

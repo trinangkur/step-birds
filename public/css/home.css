@@ -24,7 +24,6 @@
   display: flex;
 }
 #tweets {
-  /* border: 0.1vw solid black; */
   height: 81%;
   width: 100%;
   overflow: scroll;
@@ -52,6 +51,7 @@
   height: 3vw;
   width: 7vw;
   font-size: 1.5vw;
+  cursor: pointer;
 }
 
 #tweetButton {

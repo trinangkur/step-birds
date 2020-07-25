@@ -71,6 +71,14 @@ class DataStore {
     return this.getAllRows(sql, []);
   }
 
+  getTweets(userId) {
+    const sql = getSelectSql('Tweet', {
+      columns: ['*'],
+      condition: `userId="${userId}"`,
+    });
+    return this.getAllRows(sql, []);
+  }
+
   getUserProfiles(name) {
     const sql = getProfileSearchSql(name);
     return this.getAllRows(sql, []);
