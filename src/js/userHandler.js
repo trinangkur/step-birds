@@ -86,7 +86,7 @@ const getUserInfo = function(req, res) {
 const serveProfile = function(req, res) {
   const { dataStore } = req.app.locals;
   dataStore.getUserInfo(req.params.userId).then((info) => {
-    
+
     res.render('profile', {
       url: info[0].image_url,
       profile: info[0].name,
@@ -96,9 +96,13 @@ const serveProfile = function(req, res) {
 };
 
 const serveUserTweets = function(req, res) {
-  req.app.locals.dataStore.getTweets(req.body.id).then((tweets) => {
+  req.app.locals.dataStore.getUserTweets(req.body.id).then((tweets) => {
     res.json({ message: 'successful', tweets });
   });
+};
+
+const redirectUserProfile = function(req, res) {
+  res.redirect(`/user/profile/${req.userId}`);
 };
 
 module.exports = {
@@ -111,4 +115,5 @@ module.exports = {
   getUserInfo,
   serveProfile,
   serveUserTweets,
+  redirectUserProfile,
 };

@@ -2,6 +2,7 @@ const {
   getInsertionSql,
   getDeleteSql,
   getSelectSql,
+  getTweetSql,
   getProfileSearchSql,
 } = require('../queries/sqlStringGenerator');
 
@@ -76,6 +77,11 @@ class DataStore {
       columns: ['*'],
       condition: `userId="${userId}"`,
     });
+    return this.getAllRows(sql, []);
+  }
+
+  getUserTweets(userId) {
+    const sql = getTweetSql(userId);
     return this.getAllRows(sql, []);
   }
 

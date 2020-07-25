@@ -9,6 +9,7 @@ const {
   getUserInfo,
   serveProfile,
   serveUserTweets,
+  redirectUserProfile
 } = require('./userHandler');
 
 const userRouter = express.Router();
@@ -21,6 +22,8 @@ userRouter.get('/home', (req, res) => {
 userRouter.post('/searchProfile', searchProfile);
 
 userRouter.get('/profile/:userId', serveProfile);
+
+userRouter.get('/showProfile', redirectUserProfile);
 
 userRouter.post('/postTweet', postTweet);
 
