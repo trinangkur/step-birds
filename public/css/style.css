@@ -11,37 +11,67 @@ body {
 }
 #logo {
   height: 10%;
-  margin: 10% 0% 0% 20%;
-  border-radius: 50%;
+  margin: 2% 0% 0% 20%;
   border: solid 0.5px white;
 }
+
+#search-box {
+  height:60%;
+  width: 80%;
+  border-radius: 50px;
+  padding-left: 16px;
+  font-size: larger;
+  outline: none;
+  color: rgb(75, 74, 74);
+}
+
 .icon {
-  height: 5%;
-  width: 5%;
-  background-color: black;
+  margin-top: 12%;
+  margin-right: 6%;
+  margin-left: 2%;
 }
+
+.rapper {
+  display: flex;
+  width: 50%;
+  height: 60%;
+  padding-bottom: 10%;
+  padding-left: 4%;
+  cursor: pointer;
+}
+
+.svg-icon {
+  fill: black;
+}
+
+.rapper:hover {
+  color: #8296ec;
+  fill: #8296ec;
+  border-radius: 50px;
+  background-color: rgb(220, 220, 220);
+}
+
 .sideBarElements {
-  margin: 15% 0% 0% 20%;
+  margin: 0% 0% 6% 20%;
   font-weight: bold;
+  display: flex;
+  height: 8%;
 }
+
 #home {
-  color: steelblue;
+  color: #4a61c8;
   font-weight: bolder;
 }
+
 #sideBar {
   height: 100%;
   width: 25%;
   background-color: white;
   border-right: solid 0.5px lightgray;
-  /* position: absolute; */
 }
 
 #content {
   height: 100%;
   width: 100%;
   display: flex;
-}
-.someBox {
-  box-shadow: blue;
-  color: white;
 }
