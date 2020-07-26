@@ -60,11 +60,9 @@ body {
   border-radius: 50%;
 }
 
-#tweetBox * input {
+#tweetBox * textarea {
   border: none;
-  border-bottom: 0.1vw solid grey;
   width: 50vw;
-  height: 5vh;
   font-size: 1.5vw;
   margin-left: 1vw;
 }
@@ -205,13 +203,18 @@ body {
   border-radius: 50%;
 }
 
-#tweetArea input {
+#tweetArea textarea {
   border: none;
   width: 28vw;
   text-decoration: none;
-  margin-bottom: 4vw;
+  margin-top: 1vw;
   margin-left: 1vw;
   font-size: 1.5vw;
+}
+
+textarea {
+  resize: none;
+
 }
 
 input:focus,
