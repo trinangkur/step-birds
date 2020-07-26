@@ -39,9 +39,12 @@
   fill: black;
 }
 
+.change-svg-colour {
+  fill: #4a61c8;
+}
+
 .rapper:hover {
   color: #8296ec;
-  fill: #8296ec;
   border-radius: 50px;
   background-color: rgb(220, 220, 220);
 }

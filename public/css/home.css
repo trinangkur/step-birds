@@ -74,10 +74,10 @@ body {
   width: 7vw;
   font-size: 1.5vw;
   cursor: pointer;
-  background-color: #4a61c8;
   border-radius: 50px;
   color: white;
   border: none;
+  outline: none;
 }
 
 #tweetButton {
@@ -152,10 +152,11 @@ body {
   height: 27%;
   width: 14%;
   box-shadow: 1px 1px 1px 3px lightgrey;
+  cursor: pointer;
+  border-radius: 6px;
 }
 
 .options > span {
-  cursor: pointer;
   font-size: 1vw;
   position: relative;
   top: 18%;
@@ -206,10 +207,9 @@ body {
 
 #tweetArea input {
   border: none;
-  border-bottom: 0.1vw solid gray;
   width: 28vw;
   text-decoration: none;
-  margin-top: 1.5vw;
+  margin-bottom: 4vw;
   margin-left: 1vw;
   font-size: 1.5vw;
 }
@@ -226,7 +226,6 @@ select:focus {
   left: 83%;
   border: none;
   color: white;
-  background-color: #4a61c8;
   border-radius: 50px;
   margin-top: 1.5%;
   height: 80%;
@@ -246,4 +245,24 @@ select:focus {
 
 .profileLink > p {
   color: rgb(135, 132, 132);
+}
+
+.text-area {
+  display: flex;
+  justify-content: space-between;
+}
+
+.char-count {
+  height: 50px;
+  width: 26px;
+}
+
+.remove-access {
+  pointer-events: none;
+  background-color: #bbc7ff;
+}
+
+.add-access {
+  background-color: #4a61c8;
+  cursor: pointer;
 }
