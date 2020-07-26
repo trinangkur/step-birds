@@ -163,7 +163,7 @@ const indicateCountByColour = function(countIndicatorId, charCount) {
 
 const toggleClickEvent = function(tweetElementId, charCount) {
   const buttonElement = document.querySelector(`#${tweetElementId}`).firstChild;
-  
+
   if (charCount > maxLength) {
     buttonElement.classList.add('remove-access');
     buttonElement.classList.remove('add-access');
@@ -182,7 +182,6 @@ const showCharCount = function(
   const charCount = document.querySelector(`#${textBoxId}`).value.length;
   indicateCountByColour(countIndicatorId, charCount);
   toggleClickEvent(tweetElementId, charCount);
-
   const numberElement = document.querySelector(`#${counterId}`);
   numberElement.innerHTML = maxLength - charCount;
 };

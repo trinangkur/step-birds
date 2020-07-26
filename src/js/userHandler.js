@@ -100,7 +100,14 @@ const serveProfile = function(req, res) {
 
 const serveUserTweets = function(req, res) {
   req.app.locals.dataStore.getUserTweets(req.body.id).then((tweets) => {
-    res.json({ message: 'successful', tweets });
+    tweets.forEach((tweet) => {
+      tweet.isUsersTweet = req.userId === tweet.userId;
+    });
+    
+    res.json({
+      message: 'successful',
+      tweets,
+    });
   });
 };
 

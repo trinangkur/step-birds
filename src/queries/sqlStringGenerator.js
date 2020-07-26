@@ -19,7 +19,7 @@ const getProfileSearchSql = function(name) {
 };
 
 const getTweetSql = function(userId) {
-  return `select *
+  return `select *, Tweet.id as id
     from Tweet
     left join Tweeter
       on Tweet.userId = Tweeter.id
