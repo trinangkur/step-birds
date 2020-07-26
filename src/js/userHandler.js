@@ -39,7 +39,6 @@ const deleteTweet = function(req, res) {
 
 const getLatestTweet = function(req, res) {
   const { dataStore } = req.app.locals;
-
   dataStore
     .getLatestTweet(req.userId)
     .then((tweets) => {
