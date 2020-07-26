@@ -85,12 +85,15 @@ const getUserInfo = function(req, res) {
 
 const serveProfile = function(req, res) {
   const { dataStore } = req.app.locals;
-  dataStore.getUserInfo(req.params.userId).then((info) => {
-
-    res.render('profile', {
-      url: info[0].image_url,
-      profile: info[0].name,
-      id: info[0].id,
+  dataStore.getUserInfo(req.params.userId).then(([profileInfo]) => {
+    dataStore.getUserInfo(req.userId).then(([userInfo]) => {
+      res.render('profile', {
+        profileUrl: profileInfo.image_url,
+        profile: profileInfo.name,
+        id: profileInfo.id,
+        userId: userInfo.id,
+        userUrl: userInfo.image_url,
+      });
     });
   });
 };
