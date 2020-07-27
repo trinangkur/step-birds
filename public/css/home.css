@@ -23,6 +23,7 @@ body {
   background-color: white;
   border: solid 0.5px lightgray;
   margin-left: 10px;
+  overflow: hidden;
 }
 
 #header {
@@ -38,9 +39,9 @@ body {
   display: flex;
 }
 #tweets {
-  height: 81%;
+  height: 75%;
   width: 100%;
-  overflow: scroll !important;
+  overflow: scroll;
 }
 
 #header > span {

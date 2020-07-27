@@ -18,3 +18,11 @@
   border-radius: 50%;
   border: solid 0.5px white;
 }
+
+#tweets {
+  height: 52%;
+}
+
+.tweet {
+  height: 38%;
+}

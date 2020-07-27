@@ -1,6 +1,16 @@
-const createTweetHtml = function(tweet) {
-  const {content, userId, id, image_url, name} = tweet;
-  console.log(id);
+const showOptions = function (isUsersTweet, id) {
+  return isUsersTweet
+    ? `<div class="options" id="tweetId-${id}" 
+    onmouseleave="hideOptions(${id})">
+    <div class="delete-tweet" onclick="deleteTweet(${id})">
+      <span>Delete</span>
+      <img src="/assets/delete.png" alt="N/A"> 
+    </div>`
+    : '';
+};
+
+const createTweetHtml = function (tweet) {
+  const { content, userId, id, image_url, name, isUsersTweet } = tweet;
   return `<div class="userId">
             <div class="profilePart">
                 <div>
@@ -19,16 +29,11 @@ const createTweetHtml = function(tweet) {
           <div class="content">
             <p>${content}</p>
           </div>
-          <div class="options" id="tweetId-${id}" 
-          onmouseleave="hideOptions(${id})">
-          <div class="delete-tweet" onclick="deleteTweet(${id})">
-            <span>Delete</span>
-            <img src="/assets/delete.png" alt="N/A"> 
-          </div>
+          ${showOptions(isUsersTweet, id)}
           </div>`;
 };
 
-const showTweet = function(tweet) {
+const showTweet = function (tweet) {
   const element = document.createElement('div');
   element.id = tweet.id;
   element.className = 'tweet';
@@ -37,96 +42,99 @@ const showTweet = function(tweet) {
   allTweets.prepend(element);
 };
 
-const getLatestTweet = function(res) {
+const getLatestTweet = function (res) {
   if (res.message === 'successful') {
     const url = '/user/getLatestTweet';
-    sendGETRequest(url, ({message, tweet}) => {
-      if (message === 'successful') {
+    sendGETRequest(url, ({ message, tweet }) => {
+      const pageUserId = document.querySelector('#tweets').getAttribute('name');
+      if (message === 'successful' && pageUserId === tweet.userId) {
         showTweet(tweet);
       }
     });
   }
 };
 
-const postTweet = function(boxId) {
+const postTweet = function (boxId) {
   const tweetText = document.getElementById(`tweetText${boxId}`);
   const url = '/user/postTweet';
   if (tweetText.value) {
-    const body = {content: tweetText.value};
+    const body = { content: tweetText.value };
     sendPOSTRequest(url, body, getLatestTweet);
     tweetText.value = '';
     closeTweetPopUp();
   }
 };
 
-const getAllTweets = function(id) {
+const getAllTweets = function (id) {
   const url = '/user/getUserTweets';
-  sendPOSTRequest(url, {id}, ({tweets}) => {
-    tweets.forEach(tweet => {
+  sendPOSTRequest(url, { id }, ({ tweets }) => {
+    tweets.forEach((tweet) => {
       showTweet(tweet);
     });
   });
 };
 
-const showTweetOptions = function(id) {
+const showTweetOptions = function (id) {
   document.getElementById(`tweetId-${id}`).style.display = 'block';
 };
 
-const updateTweets = function(id, {message}) {
-  console.log(id);
+const updateTweets = function (id, { message }) {
   if (message === 'successful') {
     const element = document.getElementById(id);
     element.parentNode.removeChild(element);
   }
 };
 
-const deleteTweet = function(tweetId) {
+const deleteTweet = function (tweetId) {
   const url = '/user/deleteTweet';
-  const body = {tweetId};
-  sendPOSTRequest(url, body, res => updateTweets(tweetId, res));
+  const body = { tweetId };
+  sendPOSTRequest(url, body, (res) => updateTweets(tweetId, res));
 };
 
-const getUserProfile = function(id) {
+const getUserProfile = function (id) {
   location.assign(`/user/profile/${id}`);
 };
 
-const searchOnEnter = function(name) {
+const searchOnEnter = function (name) {
   if (event.keyCode === 13) {
-    sendPOSTRequest('/user/searchProfile', {name}, profiles => {
+    sendPOSTRequest('/user/searchProfile', { name }, (profiles) => {
       const contentBox = document.getElementById('contentBox');
-      contentBox.innerHTML = profiles.reduce((html, {id, name, image_url}) => {
-        return (
-          html +
-          `<div class="profileLink" onclick="getUserProfile('${id}')">
+      contentBox.innerHTML = profiles.reduce(
+        (html, { id, name, image_url }) => {
+          return (
+            html +
+            `<div class="profileLink" onclick="getUserProfile('${id}')">
             <img src="${image_url}"/>
             <h3>${name}</h3><p>@${id}</p></div>`
-        );
-      }, '');
+          );
+        },
+        ''
+      );
     });
   }
 };
 
-const hideOptions = function(id) {
+const hideOptions = function (id) {
   document.getElementById(`tweetId-${id}`).style.display = 'none';
 };
 
-const showTweetPopUp = function() {
+const showTweetPopUp = function () {
   document.getElementById('tweetPopUp').style.display = 'block';
 };
 
-const closeTweetPopUp = function() {
+const closeTweetPopUp = function () {
   document.getElementById('tweetPopUp').style.display = 'none';
 };
 
-const assignHome = function() {
+const assignHome = function () {
   location.assign('/user/home');
 };
 
-const assignProfile = function() {
+const assignProfile = function () {
   handleRedirectedRequest('/user/showProfile');
 };
 
-const changeColour = function(countIndicatorId, strokeSize, colour) {
+const changeColour = function (countIndicatorId, strokeSize, colour) {
   const startingStrokeSize = 56;
   const circleElement = document.querySelector(`#${countIndicatorId}`);
 
@@ -136,7 +144,7 @@ const changeColour = function(countIndicatorId, strokeSize, colour) {
 
 const maxLength = 180;
 
-const indicateCountByColour = function(countIndicatorId, charCount) {
+const indicateCountByColour = function (countIndicatorId, charCount) {
   const startingStrokeSize = 56;
 
   if (charCount > maxLength) {
@@ -149,7 +157,7 @@ const indicateCountByColour = function(countIndicatorId, charCount) {
   changeColour(countIndicatorId, strokeSize, '#4a61c8');
 };
 
-const toggleClickEvent = function(tweetElementId, charCount) {
+const toggleClickEvent = function (tweetElementId, charCount) {
   const buttonElement = document.querySelector(`#${tweetElementId}`).firstChild;
 
   if (charCount > maxLength) {
@@ -161,7 +169,7 @@ const toggleClickEvent = function(tweetElementId, charCount) {
   buttonElement.classList.remove('remove-access');
 };
 
-const showCharCount = function(
+const showCharCount = function (
   textBoxId,
   countIndicatorId,
   counterId,

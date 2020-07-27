@@ -8,19 +8,20 @@ const {
   getUserInfo,
   serveProfile,
   serveUserTweets,
-  redirectUserProfile
+  redirectUserProfile,
 } = require('./userHandler');
 
 const userRouter = express.Router();
 userRouter.use(authorizeUser);
 userRouter.get('/home', (req, res) => {
-  const {dataStore} = req.app.locals;
-  dataStore.getUserInfo(req.userId).then(userInfo => {
-    const {image_url, id} = userInfo[0];
+  const { dataStore } = req.app.locals;
+  dataStore.getUserInfo(req.userId).then((userInfo) => {
+    const { image_url, id } = userInfo[0];
     res.render('home', {
       title: 'Twitter',
       image_url,
-      displayTweet: `getAllTweets("${id}")`
+      displayTweet: `getAllTweets("${id}")`,
+      userId: req.userId,
     });
     res.end();
   });
@@ -42,4 +43,4 @@ userRouter.get('/getUserInfo', getUserInfo);
 
 userRouter.post('/getUserTweets', serveUserTweets);
 
-module.exports = {userRouter};
+module.exports = { userRouter };
