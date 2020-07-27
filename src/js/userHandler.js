@@ -51,13 +51,6 @@ const searchProfile = function (req, res) {
   });
 };
 
-const getUserInfo = function (req, res) {
-  const { dataStore } = req.app.locals;
-  dataStore.getUserInfo(req.userId).then((userInfo) => {
-    res.end(JSON.stringify({ message: 'successful', userInfo }));
-  });
-};
-
 const serveProfile = function (req, res) {
   const { dataStore } = req.app.locals;
   dataStore.getUserInfo(req.params.userId).then(([profileInfo]) => {
@@ -90,14 +83,28 @@ const redirectUserProfile = function (req, res) {
   res.redirect(`/user/profile/${req.userId}`);
 };
 
+const serveHome = function (req, res) {
+  const { dataStore } = req.app.locals;
+  dataStore.getUserInfo(req.userId).then((userInfo) => {
+    const { image_url, id } = userInfo[0];
+    res.render('home', {
+      title: 'Twitter',
+      image_url,
+      displayTweet: `getAllTweets("${id}")`,
+      userId: req.userId,
+    });
+    res.end();
+  });
+};
+
 module.exports = {
   authorizeUser,
   postTweet,
   deleteTweet,
   searchProfile,
   getLatestTweet,
-  getUserInfo,
   serveProfile,
   serveUserTweets,
   redirectUserProfile,
+  serveHome,
 };

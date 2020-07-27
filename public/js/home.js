@@ -95,22 +95,23 @@ const getUserProfile = function (id) {
   location.assign(`/user/profile/${id}`);
 };
 
+const createProfileTemplate = function ({ id, name, image_url }) {
+  return `<div class="profileLink" onclick="getUserProfile('${id}')">
+            <img src="${image_url}"/>
+            <h3>${name}</h3><p>@${id}</p></div>`;
+};
+
+const showSearchUserProfile = function (profiles) {
+  const contentBox = document.getElementById('contentBox');
+  contentBox.innerHTML = profiles.reduce((html, profileInfo) => {
+    const profileTemplate = createProfileTemplate(profileInfo);
+    return html + profileTemplate;
+  }, '');
+};
+
 const searchOnEnter = function (name) {
   if (event.keyCode === 13) {
-    sendPOSTRequest('/user/searchProfile', { name }, (profiles) => {
-      const contentBox = document.getElementById('contentBox');
-      contentBox.innerHTML = profiles.reduce(
-        (html, { id, name, image_url }) => {
-          return (
-            html +
-            `<div class="profileLink" onclick="getUserProfile('${id}')">
-            <img src="${image_url}"/>
-            <h3>${name}</h3><p>@${id}</p></div>`
-          );
-        },
-        ''
-      );
-    });
+    sendPOSTRequest('/user/searchProfile', { name }, showSearchUserProfile);
   }
 };
 
@@ -148,8 +149,7 @@ const indicateCountByColour = function (countIndicatorId, charCount) {
   const startingStrokeSize = 56;
 
   if (charCount > maxLength) {
-    const strokeSize =
-      (charCount - maxLength) * (startingStrokeSize / maxLength);
+    const strokeSize = (charCount - maxLength) * (startingStrokeSize / maxLength);
     changeColour(countIndicatorId, strokeSize, 'rgb(198, 23, 23)');
     return;
   }
@@ -169,12 +169,7 @@ const toggleClickEvent = function (tweetElementId, charCount) {
   buttonElement.classList.remove('remove-access');
 };
 
-const showCharCount = function (
-  textBoxId,
-  countIndicatorId,
-  counterId,
-  tweetElementId
-) {
+const showCharCount = function (textBoxId, countIndicatorId, counterId, tweetElementId) {
   const charCount = document.querySelector(`#${textBoxId}`).value.length;
   indicateCountByColour(countIndicatorId, charCount);
   toggleClickEvent(tweetElementId, charCount);

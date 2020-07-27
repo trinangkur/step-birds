@@ -80,27 +80,6 @@ describe('getLatestTweet', () => {
   });
 });
 
-describe('getUserInfo', () => {
-  before(() => {
-    const sessions = { getUserId: () => 'vikram' };
-    app.locals.sessions = sessions;
-  });
-  it('should get all tweets of user', (done) => {
-    const expected = {
-      message: 'successful',
-      userInfo: [{ name: 'Vikram Singh', image_url: 'fakeUrl', id: 'vikram' }],
-    };
-    const expectedJson = JSON.stringify(expected);
-    request(app)
-      .get('/user/getUserInfo')
-      .send({
-        userId: 'vikram',
-      })
-      .expect(200)
-      .expect(expectedJson, done);
-  });
-});
-
 describe('searchProfile', function () {
   before(() => {
     app.locals.sessions = { getUserId: () => 'revathi' };

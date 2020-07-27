@@ -3,6 +3,7 @@ const {getDB} = require('../../config');
 const schema = require('../queries/schema.json');
 
 const db = new sqlite3.Database(getDB());
+
 const throwError = function(err) {
   if (err) {
     throw err;
