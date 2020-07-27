@@ -146,14 +146,14 @@ const changeColour = function (countIndicatorId, strokeSize, colour) {
 const maxLength = 180;
 
 const indicateCountByColour = function (countIndicatorId, charCount) {
-  const startingStrokeSize = 56;
+  const startingSize = 56;
 
   if (charCount > maxLength) {
-    const strokeSize = (charCount - maxLength) * (startingStrokeSize / maxLength);
+    const strokeSize = (charCount - maxLength) * (startingSize / maxLength);
     changeColour(countIndicatorId, strokeSize, 'rgb(198, 23, 23)');
     return;
   }
-  const strokeSize = charCount * (startingStrokeSize / maxLength);
+  const strokeSize = charCount * (startingSize / maxLength);
   changeColour(countIndicatorId, strokeSize, '#4a61c8');
 };
 
@@ -169,10 +169,10 @@ const toggleClickEvent = function (tweetElementId, charCount) {
   buttonElement.classList.remove('remove-access');
 };
 
-const showCharCount = function (textBoxId, countIndicatorId, counterId, tweetElementId) {
+const showCharCount = (textBoxId, countIndicatorId, counterId, tweetId) => {
   const charCount = document.querySelector(`#${textBoxId}`).value.length;
   indicateCountByColour(countIndicatorId, charCount);
-  toggleClickEvent(tweetElementId, charCount);
+  toggleClickEvent(tweetId, charCount);
   const numberElement = document.querySelector(`#${counterId}`);
   numberElement.innerHTML = maxLength - charCount;
 };
