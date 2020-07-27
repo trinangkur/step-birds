@@ -9,6 +9,7 @@ const {
   serveUserTweets,
   serveHome,
   redirectUserProfile,
+  updateLikes
 } = require('./userHandler');
 
 const userRouter = express.Router();
@@ -29,5 +30,7 @@ userRouter.post('/deleteTweet', deleteTweet);
 userRouter.get('/getLatestTweet', getLatestTweet);
 
 userRouter.post('/getUserTweets', serveUserTweets);
+
+userRouter.post('/updateLikes', updateLikes);
 
 module.exports = { userRouter };

@@ -80,11 +80,32 @@ describe('getLatestTweet', () => {
   });
 });
 
-describe('searchProfile', function () {
+// describe('getUserInfo', () => {
+//   before(() => {
+//     const sessions = { getUserId: () => 'vikram' };
+//     app.locals.sessions = sessions;
+//   });
+//   it('should get all tweets of user', (done) => {
+//     const expected = {
+//       message: 'successful',
+//       userInfo: [{ name: 'Vikram Singh', image_url: 'fakeUrl', id: 'vikram' }],
+//     };
+//     const expectedJson = JSON.stringify(expected);
+//     request(app)
+//       .get('/user/getUserInfo')
+//       .send({
+//         userId: 'vikram',
+//       })
+//       .expect(200)
+//       .expect(expectedJson, done);
+//   });
+// });
+
+describe('searchProfile', function() {
   before(() => {
     app.locals.sessions = { getUserId: () => 'revathi' };
   });
-  it('should serve searchProfile', function (done) {
+  it('should serve searchProfile', function(done) {
     request(app)
       .post('/user/searchProfile')
       .set('Content-Type', 'application/json')
@@ -97,11 +118,11 @@ describe('searchProfile', function () {
   });
 });
 
-describe('showProfile', function () {
+describe('showProfile', function() {
   before(() => {
     app.locals.sessions = { getUserId: () => 'revathi' };
   });
-  it('should redirect to user profile', function (done) {
+  it('should redirect to user profile', function(done) {
     request(app)
       .get('/user/showProfile')
       .expect('Location', '/user/profile/revathi')
@@ -109,11 +130,11 @@ describe('showProfile', function () {
   });
 });
 
-describe('getUserTweets', function () {
+describe('getUserTweets', function() {
   before(() => {
     app.locals.sessions = { getUserId: () => 'revathi' };
   });
-  it('should get tweets for given user', function (done) {
+  it('should get tweets for given user', function(done) {
     request(app)
       .post('/user/getUserTweets')
       .set('Content-Type', 'application/json')
@@ -145,20 +166,47 @@ describe('getUserTweets', function () {
   });
 });
 
-describe('/profile/:profileName', function () {
+describe('/profile/:profileName', function() {
   before(() => {
     app.locals.sessions = { getUserId: () => 'revathi' };
   });
-  it('should get user profile', function (done) {
-    request(app).get('/user/profile/revathi').expect(200, done);
+  it('should get user profile', function(done) {
+    request(app)
+      .get('/user/profile/revathi')
+      .expect(200, done);
   });
 });
 
-describe('/profile/:profileName', function () {
+describe('/profile/:profileName', function() {
   before(() => {
     app.locals.sessions = { getUserId: () => 'revathi' };
   });
-  it('should redirect to user profile', function (done) {
-    request(app).get('/user/profile/revathi').expect(200, done);
+  it('should redirect to user profile', function(done) {
+    request(app)
+      .get('/user/profile/revathi')
+      .expect(200, done);
+  });
+});
+
+describe('updateLikes', function() {
+  before(() => {
+    app.locals.sessions = { getUserId: () => 'revathi' };
+  });
+  it('should like the tweet', function(done) {
+    request(app)
+      .post('/user/updateLikes')
+      .set('Content-Type', 'application/json')
+      .send({ tweetId: 1, userId: 'revathi' })
+      .expect({ message: 'liked' })
+      .expect(200, done);
+  });
+
+  it('should unLike the post', function(done) {
+    request(app)
+      .post('/user/updateLikes')
+      .set('Content-Type', 'application/json')
+      .send({ tweetId: 1, userId: 'revathi' })
+      .expect({ message: 'unLiked' })
+      .expect(200, done);
   });
 });

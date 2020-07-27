@@ -1,4 +1,4 @@
-const authorizeUser = function (req, res, next) {
+const authorizeUser = function(req, res, next) {
   const { sessions } = req.app.locals;
   const userId = sessions.getUserId(req.cookies._SID);
 
@@ -9,7 +9,7 @@ const authorizeUser = function (req, res, next) {
   res.redirect('/login.html');
 };
 
-const postTweet = function (req, res) {
+const postTweet = function(req, res) {
   const { content } = req.body;
   const { dataStore } = req.app.locals;
   const postDetails = { userId: req.userId, content, type: 'tweet' };
@@ -18,7 +18,7 @@ const postTweet = function (req, res) {
   });
 };
 
-const deleteTweet = function (req, res) {
+const deleteTweet = function(req, res) {
   const { tweetId } = req.body;
   const { dataStore } = req.app.locals;
   const tweetDetails = { userId: req.userId, tweetId };
@@ -27,7 +27,7 @@ const deleteTweet = function (req, res) {
   });
 };
 
-const getLatestTweet = function (req, res) {
+const getLatestTweet = function(req, res) {
   const { dataStore } = req.app.locals;
 
   dataStore.getUserTweets(req.userId).then((tweets) => {
@@ -43,7 +43,7 @@ const getLatestTweet = function (req, res) {
   });
 };
 
-const searchProfile = function (req, res) {
+const searchProfile = function(req, res) {
   const { dataStore } = req.app.locals;
   const { name } = req.body;
   dataStore.getUserProfiles(name).then((profiles) => {
@@ -51,7 +51,7 @@ const searchProfile = function (req, res) {
   });
 };
 
-const serveProfile = function (req, res) {
+const serveProfile = function(req, res) {
   const { dataStore } = req.app.locals;
   dataStore.getUserInfo(req.params.userId).then(([profileInfo]) => {
     dataStore.getUserInfo(req.userId).then(([userInfo]) => {
@@ -66,7 +66,7 @@ const serveProfile = function (req, res) {
   });
 };
 
-const serveUserTweets = function (req, res) {
+const serveUserTweets = function(req, res) {
   req.app.locals.dataStore.getUserTweets(req.body.id).then((tweets) => {
     tweets.forEach((tweet) => {
       tweet.isUsersTweet = req.userId === tweet.userId;
@@ -79,11 +79,11 @@ const serveUserTweets = function (req, res) {
   });
 };
 
-const redirectUserProfile = function (req, res) {
+const redirectUserProfile = function(req, res) {
   res.redirect(`/user/profile/${req.userId}`);
 };
 
-const serveHome = function (req, res) {
+const serveHome = function(req, res) {
   const { dataStore } = req.app.locals;
   dataStore.getUserInfo(req.userId).then((userInfo) => {
     const { image_url, id } = userInfo[0];
@@ -97,6 +97,14 @@ const serveHome = function (req, res) {
   });
 };
 
+const updateLikes = function(req, res) {
+  const { dataStore } = req.app.locals;
+  const { tweetId } = req.body;
+  dataStore.updateLikes(tweetId, req.userId).then((message) => {
+    res.json({ message });
+  });
+};
+
 module.exports = {
   authorizeUser,
   postTweet,
@@ -107,4 +115,5 @@ module.exports = {
   serveUserTweets,
   redirectUserProfile,
   serveHome,
+  updateLikes,
 };

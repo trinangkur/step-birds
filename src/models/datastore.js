@@ -4,6 +4,8 @@ const {
   getSelectSql,
   getTweetSql,
   getProfileSearchSql,
+  getIncreaseLikesSql,
+  getDecreaseLikesSql,
 } = require('../queries/sqlStringGenerator');
 
 class DataStore {
@@ -29,6 +31,19 @@ class DataStore {
           reject(err);
         }
         resolve(rows);
+      });
+    });
+  }
+
+  executeTransaction(transaction) {
+    return new Promise((resolve, reject) => {
+      this.db.exec(transaction, (err) => {
+        if (err) {
+          this.db.exec('ROLLBACK');
+          return reject(err);
+        }
+        this.db.exec('COMMIT');
+        resolve('OK');
       });
     });
   }
@@ -81,6 +96,18 @@ class DataStore {
     });
 
     return this.getAllRows(sql, []);
+  }
+
+  async updateLikes(tweetId, userId) {
+    return new Promise((res) => {
+      const increaseLikeSql = getIncreaseLikesSql(tweetId, userId);
+      this.executeTransaction(increaseLikeSql)
+        .then(() => res('liked'))
+        .catch(() => {
+          const decreaseLikeSql = getDecreaseLikesSql(tweetId, userId);
+          this.executeTransaction(decreaseLikeSql).then(() => res('unLiked'));
+        });
+    });
   }
 }
 

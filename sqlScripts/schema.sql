@@ -38,8 +38,8 @@ CREATE TABLE Likes (
   tweetId NUMERIC(10) NOT NULL,
   userId VARCHAR(20) NOT NULL,
   PRIMARY KEY (tweetId, userId),
-  FOREIGN KEY (userId) REFERENCES Tweeter(id),
-  FOREIGN KEY (tweetId) REFERENCES Tweet(id)
+  FOREIGN KEY (tweetId) REFERENCES Tweet(id),
+  FOREIGN KEY (userId) REFERENCES Tweeter(id)
 );
 
 DROP TABLE IF EXISTS Hashes;
