@@ -1,6 +1,6 @@
-const createTweetHtml = function(tweet, userInfo) {
-  const { content, userId, id } = tweet;
-  const { image_url, name } = userInfo;
+const createTweetHtml = function(tweet) {
+  const {content, userId, id, image_url, name} = tweet;
+  console.log(id);
   return `<div class="userId">
             <div class="profilePart">
                 <div>
@@ -12,36 +12,35 @@ const createTweetHtml = function(tweet, userInfo) {
                 </div>
             </div>
             <div class="optionsButton">
-             <img src="/assets/options.jpeg" onclick="showTweetOptions(${id})"/>
+             <img src="/assets/options.jpeg"
+             onclick="showTweetOptions(${id})"/>
             </div>
           </div>
           <div class="content">
             <p>${content}</p>
           </div>
           <div class="options" id="tweetId-${id}" 
-          onmouseleave="hideOptions(${id})" onclick="deleteTweet(${id})" >
+          onmouseleave="hideOptions(${id})">
+          <div class="delete-tweet" onclick="deleteTweet(${id})">
             <span>Delete</span>
+            <img src="/assets/delete.png" alt="N/A"> 
+          </div>
           </div>`;
 };
 
 const showTweet = function(tweet) {
-  const url = '/user/getUserInfo';
-  sendGETRequest(url, ({ message, userInfo }) => {
-    if (message === 'successful') {
-      const element = document.createElement('div');
-      element.id = tweet.id;
-      element.className = 'tweet';
-      element.innerHTML = createTweetHtml(tweet, userInfo[0]);
-      const allTweets = document.getElementById('tweets');
-      allTweets.prepend(element);
-    }
-  });
+  const element = document.createElement('div');
+  element.id = tweet.id;
+  element.className = 'tweet';
+  element.innerHTML = createTweetHtml(tweet);
+  const allTweets = document.getElementById('tweets');
+  allTweets.prepend(element);
 };
 
 const getLatestTweet = function(res) {
   if (res.message === 'successful') {
     const url = '/user/getLatestTweet';
-    sendGETRequest(url, ({ message, tweet }) => {
+    sendGETRequest(url, ({message, tweet}) => {
       if (message === 'successful') {
         showTweet(tweet);
       }
@@ -53,28 +52,19 @@ const postTweet = function(boxId) {
   const tweetText = document.getElementById(`tweetText${boxId}`);
   const url = '/user/postTweet';
   if (tweetText.value) {
-    const body = { content: tweetText.value };
+    const body = {content: tweetText.value};
     sendPOSTRequest(url, body, getLatestTweet);
     tweetText.value = '';
     closeTweetPopUp();
   }
 };
 
-const getAllTweets = function() {
-  const url = '/user/getTweets';
-  sendGETRequest(url, ({ message, tweets }) => {
-    if (message === 'successful') {
-      tweets.forEach(showTweet);
-    }
-  });
-  sendGETRequest('/user/getUserInfo', ({ message, userInfo }) => {
-    if (message === 'successful') {
-      document.querySelector('#user-id').innerText = `@${userInfo[0].id}`;
-      const profiles = document.getElementsByClassName('profileIcon');
-      Array.from(profiles).forEach((profile) => {
-        profile.src = userInfo[0].image_url;
-      });
-    }
+const getAllTweets = function(id) {
+  const url = '/user/getUserTweets';
+  sendPOSTRequest(url, {id}, ({tweets}) => {
+    tweets.forEach(tweet => {
+      showTweet(tweet);
+    });
   });
 };
 
@@ -82,7 +72,8 @@ const showTweetOptions = function(id) {
   document.getElementById(`tweetId-${id}`).style.display = 'block';
 };
 
-const updateTweets = function(id, { message }) {
+const updateTweets = function(id, {message}) {
+  console.log(id);
   if (message === 'successful') {
     const element = document.getElementById(id);
     element.parentNode.removeChild(element);
@@ -91,8 +82,8 @@ const updateTweets = function(id, { message }) {
 
 const deleteTweet = function(tweetId) {
   const url = '/user/deleteTweet';
-  const body = { tweetId };
-  sendPOSTRequest(url, body, (res) => updateTweets(tweetId, res));
+  const body = {tweetId};
+  sendPOSTRequest(url, body, res => updateTweets(tweetId, res));
 };
 
 const getUserProfile = function(id) {
@@ -101,19 +92,16 @@ const getUserProfile = function(id) {
 
 const searchOnEnter = function(name) {
   if (event.keyCode === 13) {
-    sendPOSTRequest('/user/searchProfile', { name }, (profiles) => {
+    sendPOSTRequest('/user/searchProfile', {name}, profiles => {
       const contentBox = document.getElementById('contentBox');
-      contentBox.innerHTML = profiles.reduce(
-        (html, { id, name, image_url }) => {
-          return (
-            html +
-            `<div class="profileLink" onclick="getUserProfile('${id}')">
+      contentBox.innerHTML = profiles.reduce((html, {id, name, image_url}) => {
+        return (
+          html +
+          `<div class="profileLink" onclick="getUserProfile('${id}')">
             <img src="${image_url}"/>
             <h3>${name}</h3><p>@${id}</p></div>`
-          );
-        },
-        ''
-      );
+        );
+      }, '');
     });
   }
 };

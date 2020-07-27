@@ -5,7 +5,6 @@ const {
   deleteTweet,
   getLatestTweet,
   searchProfile,
-  getTweets,
   getUserInfo,
   serveProfile,
   serveUserTweets,
@@ -15,8 +14,16 @@ const {
 const userRouter = express.Router();
 userRouter.use(authorizeUser);
 userRouter.get('/home', (req, res) => {
-  res.render('home', { title: 'Twitter' });
-  res.end();
+  const {dataStore} = req.app.locals;
+  dataStore.getUserInfo(req.userId).then(userInfo => {
+    const {image_url, id} = userInfo[0];
+    res.render('home', {
+      title: 'Twitter',
+      image_url,
+      displayTweet: `getAllTweets("${id}")`
+    });
+    res.end();
+  });
 });
 
 userRouter.post('/searchProfile', searchProfile);
@@ -31,10 +38,8 @@ userRouter.post('/deleteTweet', deleteTweet);
 
 userRouter.get('/getLatestTweet', getLatestTweet);
 
-userRouter.get('/getTweets', getTweets);
-
 userRouter.get('/getUserInfo', getUserInfo);
 
 userRouter.post('/getUserTweets', serveUserTweets);
 
-module.exports = { userRouter };
+module.exports = {userRouter};

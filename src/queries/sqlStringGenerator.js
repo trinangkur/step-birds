@@ -7,7 +7,7 @@ const getDeleteSql = function(table, condition) {
   return `DELETE FROM ${table} WHERE ${condition}`;
 };
 
-const getSelectSql = function(table, { columns, condition }) {
+const getSelectSql = function(table, {columns, condition}) {
   let sql = `SELECT ${columns.join(',')} FROM ${table}`;
   sql += condition ? ` WHERE ${condition}` : '';
   return sql;
@@ -31,5 +31,5 @@ module.exports = {
   getDeleteSql,
   getProfileSearchSql,
   getSelectSql,
-  getTweetSql,
+  getTweetSql
 };

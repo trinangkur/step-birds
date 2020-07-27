@@ -1,5 +1,4 @@
 PRAGMA foreign_keys = ON;
-
 INSERT INTO Tweeter (id, name, image_url, joiningDate, dob, bio, followersCount, followingCount) VALUES
 ('revathi','Revathi Dhurai', 'fakeUrl', '07/07/2019', '21/12/2000', 'Enjoy Life', 0, 0),
 ('trinangkur','Trinangkur Chatterjee','fakeUrl', '22/06/2017', '22/06/1998', 'Enjoy Food', 0, 0),

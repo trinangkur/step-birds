@@ -11,7 +11,7 @@ html(lang="en")
     script(src="../js/sideBar.js")
     title=title
 
-  body(onload="getAllTweets()")
+  body(onload=displayTweet id=id)
     div#container()
       div#tweetPopUp()
         div#closeTweetPopUp
@@ -19,7 +19,7 @@ html(lang="en")
           span#user-id
         div#tweetArea()
           div()
-            img(class="profileIcon" src= '../assets/profileIcon.png' alt='N/A')
+            img(class="profileIcon" src=image_url alt='../assets/profileIcon.png')
           div(class="text-area")
               textarea#tweetText1(name="name", cols="90", rows="10" placeholder="what's happening..." onkeydown="showCharCount('tweetText1','count-indicator1', 'counter1', 'popUpFooter')")
               div(class="char-count")
@@ -55,7 +55,7 @@ html(lang="en")
         div#tweetBLog()
           div#tweetBox
             div()
-              img(class="profileIcon" src= '../assets/profileIcon.png' alt='N/A')
+              img(class="profileIcon" src=image_url alt='../assets/profileIcon.png')
             div(class="text-area")
               textarea#tweetText2(name="name", cols="90", rows="10" placeholder="what's happening..." onkeydown="showCharCount('tweetText2','count-indicator2', 'counter2', 'tweetButton')")
               div(class="char-count")
