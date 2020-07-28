@@ -53,16 +53,22 @@ const searchProfile = function (req, res) {
 
 const serveProfile = function (req, res) {
   const { dataStore } = req.app.locals;
-  dataStore.getUserInfo(req.params.userId).then(([profileInfo]) => {
-    dataStore.getUserInfo(req.userId).then(([userInfo]) => {
-      res.render('profile', {
-        profileUrl: profileInfo.image_url,
-        profile: profileInfo.name,
-        id: profileInfo.id,
-        userId: userInfo.id,
-        userUrl: userInfo.image_url,
+  dataStore.getUserInfo(req.userId).then(([userInfo]) => {
+    dataStore
+      .getProfileInfo(req.params.userId, req.userId)
+      .then(([profileInfo]) => {
+        res.render('profile', {
+          profileUrl: profileInfo.image_url,
+          profile: profileInfo.name,
+          id: profileInfo.id,
+          userId: userInfo.id,
+          userUrl: userInfo.image_url,
+          joinedAt: userInfo.joiningDate,
+          followingCount: profileInfo.followingCount,
+          followersCount: profileInfo.followersCount,
+          userOption: profileInfo.userOption,
+        });
       });
-    });
   });
 };
 
@@ -104,7 +110,6 @@ const updateLikes = function (req, res) {
     res.json({ message });
   });
 };
-
 
 const toggleFollow = function (req, res) {
   const { dataStore } = req.app.locals;

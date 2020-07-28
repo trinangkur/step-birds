@@ -8,6 +8,7 @@ const {
   getDecreaseLikesSql,
   getAddFollowerSql,
   getRemoveFollowerSql,
+  getProfileInfoSql,
 } = require('../queries/sqlStringGenerator');
 
 class DataStore {
@@ -17,7 +18,7 @@ class DataStore {
 
   runSql(sql, params) {
     return new Promise((resolve, reject) => {
-      this.db.run(sql, params, err => {
+      this.db.run(sql, params, (err) => {
         if (err) {
           reject(err);
         }
@@ -39,7 +40,7 @@ class DataStore {
 
   executeTransaction(transaction) {
     return new Promise((resolve, reject) => {
-      this.db.exec(transaction, err => {
+      this.db.exec(transaction, (err) => {
         if (err) {
           this.db.exec('ROLLBACK');
           return reject(err);
@@ -58,7 +59,7 @@ class DataStore {
     return new Promise((res, rej) => {
       this.runSql(sql, [])
         .then(res)
-        .catch(err => {
+        .catch((err) => {
           if (err.code === 'SQLITE_CONSTRAINT') {
             return res('already have an account');
           }
@@ -93,26 +94,24 @@ class DataStore {
 
   getUserInfo(userId) {
     const sql = getSelectSql('Tweeter', {
-      columns: ['name', 'image_url', 'id'],
-      condition: `id="${userId}"`
+      columns: ['*'],
+      condition: `id="${userId}"`,
     });
 
     return this.getAllRows(sql, []);
   }
 
   updateLikes(tweetId, userId) {
-    return new Promise(res => {
+    return new Promise((res) => {
       const increaseLikeSql = getIncreaseLikesSql(tweetId, userId);
       this.executeTransaction(increaseLikeSql)
         .then(() => res('liked'))
         .catch(() => {
           const decreaseLikeSql = getDecreaseLikesSql(tweetId, userId);
           this.executeTransaction(decreaseLikeSql).then(() => res('unLiked'));
-
         });
-    })
+    });
   }
-
 
   toggleFollow(tweeterId, userId) {
     return new Promise((resolve, reject) => {
@@ -122,13 +121,19 @@ class DataStore {
         .catch((err) => {
           if (err.code === 'SQLITE_CONSTRAINT') {
             const removeFollowerSql = getRemoveFollowerSql(tweeterId, userId);
-            this.executeTransaction(removeFollowerSql)
-              .then(() => resolve('unFollowed'));
+            this.executeTransaction(removeFollowerSql).then(() =>
+              resolve('unFollowed')
+            );
           } else {
             reject(err);
           }
         });
     });
+  }
+
+  getProfileInfo(tweeterId, userId) {
+    const sql = getProfileInfoSql(tweeterId, userId);
+    return this.getAllRows(sql, []);
   }
 }
 

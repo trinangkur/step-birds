@@ -53,9 +53,18 @@ html(lang="en")
       div#contentBox()
         div#profile-icon
           img#profile-pic(src=profileUrl, alt="")
-
-        h2#profile-name= profile
-        p#profile-id @#{id}
+        div#user-panel
+          div#user-info
+            h2#profile-name= profile
+            p#profile-id @#{id}
+            p#joined-at Joined: #{joinedAt}
+            p 
+              span Following: 
+              span#following-count #{followingCount}
+              span  &nbsp&nbsp Followers: 
+              span#follower-count #{followersCount}
+          div#user-options
+            input(type="button", value=userOption onclick="userOptions(this)")
 
         div#option-bar
           h3 Tweets

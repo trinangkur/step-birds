@@ -7,10 +7,7 @@
   height: 25%;
 }
 
-#profile-name,
-#profile-id {
-  margin-left: 2%;
-}
+
 
 #profile-pic {
   height: 70%;
@@ -20,9 +17,22 @@
 }
 
 #tweets {
-  height: 52%;
+  height: 45%;
 }
 
 .tweet {
-  height: 38%;
+  height: 50%;
+}
+
+#user-panel{
+  display: flex;
+  justify-content: space-between;
+}
+
+#user-info{
+  margin-left: 2%;
+}
+
+#user-options{
+  margin-right: 2%;  
 }

@@ -41,15 +41,15 @@ const getDecreaseLikesSql = function (tweetId, userId) {
   UPDATE Tweet
     SET likeCount=likeCount - 1
     WHERE id is '${tweetId}';`;
-}
+};
 
 const getFollowSql = function (tweeterId, userId, operator) {
   return `BEGIN TRANSACTION;
           UPDATE Tweeter
-            SET followersCount=followersCount ${operator} 1
-            WHERE id is '${tweeterId}';
+          SET followersCount=followersCount ${operator} 1
+          WHERE id is '${tweeterId}';
           UPDATE Tweeter
-            SET followingCount=followingCount ${operator} 1
+          SET followingCount=followingCount ${operator} 1
             WHERE id is '${userId}'; `;
 };
 
@@ -71,6 +71,21 @@ const getRemoveFollowerSql = function (tweeterId, userId) {
   );
 };
 
+const getProfileInfoSql = function (tweeterId, userId) {
+  return `SELECT *,
+            CASE
+              WHEN Tweeter.id = '${userId}'
+              THEN 'edit profile'
+              WHEN Tweeter.id = Followers.followingId
+                AND Followers.followerId = '${userId}'
+              THEN 'unfollow'
+              ELSE 'follow'
+              end userOption
+          FROM Tweeter LEFT JOIN Followers
+          on followers.followingId  = '${tweeterId}' 
+          where Tweeter.id = '${tweeterId}'`;
+};
+
 module.exports = {
   getInsertionSql,
   getDeleteSql,
@@ -81,4 +96,5 @@ module.exports = {
   getDecreaseLikesSql,
   getAddFollowerSql,
   getRemoveFollowerSql,
+  getProfileInfoSql,
 };
