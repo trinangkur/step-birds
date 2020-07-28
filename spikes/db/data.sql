@@ -121,6 +121,54 @@ SELECT *
 -- (?,'tweet', 'vikram', 'Nice weather',?)
 
 
+BEGIN TRANSACTION;
 
+INSERT INTO Likes (tweetId,userId) 
+	VALUES('5','revathi');
+
+UPDATE Tweet
+	SET likeCount=likeCount + 1
+	WHERE id is 5;
+
+COMMIT;
+
+
+SELECT * from Tweeter;
+SELECT * from Tweet;
+SELECT 
+	t2.id as userId
+	,t2.name as userName
+	,t1.id as tweetId
+	,t1.content
+	,t1.timeStamp
+	,t1.likeCount
+	,t1.replyCount
+	,t1.replyCount
+	FROM Tweet t1 LEFT JOIN Tweeter t2 
+	on t2.id is t1.userId;
+
+SELECT * from Likes;
+
+with tweets as
+(SELECT 
+	t2.id as user_id
+	,t2.name as userName
+	,t1.id as tweet_id
+	,t1.content
+	,t1.timeStamp
+	,t1.likeCount
+	,t1.replyCount
+	FROM Tweet t1 LEFT JOIN Tweeter t2 
+	on t2.id is t1.userId)
+	SELECT *,
+		CASE 
+			WHEN tweets.tweet_id is Likes.tweetId
+			and Likes.userId is 'revathi'
+			then 'true'
+			else 'false'
+			end status
+	FROM tweets LEFT JOIN Likes
+	on Likes.userId='revathi' 
+	and Likes.tweetId=tweets.tweet_id;
 
 
