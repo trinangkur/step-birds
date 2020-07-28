@@ -124,11 +124,11 @@ SELECT *
 BEGIN TRANSACTION;
 
 INSERT INTO Likes (tweetId,userId) 
-	VALUES('5','revathi');
+	VALUES('1','revathi');
 
 UPDATE Tweet
 	SET likeCount=likeCount + 1
-	WHERE id is 5;
+	WHERE id is 1;
 
 COMMIT;
 
@@ -148,6 +148,10 @@ SELECT
 	on t2.id is t1.userId;
 
 SELECT * from Likes;
+SELECT * from Tweet;
+SELECT * from Likes;
+
+
 
 with tweets as
 (SELECT 
@@ -159,7 +163,8 @@ with tweets as
 	,t1.likeCount
 	,t1.replyCount
 	FROM Tweet t1 LEFT JOIN Tweeter t2 
-	on t2.id is t1.userId)
+	on t2.id is t1.userId 
+	where t1.userId is 'revathi')
 	SELECT *,
 		CASE 
 			WHEN tweets.tweet_id is Likes.tweetId
@@ -171,4 +176,5 @@ with tweets as
 	on Likes.userId='revathi' 
 	and Likes.tweetId=tweets.tweet_id;
 
+-- working
 
