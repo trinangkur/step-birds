@@ -17,12 +17,30 @@ const getProfileSearchSql = function (name) {
   WHERE id like "%${name}%" OR name like "%${name}%"`;
 };
 
-const getTweetSql = function (userId) {
-  return `select *, Tweet.id as id
-    from Tweet
-    left join Tweeter
-      on Tweet.userId = Tweeter.id
-      where userId is '${userId}';`;
+const getTweetSql = function(userId, loggedInUser) {
+  return `with tweets as
+  (SELECT 
+    t2.id as user_id
+    ,t2.name as userName
+    ,t1.id as tweet_id
+    ,t1.content
+    ,t1.timeStamp
+    ,t1.likeCount
+    ,t1.replyCount
+    ,t2.image_url
+    FROM Tweet t1 LEFT JOIN Tweeter t2 
+    on t2.id is t1.userId 
+    where t1.userId is '${userId}')
+    SELECT *,
+      CASE 
+        WHEN tweets.tweet_id is Likes.tweetId
+        and Likes.userId is '${loggedInUser}'
+        then 'true'
+        else 'false'
+        end status
+    FROM tweets LEFT JOIN Likes
+    on Likes.userId='${loggedInUser}' 
+    and Likes.tweetId=tweets.tweet_id;`;
 };
 
 const getIncreaseLikesSql = function (tweetId, userId) {
