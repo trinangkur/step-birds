@@ -17,12 +17,12 @@ const getProfileSearchSql = function (name) {
   WHERE id like "%${name}%" OR name like "%${name}%"`;
 };
 
-const getTweetSql = function(userId, loggedInUser) {
+const getTweetSql = function (userId, loggedInUser) {
   return `with tweets as
   (SELECT 
-    t2.id as user_id
-    ,t2.name as userName
-    ,t1.id as tweet_id
+    t2.id as userId
+    ,t2.name as name
+    ,t1.id as id
     ,t1.content
     ,t1.timeStamp
     ,t1.likeCount
@@ -31,16 +31,16 @@ const getTweetSql = function(userId, loggedInUser) {
     FROM Tweet t1 LEFT JOIN Tweeter t2 
     on t2.id is t1.userId 
     where t1.userId is '${userId}')
-    SELECT *,
+    SELECT *, tweets.userId as userId,
       CASE 
-        WHEN tweets.tweet_id is Likes.tweetId
+        WHEN tweets.id is Likes.tweetId
         and Likes.userId is '${loggedInUser}'
         then 'true'
         else 'false'
         end status
     FROM tweets LEFT JOIN Likes
     on Likes.userId='${loggedInUser}' 
-    and Likes.tweetId=tweets.tweet_id;`;
+    and Likes.tweetId=tweets.id;`;
 };
 
 const getIncreaseLikesSql = function (tweetId, userId) {
@@ -104,6 +104,39 @@ const getProfileInfoSql = function (tweeterId, userId) {
           where Tweeter.id = '${tweeterId}'`;
 };
 
+const createTweetView = (userId) => `WITH homeDetails as (
+  SELECT DISTINCT(Tweet.id), Tweet.replyCount as replyCount,
+  Tweet.likeCount as likeCount,
+  Tweet.userId as userId,
+  Tweet._type as type,
+  Tweet.content as content,
+  Tweet.reference as reference,
+  Tweet.timeStamp as timeStamp
+   From Tweet
+  LEFT JOIN Followers
+  on Tweet.userId = Followers.followingId OR Tweet.userId = '${userId}'
+  WHERE Followers.followerId = '${userId}' OR Tweet.userId = '${userId}'`;
+
+const getAllTweetsSql = function (userId) {
+  return `WITH tweets as (
+          ${createTweetView(userId)}
+      )
+      SELECT *, homeDetails.id as id
+       FROM homeDetails LEFT JOIN Tweeter
+       ON homeDetails.userId = Tweeter.id
+    ) SELECT *,
+      tweets.userId as userId,
+          CASE 
+            WHEN tweets.id is Likes.tweetId
+            and Likes.userId is '${userId}'
+            then 'true'
+            else 'false'
+            end isLiked
+        FROM tweets LEFT JOIN Likes
+        on Likes.userId='${userId}' 
+        and Likes.tweetId=tweets.id;`;
+};
+
 module.exports = {
   getInsertionSql,
   getDeleteSql,
@@ -115,4 +148,5 @@ module.exports = {
   getAddFollowerSql,
   getRemoveFollowerSql,
   getProfileInfoSql,
+  getAllTweetsSql,
 };

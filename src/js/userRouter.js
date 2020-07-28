@@ -11,6 +11,7 @@ const {
   redirectUserProfile,
   updateLikes,
   toggleFollow,
+  serveAllTweets,
 } = require('./userHandler');
 
 const userRouter = express.Router();
@@ -35,5 +36,7 @@ userRouter.post('/getUserTweets', serveUserTweets);
 userRouter.post('/updateLikes', updateLikes);
 
 userRouter.post('/toggleFollowRequest', toggleFollow);
+
+userRouter.get('/getAllTweets', serveAllTweets);
 
 module.exports = { userRouter };

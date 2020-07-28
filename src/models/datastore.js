@@ -9,6 +9,7 @@ const {
   getAddFollowerSql,
   getRemoveFollowerSql,
   getProfileInfoSql,
+  getAllTweetsSql,
 } = require('../queries/sqlStringGenerator');
 
 class DataStore {
@@ -133,6 +134,11 @@ class DataStore {
 
   getProfileInfo(tweeterId, userId) {
     const sql = getProfileInfoSql(tweeterId, userId);
+    return this.getAllRows(sql, []);
+  }
+
+  getAllTweets(userId) {
+    const sql = getAllTweetsSql(userId);
     return this.getAllRows(sql, []);
   }
 }
