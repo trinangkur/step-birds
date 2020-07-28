@@ -1,3 +1,12 @@
+const reloadTweets = function() {
+  const tweetsElement = document.querySelector('#tweets');
+  const id = tweetsElement.getAttribute('name');
+  tweetsElement.innerHTML = '';
+  getAllTweets(id);
+};
+
+setInterval(reloadTweets, 5000);
+
 const showOptions = function(isUsersTweet, id) {
   return isUsersTweet
     ? `<div class="options" id="tweetId-${id}" 
@@ -80,6 +89,7 @@ const postTweet = function(boxId) {
 
 const getAllTweets = function(id) {
   const url = '/user/getUserTweets';
+
   sendPOSTRequest(url, {id}, ({tweets}) => {
     tweets.forEach(tweet => {
       showTweet(tweet);
