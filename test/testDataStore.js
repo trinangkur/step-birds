@@ -94,3 +94,20 @@ describe('getUserTweet', () => {
     });
   });
 });
+
+describe('toggleFollow', () => {
+  it('should throw if transaction is not propitiate', (done) => {
+    const err = new Error();
+    err.code = 'no transaction active';
+    const exec = (sql, cb) => {
+      if (cb) {
+        throw err;
+      }
+    };
+    const dataStore = new DataStore({ exec });
+    dataStore.toggleFollow('vikram', 'trinangkur').catch((err) => {
+      assert.strictEqual(err.code, 'no transaction active');
+      done();
+    });
+  });
+});

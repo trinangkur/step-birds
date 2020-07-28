@@ -1,24 +1,23 @@
-const getInsertionSql = function(table, columns, values) {
+const getInsertionSql = function (table, columns, values) {
   return `INSERT INTO ${table} (${columns})
                   VALUES (${values})`;
 };
 
-const getDeleteSql = function(table, condition) {
+const getDeleteSql = function (table, condition) {
   return `DELETE FROM ${table} WHERE ${condition}`;
 };
 
-const getSelectSql = function(table, {columns, condition}) {
-  let sql = `SELECT ${columns.join(',')} FROM ${table}`;
-  sql += condition ? ` WHERE ${condition}` : '';
-  return sql;
+const getSelectSql = function (table, { columns, condition }) {
+  return `SELECT ${columns.join(',')} FROM ${table}
+             WHERE ${condition}`;
 };
 
-const getProfileSearchSql = function(name) {
+const getProfileSearchSql = function (name) {
   return `SELECT id, name, image_url FROM Tweeter
   WHERE id like "%${name}%" OR name like "%${name}%"`;
 };
 
-const getTweetSql = function(userId) {
+const getTweetSql = function (userId) {
   return `select *, Tweet.id as id
     from Tweet
     left join Tweeter
@@ -26,7 +25,7 @@ const getTweetSql = function(userId) {
       where userId is '${userId}';`;
 };
 
-const getIncreaseLikesSql = function(tweetId, userId) {
+const getIncreaseLikesSql = function (tweetId, userId) {
   return `BEGIN TRANSACTION;
   INSERT INTO Likes (tweetId,userId) 
     VALUES('${tweetId}','${userId}');
@@ -35,13 +34,41 @@ const getIncreaseLikesSql = function(tweetId, userId) {
     WHERE id is ${tweetId};`;
 };
 
-const getDecreaseLikesSql = function(tweetId, userId) {
+const getDecreaseLikesSql = function (tweetId, userId) {
   return `BEGIN TRANSACTION;
   DELETE FROM Likes
     WHERE userId = '${userId}' AND tweetId='${tweetId}';
   UPDATE Tweet
     SET likeCount=likeCount - 1
     WHERE id is '${tweetId}';`;
+}
+
+const getFollowSql = function (tweeterId, userId, operator) {
+  return `BEGIN TRANSACTION;
+          UPDATE Tweeter
+            SET followersCount=followersCount ${operator} 1
+            WHERE id is '${tweeterId}';
+          UPDATE Tweeter
+            SET followingCount=followingCount ${operator} 1
+            WHERE id is '${userId}'; `;
+};
+
+const getAddFollowerSql = function (tweeterId, userId) {
+  const followSql = getFollowSql(tweeterId, userId, '+');
+  return (
+    followSql +
+    `INSERT INTO Followers (followerId, followingId)
+            VALUES('${userId}', '${tweeterId}');`
+  );
+};
+
+const getRemoveFollowerSql = function (tweeterId, userId) {
+  const followSql = getFollowSql(tweeterId, userId, '-');
+  return (
+    followSql +
+    `DELETE FROM Followers
+              WHERE followerId = '${userId}' AND followingId = '${tweeterId}';`
+  );
 };
 
 module.exports = {
@@ -51,5 +78,7 @@ module.exports = {
   getSelectSql,
   getTweetSql,
   getIncreaseLikesSql,
-  getDecreaseLikesSql
+  getDecreaseLikesSql,
+  getAddFollowerSql,
+  getRemoveFollowerSql,
 };

@@ -5,7 +5,9 @@ const {
   getTweetSql,
   getProfileSearchSql,
   getIncreaseLikesSql,
-  getDecreaseLikesSql
+  getDecreaseLikesSql,
+  getAddFollowerSql,
+  getRemoveFollowerSql,
 } = require('../queries/sqlStringGenerator');
 
 class DataStore {
@@ -49,7 +51,7 @@ class DataStore {
   }
 
   addTweeter(details) {
-    const {login, avatar_url, name} = details;
+    const { login, avatar_url, name } = details;
     const columns = 'id, image_url, name';
     const values = `"${login}", "${avatar_url}", "${name}"`;
     const sql = getInsertionSql('Tweeter', columns, values);
@@ -66,7 +68,7 @@ class DataStore {
   }
 
   postTweet(details) {
-    const {userId, type, content} = details;
+    const { userId, type, content } = details;
     const columns = 'id ,userId, _type, content,reference';
     const values = `?,"${userId}", "${type}", "${content}",NULL`;
     const sql = getInsertionSql('Tweet', columns, values);
@@ -74,7 +76,7 @@ class DataStore {
   }
 
   deleteTweet(details) {
-    const {tweetId} = details;
+    const { tweetId } = details;
     const sql = getDeleteSql('Tweet', `id = "${tweetId}"`);
     return this.runSql(sql, []);
   }
@@ -106,9 +108,28 @@ class DataStore {
         .catch(() => {
           const decreaseLikeSql = getDecreaseLikesSql(tweetId, userId);
           this.executeTransaction(decreaseLikeSql).then(() => res('unLiked'));
+
+        });
+    })
+  }
+
+
+  toggleFollow(tweeterId, userId) {
+    return new Promise((resolve, reject) => {
+      const addFollowerSql = getAddFollowerSql(tweeterId, userId);
+      this.executeTransaction(addFollowerSql)
+        .then(() => resolve('followed'))
+        .catch((err) => {
+          if (err.code === 'SQLITE_CONSTRAINT') {
+            const removeFollowerSql = getRemoveFollowerSql(tweeterId, userId);
+            this.executeTransaction(removeFollowerSql)
+              .then(() => resolve('unFollowed'));
+          } else {
+            reject(err);
+          }
         });
     });
   }
 }
 
-module.exports = {DataStore};
+module.exports = { DataStore };

@@ -189,3 +189,30 @@ describe('updateLikes', function() {
       .expect(200, done);
   });
 });
+
+describe('/toggleFollowRequest', function () {
+  before(() => {
+    app.locals.sessions = { getUserId: () => 'revathi' };
+  });
+  it('should be add user as a follower of particular tweeter', (done) => {
+    app.locals.dataStore = new DataStore(db);
+    const expected = { message: 'successful', status: 'followed' };
+    request(app)
+      .post('/user/toggleFollowRequest')
+      .set('Content-Type', 'application/json')
+      .send({ tweeter: 'vikram' })
+      .expect(200)
+      .expect(expected, done);
+  });
+
+  it('should unfollow a particular tweeter which user has already followed', (done) => {
+    app.locals.dataStore = new DataStore(db);
+    const expected = { message: 'successful', status: 'unFollowed' };
+    request(app)
+      .post('/user/toggleFollowRequest')
+      .set('Content-Type', 'application/json')
+      .send({ tweeter: 'vikram' })
+      .expect(200)
+      .expect(expected, done);
+  });
+});

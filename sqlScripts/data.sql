@@ -18,4 +18,3 @@ INSERT INTO Tweet (id, _type, userId, content, reference, timeStamp) VALUES
 
 INSERT INTO Tweet (id, _type, userId, content, reference) VALUES
 (?,'reply', 'revathi', 'Nice weather',1);
-
