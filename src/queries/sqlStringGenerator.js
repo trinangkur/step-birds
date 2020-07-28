@@ -1,24 +1,24 @@
-const getInsertionSql = function (table, columns, values) {
+const getInsertionSql = function(table, columns, values) {
   return `INSERT INTO ${table} (${columns})
                   VALUES (${values})`;
 };
 
-const getDeleteSql = function (table, condition) {
+const getDeleteSql = function(table, condition) {
   return `DELETE FROM ${table} WHERE ${condition}`;
 };
 
-const getSelectSql = function(table, { columns, condition }) {
+const getSelectSql = function(table, {columns, condition}) {
   let sql = `SELECT ${columns.join(',')} FROM ${table}`;
   sql += condition ? ` WHERE ${condition}` : '';
   return sql;
 };
 
-const getProfileSearchSql = function (name) {
+const getProfileSearchSql = function(name) {
   return `SELECT id, name, image_url FROM Tweeter
   WHERE id like "%${name}%" OR name like "%${name}%"`;
 };
 
-const getTweetSql = function (userId) {
+const getTweetSql = function(userId) {
   return `select *, Tweet.id as id
     from Tweet
     left join Tweeter
@@ -38,7 +38,7 @@ const getIncreaseLikesSql = function(tweetId, userId) {
 const getDecreaseLikesSql = function(tweetId, userId) {
   return `BEGIN TRANSACTION;
   DELETE FROM Likes
-    WHERE userId = '${userId}';
+    WHERE userId = '${userId}' AND tweetId='${tweetId}';
   UPDATE Tweet
     SET likeCount=likeCount - 1
     WHERE id is '${tweetId}';`;
@@ -51,5 +51,5 @@ module.exports = {
   getSelectSql,
   getTweetSql,
   getIncreaseLikesSql,
-  getDecreaseLikesSql,
+  getDecreaseLikesSql
 };
