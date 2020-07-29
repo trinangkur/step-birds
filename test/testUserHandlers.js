@@ -1,7 +1,7 @@
 const request = require('supertest');
 const { getDB } = require('../config');
 const { DataStore } = require('../src/models/datastore');
-const { app } = require('../src/js/app');
+const { app } = require('../src/app');
 const Sqlite3 = require('sqlite3').verbose();
 const db = new Sqlite3.Database(getDB());
 

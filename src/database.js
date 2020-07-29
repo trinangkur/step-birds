@@ -1,10 +1,10 @@
 const sqlite3 = require('sqlite3').verbose();
-const {getDB} = require('../../config');
-const schema = require('../queries/schema.json');
+const { getDB } = require('../config');
+const schema = require('./queries/schema.json');
 
 const db = new sqlite3.Database(getDB());
 
-const throwError = function(err) {
+const throwError = function (err) {
   if (err) {
     throw err;
   }
@@ -18,4 +18,4 @@ db.run(schema.hashes, [], throwError);
 db.run(schema.mentions, [], throwError);
 db.run(schema.bookmarks, [], throwError);
 
-module.exports = {db};
+module.exports = { db };

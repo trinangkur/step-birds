@@ -10,7 +10,7 @@ const {
   getRemoveFollowerSql,
   getProfileInfoSql,
   getAllTweetsSql,
-} = require('../queries/sqlStringGenerator');
+} = require('../queries/queryStringGenerator');
 
 class DataStore {
   constructor(db) {

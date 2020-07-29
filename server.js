@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 require('dotenv').config();
-const { app } = require('./src/js/app');
-const { db } = require('./src/js/database');
+const { app } = require('./src/app');
+const { db } = require('./src/database');
 const { DataStore } = require('./src/models/datastore');
 const { Sessions } = require('./src/models/sessions');
 const { LoginInteractor } = require('./src/models/loginInteractor');

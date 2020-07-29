@@ -23,7 +23,7 @@
   transition-duration: 0.2s;
 }
 
-#user-options :hover {
+#user-options > input:hover {
   color: white;
   background-color: #4a61c8;
 }
