@@ -5,7 +5,7 @@
   border: solid 0.5px lightgray;
   margin-left: 10px;
   margin-right: 10px;
-  overflow: hidden;
+  overflow: scroll;
 }
 
 #header {
