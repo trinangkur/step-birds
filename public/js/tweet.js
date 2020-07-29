@@ -80,11 +80,7 @@ const getTweetOptions = function (id, likeCount, isLiked) {
   `;
 };
 
-<<<<<<< HEAD
-const getRightSideOptions = function (isUsersTweet, id) {
-=======
 const getRightSideOptions = function(isUsersTweet, id) {
->>>>>>> |#6|revathi/rahit| added indicator for likes
   return isUsersTweet
     ? `
     <div class="options" id="tweetId-${id}" onmouseleave="hideOptions(${id})">
@@ -125,13 +121,7 @@ const createTweetHtml = function (tweet) {
   `;
 };
 
-<<<<<<< HEAD
-const updateLikes = function (tweetId) {
-=======
-// const changeLikeColour = function(tweetId, message) {};
-
 const updateLikes = function(tweetId) {
->>>>>>> |#6|revathi/rahit| added indicator for likes
   const url = '/user/updateLikes';
   sendPOSTRequest(url, { tweetId }, ({ message }) => {
     const counterElement = document.querySelector(`#like-count-${tweetId}`);
