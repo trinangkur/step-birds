@@ -61,7 +61,7 @@ describe('/getLatestTweet', () => {
         image_url: 'fakeUrl',
         tweetId: null,
         status: 'false',
-        isUsersTweet: false,
+        isUsersTweet: true,
       },
     };
     const expectedJson = JSON.stringify(expected);

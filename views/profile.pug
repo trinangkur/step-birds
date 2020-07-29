@@ -1,71 +1,24 @@
-<!DOCTYPE html>
-html(lang="en")
-  head
-    meta(charset="UTF-8")
-    meta(name="viewport", content="width=device-width, initial-scale=1.0")
-    meta(http-equiv="X-UA-Compatible", content="ie=edge")
-    link(rel="stylesheet", href="../../css/home.css")
-    link(rel="stylesheet", href="../../css/sideBar.css")
-    link(rel="stylesheet", href="../../css/profile.css")
-    script(src="../../js/home.js")
-    script(src="../../js/request.js")
-    script(src="../../js/profile.js")
-    script(src="../../js/sideBar.js")
-    title step-birds
-  body(onload="profileMain()")
-    div#container()
-      div#tweetPopUp()
-        div#closeTweetPopUp
-          span(onclick="closeTweetPopUp()") X
-          span#user-id @#{userId}
-        div#tweetArea()
-          div()
-            img(class="profileIcon" src=userUrl alt='N/A')
-          div(class="text-area")
-              textarea#tweetText3(name="name", cols="90", rows="10" placeholder="what's happening..." onkeydown="showCharCount('tweetText3','count-indicator3', 'counter3', 'popUpFooter')")
-              div(class="char-count")
-                svg(height="100%" viewBox="0 0 20 20" width="100%" style="overflow: visible;")    
-                  circle(cx="50%" cy="50%" fill="none" stroke-width="2" r="9" stroke="#E6ECF0")    
-                  circle(cx="50%" cy="50%" fill="none" id="count-indicator3" stroke-width="2" r="9" stroke="#4a61c8" stroke-linecap="round" style="stroke-dashoffset: 56; stroke-dasharray: 56.5487;")
-                  text(x="50%" y="50%" text-anchor="middle" stroke="black" stroke-width="0.1px" dy=".3em" font-size="8px" id="counter3") 180
-        div#popUpFooter()
-            button.primary-btn.add-access(onclick="postTweet(3);showCharCount('tweetText3','count-indicator3', 'counter3', 'popUpFooter')") Tweet
-      div#sideBar()
-        img#logo(src="../../assets/logo.png", alt="step-birds")
-        div(class="sideBarElements")
-          input(id="search-box" type="text" placeholder="search" onkeydown="searchOnEnter(this.value)")
-        div(class="sideBarElements")
-          div(class="rapper"   onmouseover="changeSvgColour('home')" onmouseleave="restoreSvgColour('home')" onclick="assignHome()")
-            div(class="icon")
-              svg(viewBox="0 0 30 30" width="30px" height="30px" id= "home" class="svg-icon")
-                path(d="M 12 2 L 0 13 L 4 13 L 4 24 L 10 24 L 10 18 L 14 18 L 14 24 L 20 24 L 20 13 L 24 13 L 12 2 z")
-            h2#home Home
-        div(class="sideBarElements")
-          div(class="rapper"   onmouseover="changeSvgColour('profile')" onmouseleave="restoreSvgColour('profile')" onclick="assignProfile()")
-            div(class="icon")
-              svg(x="0px" y="0px" width="30" height="30" viewBox="0 0 30 30" id="profile" class="svg-icon")
-                path(d="M 15 3 C 11.686 3 9 5.686 9 9 L 9 10 C 9 13.314 11.686 16 15 16 C 18.314 16 21 13.314 21 10 L 21 9 C 21 5.686 18.314 3 15 3 z M 14.998047 19 C 10.992047 19 5.8520469 21.166844 4.3730469 23.089844 C 3.4590469 24.278844 4.329125 26 5.828125 26 L 24.169922 26 C 25.668922 26 26.539 24.278844 25.625 23.089844 C 24.146 21.167844 19.004047 19 14.998047 19 z")
-            h2#home Profile
-        div(class="sideBarElements")
-          div(onclick="showTweetPopUp()") 
-            h2#tweetLogo Tweet
-
-      div#contentBox()
-        div#profile-icon
-          img#profile-pic(src=profileUrl, alt="")
-        div#user-panel
-          div#user-info
-            h2#profile-name= profile
-            p#profile-id @#{id}
-            p#joined-at Joined: #{joinedAt}
-            p 
-              span Following: 
-              span#following-count #{followingCount}
-              span  &nbsp&nbsp Followers: 
-              span#follower-count #{followersCount}
-          div#user-options
-            input(type="button", value=userOption onclick="userOptions(this)")
-
-        div#option-bar
-          h3 Tweets
-        div#tweets(name=id)
+head
+  link(rel="stylesheet", href="/css/profile.css")
+  script(src="/js/profile.js")
+  include ./commonPart.pug
+body(onload="main()") 
+  div#content-box()
+    div#profile-icon
+      img#profile-pic(src=image_url, alt="")
+    div#user-panel
+      div#user-info
+        h2#profile-name= profile
+        p#profile-id @#{id}
+        p#joined-at Joined: #{joinedAt}
+        p 
+          span Following: 
+          span#following-count #{followingCount}
+          span  &nbsp&nbsp Followers: 
+          span#follower-count #{followersCount}
+      div#user-options
+        input(type="button", value=userOption onclick="userOptions(this)")
+    div#option-bar
+      h3 Tweets
+    div#tweets(name=id)
+  #right-side-bar

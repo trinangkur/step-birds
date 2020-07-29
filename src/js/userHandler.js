@@ -32,7 +32,7 @@ const getLatestTweet = function (req, res) {
 
   dataStore.getUserTweets(req.userId, req.userId).then((tweets) => {
     const tweet = tweets[tweets.length - 1];
-    tweet.isUsersTweet = req.userId === tweet.user_id;
+    tweet.isUsersTweet = req.userId === tweet.userId;
 
     res.end(
       JSON.stringify({
@@ -58,7 +58,7 @@ const serveProfile = function (req, res) {
       .getProfileInfo(req.params.userId, req.userId)
       .then(([profileInfo]) => {
         res.render('profile', {
-          profileUrl: profileInfo.image_url,
+          image_url: profileInfo.image_url,
           profile: profileInfo.name,
           id: profileInfo.id,
           userId: userInfo.id,

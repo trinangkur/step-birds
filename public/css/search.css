@@ -1,0 +1,23 @@
+.profileLink {
+  display: flex;
+  height: 19%;
+  width: 100%;
+  margin: 2% 0% 0% 2%;
+  cursor: pointer;
+  border-bottom: solid 1px lightgrey
+}
+
+.profileLink > img {
+  border-radius: 50%;
+  height: 60%;
+}
+
+.profileLink > p {
+  color: rgb(135, 132, 132);
+  margin: 5% 0% 0% 1%;
+}
+
+.profileLink > h3 {
+  margin: 4.5% 0% 0% 1%;
+  font-weight: 500;
+}
