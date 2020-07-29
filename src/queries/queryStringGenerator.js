@@ -1,23 +1,23 @@
-const getInsertionQuery = function (table, columns, values) {
+const getInsertionQuery = function(table, columns, values) {
   return `INSERT INTO ${table} (${columns})
                   VALUES (${values})`;
 };
 
-const getDeleteQuery = function (table, condition) {
+const getDeleteQuery = function(table, condition) {
   return `DELETE FROM ${table} WHERE ${condition}`;
 };
 
-const getSelectQuery = function (table, { columns, condition }) {
+const getSelectQuery = function(table, {columns, condition}) {
   return `SELECT ${columns.join(',')} FROM ${table}
              WHERE ${condition}`;
 };
 
-const getProfileSearchQuery = function (name) {
+const getProfileSearchQuery = function(name) {
   return `SELECT id, name, image_url FROM Tweeter
   WHERE id like "%${name}%" OR name like "%${name}%"`;
 };
 
-const getTweetQuery = function (userId, loggedInUser) {
+const getTweetQuery = function(userId, loggedInUser) {
   return `with tweets as
   (SELECT 
     t2.id as userId
@@ -37,13 +37,13 @@ const getTweetQuery = function (userId, loggedInUser) {
         and Likes.userId is '${loggedInUser}'
         then 'true'
         else 'false'
-        end status
+        end isLiked
     FROM tweets LEFT JOIN Likes
     on Likes.userId='${loggedInUser}' 
     and Likes.tweetId=tweets.id;`;
 };
 
-const getIncreaseLikesQuery = function (tweetId, userId) {
+const getIncreaseLikesQuery = function(tweetId, userId) {
   return `BEGIN TRANSACTION;
   INSERT INTO Likes (tweetId,userId) 
     VALUES('${tweetId}','${userId}');
@@ -52,7 +52,7 @@ const getIncreaseLikesQuery = function (tweetId, userId) {
     WHERE id is ${tweetId};`;
 };
 
-const getDecreaseLikesQuery = function (tweetId, userId) {
+const getDecreaseLikesQuery = function(tweetId, userId) {
   return `BEGIN TRANSACTION;
   DELETE FROM Likes
     WHERE userId = '${userId}' AND tweetId='${tweetId}';
@@ -61,7 +61,7 @@ const getDecreaseLikesQuery = function (tweetId, userId) {
     WHERE id is '${tweetId}';`;
 };
 
-const getFollowQuery = function (tweeterId, userId, operator) {
+const getFollowQuery = function(tweeterId, userId, operator) {
   return `BEGIN TRANSACTION;
           UPDATE Tweeter
           SET followersCount=followersCount ${operator} 1
@@ -71,7 +71,7 @@ const getFollowQuery = function (tweeterId, userId, operator) {
             WHERE id is '${userId}'; `;
 };
 
-const getAddFollowerQuery = function (tweeterId, userId) {
+const getAddFollowerQuery = function(tweeterId, userId) {
   const followQuery = getFollowQuery(tweeterId, userId, '+');
   return (
     followQuery +
@@ -80,7 +80,7 @@ const getAddFollowerQuery = function (tweeterId, userId) {
   );
 };
 
-const getRemoveFollowerQuery = function (tweeterId, userId) {
+const getRemoveFollowerQuery = function(tweeterId, userId) {
   const followQuery = getFollowQuery(tweeterId, userId, '-');
   return (
     followQuery +
@@ -89,7 +89,7 @@ const getRemoveFollowerQuery = function (tweeterId, userId) {
   );
 };
 
-const getProfileInfoQuery = function (tweeterId, userId) {
+const getProfileInfoQuery = function(tweeterId, userId) {
   return `SELECT *,
             CASE
               WHEN Tweeter.id = '${userId}'
@@ -104,7 +104,7 @@ const getProfileInfoQuery = function (tweeterId, userId) {
           where Tweeter.id = '${tweeterId}'`;
 };
 
-const createTweetView = (userId) => `WITH homeDetails as (
+const createTweetView = userId => `WITH homeDetails as (
   SELECT DISTINCT(Tweet.id), Tweet.replyCount as replyCount,
   Tweet.likeCount as likeCount,
   Tweet.userId as userId,
@@ -117,7 +117,7 @@ const createTweetView = (userId) => `WITH homeDetails as (
   on Tweet.userId = Followers.followingId OR Tweet.userId = '${userId}'
   WHERE Followers.followerId = '${userId}' OR Tweet.userId = '${userId}'`;
 
-const getAllTweetsQuery = function (userId) {
+const getAllTweetsQuery = function(userId, loggedInUser) {
   return `WITH tweets as (
           ${createTweetView(userId)}
       )
@@ -128,12 +128,12 @@ const getAllTweetsQuery = function (userId) {
       tweets.userId as userId,
           CASE 
             WHEN tweets.id is Likes.tweetId
-            and Likes.userId is '${userId}'
+            and Likes.userId is '${loggedInUser}'
             then 'true'
             else 'false'
             end isLiked
         FROM tweets LEFT JOIN Likes
-        on Likes.userId='${userId}' 
+        on Likes.userId='${loggedInUser}' 
         and Likes.tweetId=tweets.id;`;
 };
 
@@ -148,5 +148,5 @@ module.exports = {
   getAddFollowerQuery,
   getRemoveFollowerQuery,
   getProfileInfoQuery,
-  getAllTweetsQuery,
+  getAllTweetsQuery
 };
