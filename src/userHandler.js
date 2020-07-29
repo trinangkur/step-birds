@@ -60,7 +60,8 @@ const serveProfile = function(req, res) {
           joinedAt: userInfo.joiningDate,
           followingCount: profileInfo.followingCount,
           followersCount: profileInfo.followersCount,
-          userOption: profileInfo.userOption
+          userOption: profileInfo.userOption,
+          bio: profileInfo.bio
         });
       });
   });
@@ -119,6 +120,14 @@ const serveAllTweets = function(req, res) {
   });
 };
 
+const updateProfile = function(req, res) {
+  const {dataStore} = req.app.locals;
+  const {name, bio} = req.body;
+  dataStore.updateProfile(req.userId, name, bio).then(() => {
+    res.json({status: true});
+  });
+};
+
 module.exports = {
   authorizeUser,
   postTweet,
@@ -131,5 +140,6 @@ module.exports = {
   serveHome,
   updateLikes,
   toggleFollow,
-  serveAllTweets
+  serveAllTweets,
+  updateProfile
 };

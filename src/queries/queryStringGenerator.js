@@ -137,6 +137,10 @@ const getAllTweetsQuery = function(userId, loggedInUser) {
         and Likes.tweetId=tweets.id;`;
 };
 
+const getUpdateProfileQuery = function(userId, name, bio) {
+  return `UPDATE Tweeter SET name='${name}', bio='${bio}' where id='${userId}'`;
+};
+
 module.exports = {
   getInsertionQuery,
   getDeleteQuery,
@@ -148,5 +152,6 @@ module.exports = {
   getAddFollowerQuery,
   getRemoveFollowerQuery,
   getProfileInfoQuery,
-  getAllTweetsQuery
+  getAllTweetsQuery,
+  getUpdateProfileQuery
 };

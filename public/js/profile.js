@@ -20,6 +20,10 @@ const showUnfollow = function(userOption) {
   followers.innerText = followersCount - 1;
 };
 
+const openEditor = function() {
+  document.querySelector('#editor').style.display = 'block';
+};
+
 const userOptions = function(userOption) {
   if (userOption.value !== 'Edit Profile') {
     const tweeter = document.querySelector('#profile-id').innerText.slice(1);
@@ -31,7 +35,24 @@ const userOptions = function(userOption) {
     sendPOSTRequest(url, {tweeter}, ({status}) => {
       lookup[status]();
     });
+  } else {
+    openEditor();
   }
+};
+
+const closeEditor = function() {
+  document.querySelector('#editor').style.display = 'none';
+};
+
+const updateProfile = function() {
+  const name = document.querySelector('#name').value;
+  const bio = document.querySelector('#bio').value;
+  const url = '/user/updateProfile';
+  sendPOSTRequest(url, {name, bio}, ({status}) => {
+    if (status) {
+      location.reload();
+    }
+  });
 };
 
 const main = function() {

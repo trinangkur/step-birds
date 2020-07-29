@@ -11,8 +11,12 @@ body(onload="main()")
       img#profile-pic(src=image_url, alt="")
     div#user-panel
       div#user-info
-        h2#profile-name= profile
-        p#profile-id @#{id}
+        p
+          span#profile-name= profile 
+          span &nbsp 
+          span#profile-id @#{id}
+        if bio !== '' 
+          p #{bio}
         p#joined-at Joined: #{joinedAt}
         p 
           span Following: 
@@ -20,8 +24,20 @@ body(onload="main()")
           span  &nbsp&nbsp Followers: 
           span#follower-count #{followersCount}
       div#user-options
-        input(type="button", value=userOption onclick="userOptions(this)")
+        input(type="button", value=userOption onclick="userOptions(this);")
     div#option-bar
       h3 Tweets
     div#tweets(name=id)
+  #editor
+    #edit-panel
+      #editor-header
+        #close(onclick="closeEditor()") X
+        h3#heading Edit Profile
+        button#save-button(onclick="updateProfile()") Save
+      #user-profile
+        img(src=image_url, alt="N/A")
+      #edit-username
+        input#name(type="text", name="name" placeholder=profile)
+      #edit-bio
+        textarea#bio(name="name", cols="28", rows="10" placeholder=bio )
   #right-side-bar

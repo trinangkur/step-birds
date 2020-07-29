@@ -9,7 +9,8 @@ const {
   getAddFollowerQuery,
   getRemoveFollowerQuery,
   getProfileInfoQuery,
-  getAllTweetsQuery
+  getAllTweetsQuery,
+  getUpdateProfileQuery
 } = require('../queries/queryStringGenerator');
 
 class DataStore {
@@ -140,6 +141,11 @@ class DataStore {
   getAllTweets(userId, loggedInUser) {
     const queryString = getAllTweetsQuery(userId, loggedInUser);
     return this.getAllRows(queryString, []);
+  }
+
+  updateProfile(userId, name, bio) {
+    const queryString = getUpdateProfileQuery(userId, name, bio);
+    return this.runQuery(queryString, []);
   }
 }
 

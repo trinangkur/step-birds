@@ -58,3 +58,84 @@
 #user-options {
   margin-right: 2%;
 }
+
+#editor {
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.4);
+  position: absolute;
+  padding: 2%;
+  display: none;
+}
+
+#edit-panel {
+  height: 54vh;
+  width: 30vw;
+  margin: auto;
+  margin-top: 10vw;
+  border-radius: 12px;
+  background: white;
+  padding: 2%;
+}
+
+#editor-header {
+  display: flex;
+  height: 9%;
+  justify-content: space-between;
+}
+
+#close {
+  width: 10%;
+  cursor: pointer;
+}
+
+#heading {
+  width: 40%;
+}
+
+#save-button {
+  width: 17%;
+  border-radius: 50px;
+  background: #4a61c8;
+  border: none;
+  color: white;
+  font-size: 1.2vw;
+  cursor: pointer;
+  outline: none;
+}
+
+#user-profile {
+  height: 30%;
+  border-radius: 50%;
+}
+
+#edit-username {
+  height: 15%;
+}
+
+#edit-username > input {
+  text-decoration: none;
+}
+
+#edit-bio {
+  height: 40%;
+}
+
+#edit-bio textarea {
+  text-decoration: none;
+  height: 100%;
+  width: 100%;
+}
+
+#user-profile img {
+  height: 110px;
+  width: 110px;
+}
+
+#profile-name {
+  font-size: x-large;
+}
+
+#profile-id {
+  color: gray;
+}
