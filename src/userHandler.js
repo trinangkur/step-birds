@@ -14,7 +14,7 @@ const postTweet = function (req, res) {
   const { dataStore } = req.app.locals;
   const postDetails = { userId: req.userId, content, type: 'tweet' };
   dataStore.postTweet(postDetails).then(() => {
-    res.end(JSON.stringify({ message: 'successful' }));
+    res.json({ status: true });
   });
 };
 
@@ -23,7 +23,7 @@ const deleteTweet = function (req, res) {
   const { dataStore } = req.app.locals;
   const tweetDetails = { userId: req.userId, tweetId };
   dataStore.deleteTweet(tweetDetails).then(() => {
-    res.end(JSON.stringify({ message: 'successful' }));
+    res.json({ status: true });
   });
 };
 
@@ -33,13 +33,7 @@ const getLatestTweet = function (req, res) {
   dataStore.getUserTweets(req.userId, req.userId).then((tweets) => {
     const tweet = tweets[tweets.length - 1];
     tweet.isUsersTweet = req.userId === tweet.userId;
-
-    res.end(
-      JSON.stringify({
-        message: 'successful',
-        tweet,
-      })
-    );
+    res.json(tweet);
   });
 };
 
@@ -77,13 +71,9 @@ const serveUserTweets = function (req, res) {
     .getUserTweets(req.body.id, req.userId)
     .then((tweets) => {
       tweets.forEach((tweet) => {
-        tweet.isUsersTweet = req.userId === tweet.user_id;
+        tweet.isUsersTweet = req.userId === tweet.userId;
       });
-
-      res.json({
-        message: 'successful',
-        tweets,
-      });
+      res.json(tweets);
     });
 };
 
@@ -100,7 +90,6 @@ const serveHome = function (req, res) {
       image_url,
       userId: id,
     });
-    res.end();
   });
 };
 
@@ -116,7 +105,7 @@ const toggleFollow = function (req, res) {
   const { dataStore } = req.app.locals;
   const { tweeter } = req.body;
   dataStore.toggleFollow(tweeter, req.userId).then((status) => {
-    res.json({ message: 'successful', status });
+    res.json({ status });
   });
 };
 

@@ -1,4 +1,4 @@
-const getReplay = function() {
+const getReplay = function () {
   return `
   <div class="replay">
                 <div class="replay-icon">
@@ -15,7 +15,7 @@ const getReplay = function() {
   `;
 };
 
-const getRetweet = function() {
+const getRetweet = function () {
   return `
   <div class="retweet">
   <div class="retweet-icon">
@@ -32,7 +32,7 @@ const getRetweet = function() {
   `;
 };
 
-const getLike = function(id, likeCount) {
+const getLike = function (id, likeCount) {
   return `
   <div class="like">
   <div class="like-icon" onclick="updateLikes('${id}')">
@@ -49,7 +49,7 @@ const getLike = function(id, likeCount) {
   `;
 };
 
-const getBookmark = function() {
+const getBookmark = function () {
   return `
   <div class="bookmark">
   <div class="bookmark-icon">
@@ -68,7 +68,7 @@ const getBookmark = function() {
   `;
 };
 
-const getTweetOptions = function(id, likeCount, isLiked) {
+const getTweetOptions = function (id, likeCount, isLiked) {
   return `
   <div class="tweet-options">
     ${getReplay()}
@@ -79,8 +79,7 @@ const getTweetOptions = function(id, likeCount, isLiked) {
   `;
 };
 
-const getRightSideOptions = function(isUsersTweet, id) {
-
+const getRightSideOptions = function (isUsersTweet, id) {
   return isUsersTweet
     ? `
     <div class="options" id="tweetId-${id}" onmouseleave="hideOptions(${id})">
@@ -93,7 +92,7 @@ const getRightSideOptions = function(isUsersTweet, id) {
     : '';
 };
 
-const createTweetHtml = function(tweet) {
+const createTweetHtml = function (tweet) {
   const { content, id, isUsersTweet, isLiked, likeCount } = tweet;
   const { userId, image_url, name } = tweet;
 
@@ -121,7 +120,7 @@ const createTweetHtml = function(tweet) {
   `;
 };
 
-const updateLikes = function(tweetId) {
+const updateLikes = function (tweetId) {
   const url = '/user/updateLikes';
   sendPOSTRequest(url, { tweetId }, ({ message }) => {
     const counterElement = document.querySelector(`#like-count-${tweetId}`);
@@ -139,24 +138,24 @@ const updateLikes = function(tweetId) {
   });
 };
 
-const showTweetOptions = function(id) {
+const showTweetOptions = function (id) {
   document.getElementById(`tweetId-${id}`).style.display = 'block';
 };
 
-const updateTweets = function(id, { message }) {
-  if (message === 'successful') {
+const updateTweets = function (id, res) {
+  if (res.status) {
     const element = document.getElementById(id);
     element.parentNode.removeChild(element);
   }
 };
 
-const deleteTweet = function(tweetId) {
+const deleteTweet = function (tweetId) {
   const url = '/user/deleteTweet';
   const body = { tweetId };
   sendPOSTRequest(url, body, (res) => updateTweets(tweetId, res));
 };
 
-const showTweet = function(tweet) {
+const showTweet = function (tweet) {
   const element = document.createElement('div');
   element.id = tweet.id;
   element.className = 'tweet';
@@ -165,6 +164,6 @@ const showTweet = function(tweet) {
   allTweets.prepend(element);
 };
 
-const hideOptions = function(id) {
+const hideOptions = function (id) {
   document.getElementById(`tweetId-${id}`).style.display = 'none';
 };

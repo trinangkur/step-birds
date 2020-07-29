@@ -1,23 +1,23 @@
-const getInsertionSql = function (table, columns, values) {
+const getInsertionQuery = function (table, columns, values) {
   return `INSERT INTO ${table} (${columns})
                   VALUES (${values})`;
 };
 
-const getDeleteSql = function (table, condition) {
+const getDeleteQuery = function (table, condition) {
   return `DELETE FROM ${table} WHERE ${condition}`;
 };
 
-const getSelectSql = function (table, { columns, condition }) {
+const getSelectQuery = function (table, { columns, condition }) {
   return `SELECT ${columns.join(',')} FROM ${table}
              WHERE ${condition}`;
 };
 
-const getProfileSearchSql = function (name) {
+const getProfileSearchQuery = function (name) {
   return `SELECT id, name, image_url FROM Tweeter
   WHERE id like "%${name}%" OR name like "%${name}%"`;
 };
 
-const getTweetSql = function (userId, loggedInUser) {
+const getTweetQuery = function (userId, loggedInUser) {
   return `with tweets as
   (SELECT 
     t2.id as userId
@@ -43,7 +43,7 @@ const getTweetSql = function (userId, loggedInUser) {
     and Likes.tweetId=tweets.id;`;
 };
 
-const getIncreaseLikesSql = function (tweetId, userId) {
+const getIncreaseLikesQuery = function (tweetId, userId) {
   return `BEGIN TRANSACTION;
   INSERT INTO Likes (tweetId,userId) 
     VALUES('${tweetId}','${userId}');
@@ -52,7 +52,7 @@ const getIncreaseLikesSql = function (tweetId, userId) {
     WHERE id is ${tweetId};`;
 };
 
-const getDecreaseLikesSql = function (tweetId, userId) {
+const getDecreaseLikesQuery = function (tweetId, userId) {
   return `BEGIN TRANSACTION;
   DELETE FROM Likes
     WHERE userId = '${userId}' AND tweetId='${tweetId}';
@@ -61,7 +61,7 @@ const getDecreaseLikesSql = function (tweetId, userId) {
     WHERE id is '${tweetId}';`;
 };
 
-const getFollowSql = function (tweeterId, userId, operator) {
+const getFollowQuery = function (tweeterId, userId, operator) {
   return `BEGIN TRANSACTION;
           UPDATE Tweeter
           SET followersCount=followersCount ${operator} 1
@@ -71,33 +71,33 @@ const getFollowSql = function (tweeterId, userId, operator) {
             WHERE id is '${userId}'; `;
 };
 
-const getAddFollowerSql = function (tweeterId, userId) {
-  const followSql = getFollowSql(tweeterId, userId, '+');
+const getAddFollowerQuery = function (tweeterId, userId) {
+  const followQuery = getFollowQuery(tweeterId, userId, '+');
   return (
-    followSql +
+    followQuery +
     `INSERT INTO Followers (followerId, followingId)
             VALUES('${userId}', '${tweeterId}');`
   );
 };
 
-const getRemoveFollowerSql = function (tweeterId, userId) {
-  const followSql = getFollowSql(tweeterId, userId, '-');
+const getRemoveFollowerQuery = function (tweeterId, userId) {
+  const followQuery = getFollowQuery(tweeterId, userId, '-');
   return (
-    followSql +
+    followQuery +
     `DELETE FROM Followers
               WHERE followerId = '${userId}' AND followingId = '${tweeterId}';`
   );
 };
 
-const getProfileInfoSql = function (tweeterId, userId) {
+const getProfileInfoQuery = function (tweeterId, userId) {
   return `SELECT *,
             CASE
               WHEN Tweeter.id = '${userId}'
-              THEN 'edit profile'
+              THEN 'Edit Profile'
               WHEN Tweeter.id = Followers.followingId
                 AND Followers.followerId = '${userId}'
-              THEN 'unfollow'
-              ELSE 'follow'
+              THEN 'Unfollow'
+              ELSE 'Follow'
               end userOption
           FROM Tweeter LEFT JOIN Followers
           on followers.followingId  = '${tweeterId}' 
@@ -117,7 +117,7 @@ const createTweetView = (userId) => `WITH homeDetails as (
   on Tweet.userId = Followers.followingId OR Tweet.userId = '${userId}'
   WHERE Followers.followerId = '${userId}' OR Tweet.userId = '${userId}'`;
 
-const getAllTweetsSql = function (userId) {
+const getAllTweetsQuery = function (userId) {
   return `WITH tweets as (
           ${createTweetView(userId)}
       )
@@ -138,15 +138,15 @@ const getAllTweetsSql = function (userId) {
 };
 
 module.exports = {
-  getInsertionSql,
-  getDeleteSql,
-  getProfileSearchSql,
-  getSelectSql,
-  getTweetSql,
-  getIncreaseLikesSql,
-  getDecreaseLikesSql,
-  getAddFollowerSql,
-  getRemoveFollowerSql,
-  getProfileInfoSql,
-  getAllTweetsSql,
+  getInsertionQuery,
+  getDeleteQuery,
+  getProfileSearchQuery,
+  getSelectQuery,
+  getTweetQuery,
+  getIncreaseLikesQuery,
+  getDecreaseLikesQuery,
+  getAddFollowerQuery,
+  getRemoveFollowerQuery,
+  getProfileInfoQuery,
+  getAllTweetsQuery,
 };

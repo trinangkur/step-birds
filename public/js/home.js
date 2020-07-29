@@ -1,9 +1,9 @@
 const getLatestTweet = function (res) {
-  if (res.message === 'successful') {
+  if (res.status) {
     const url = '/user/getLatestTweet';
-    sendGETRequest(url, ({ message, tweet }) => {
+    sendGETRequest(url, (tweet) => {
       const pageUserId = document.querySelector('#tweets').getAttribute('name');
-      if (message === 'successful' && pageUserId === tweet.userId) {
+      if (pageUserId === tweet.userId) {
         showTweet(tweet);
       }
     });

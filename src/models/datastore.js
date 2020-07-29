@@ -1,15 +1,15 @@
 const {
-  getInsertionSql,
-  getDeleteSql,
-  getSelectSql,
-  getTweetSql,
-  getProfileSearchSql,
-  getIncreaseLikesSql,
-  getDecreaseLikesSql,
-  getAddFollowerSql,
-  getRemoveFollowerSql,
-  getProfileInfoSql,
-  getAllTweetsSql,
+  getInsertionQuery,
+  getDeleteQuery,
+  getSelectQuery,
+  getTweetQuery,
+  getProfileSearchQuery,
+  getIncreaseLikesQuery,
+  getDecreaseLikesQuery,
+  getAddFollowerQuery,
+  getRemoveFollowerQuery,
+  getProfileInfoQuery,
+  getAllTweetsQuery,
 } = require('../queries/queryStringGenerator');
 
 class DataStore {
@@ -17,9 +17,9 @@ class DataStore {
     this.db = db;
   }
 
-  runSql(sql, params) {
+  runQuery(queryString, params) {
     return new Promise((resolve, reject) => {
-      this.db.run(sql, params, (err) => {
+      this.db.run(queryString, params, (err) => {
         if (err) {
           reject(err);
         }
@@ -28,9 +28,9 @@ class DataStore {
     });
   }
 
-  getAllRows(sql, params) {
+  getAllRows(queryString, params) {
     return new Promise((resolve, reject) => {
-      this.db.all(sql, params, (err, rows) => {
+      this.db.all(queryString, params, (err, rows) => {
         if (err) {
           reject(err);
         }
@@ -56,9 +56,9 @@ class DataStore {
     const { login, avatar_url, name } = details;
     const columns = 'id, image_url, name';
     const values = `"${login}", "${avatar_url}", "${name}"`;
-    const sql = getInsertionSql('Tweeter', columns, values);
+    const queryString = getInsertionQuery('Tweeter', columns, values);
     return new Promise((res, rej) => {
-      this.runSql(sql, [])
+      this.runQuery(queryString, [])
         .then(res)
         .catch((err) => {
           if (err.code === 'SQLITE_CONSTRAINT') {
@@ -73,42 +73,42 @@ class DataStore {
     const { userId, type, content } = details;
     const columns = 'id ,userId, _type, content,reference';
     const values = `?,"${userId}", "${type}", "${content}",NULL`;
-    const sql = getInsertionSql('Tweet', columns, values);
-    return this.runSql(sql, []);
+    const queryString = getInsertionQuery('Tweet', columns, values);
+    return this.runQuery(queryString, []);
   }
 
   deleteTweet(details) {
     const { tweetId } = details;
-    const sql = getDeleteSql('Tweet', `id = "${tweetId}"`);
-    return this.runSql(sql, []);
+    const queryString = getDeleteQuery('Tweet', `id = "${tweetId}"`);
+    return this.runQuery(queryString, []);
   }
 
   getUserTweets(userId) {
-    const sql = getTweetSql(userId);
-    return this.getAllRows(sql, []);
+    const queryString = getTweetQuery(userId);
+    return this.getAllRows(queryString, []);
   }
 
   getUserProfiles(name) {
-    const sql = getProfileSearchSql(name);
-    return this.getAllRows(sql, []);
+    const queryString = getProfileSearchQuery(name);
+    return this.getAllRows(queryString, []);
   }
 
   getUserInfo(userId) {
-    const sql = getSelectSql('Tweeter', {
+    const queryString = getSelectQuery('Tweeter', {
       columns: ['*'],
       condition: `id="${userId}"`,
     });
 
-    return this.getAllRows(sql, []);
+    return this.getAllRows(queryString, []);
   }
 
   updateLikes(tweetId, userId) {
     return new Promise((res) => {
-      const increaseLikeSql = getIncreaseLikesSql(tweetId, userId);
+      const increaseLikeSql = getIncreaseLikesQuery(tweetId, userId);
       this.executeTransaction(increaseLikeSql)
         .then(() => res('liked'))
         .catch(() => {
-          const decreaseLikeSql = getDecreaseLikesSql(tweetId, userId);
+          const decreaseLikeSql = getDecreaseLikesQuery(tweetId, userId);
           this.executeTransaction(decreaseLikeSql).then(() => res('unLiked'));
         });
     });
@@ -116,12 +116,12 @@ class DataStore {
 
   toggleFollow(tweeterId, userId) {
     return new Promise((resolve, reject) => {
-      const addFollowerSql = getAddFollowerSql(tweeterId, userId);
+      const addFollowerSql = getAddFollowerQuery(tweeterId, userId);
       this.executeTransaction(addFollowerSql)
         .then(() => resolve('followed'))
         .catch((err) => {
           if (err.code === 'SQLITE_CONSTRAINT') {
-            const removeFollowerSql = getRemoveFollowerSql(tweeterId, userId);
+            const removeFollowerSql = getRemoveFollowerQuery(tweeterId, userId);
             this.executeTransaction(removeFollowerSql).then(() =>
               resolve('unFollowed')
             );
@@ -133,13 +133,13 @@ class DataStore {
   }
 
   getProfileInfo(tweeterId, userId) {
-    const sql = getProfileInfoSql(tweeterId, userId);
-    return this.getAllRows(sql, []);
+    const queryString = getProfileInfoQuery(tweeterId, userId);
+    return this.getAllRows(queryString, []);
   }
 
   getAllTweets(userId) {
-    const sql = getAllTweetsSql(userId);
-    return this.getAllRows(sql, []);
+    const queryString = getAllTweetsQuery(userId);
+    return this.getAllRows(queryString, []);
   }
 }
 
