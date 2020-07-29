@@ -33,5 +33,5 @@ const getAllTweets = function () {
 
 const main = function () {
   getAllTweets();
-  setInterval(getAllTweets, 5000);
+  // setInterval(getAllTweets, 5000);
 };

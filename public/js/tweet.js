@@ -32,11 +32,12 @@ const getRetweet = function () {
   `;
 };
 
-const getLike = function (id, likeCount) {
+const getLike = function(id, likeCount, isLiked) {
+  const colour = isLiked === 'true' ? 'red' : 'black';
   return `
   <div class="like">
   <div class="like-icon" onclick="updateLikes('${id}')">
-    <svg viewBox="0 0 24 24" class="like-svg" id="like-svg-${id}">
+    <svg viewBox="0 0 24 24" class="like-svg ${colour}" id="like-svg-${id}">
       <g>
         <path
           d="M12 21.638h-.014C9.403 21.59 1.95 14.856 1.95 8.478c0-3.064 2.525-5.754 5.403-5.754 2.29 0 3.83 1.58 4.646 2.73.814-1.148 2.354-2.73 4.645-2.73 2.88 0 5.404 2.69 5.404 5.755 0 6.376-7.454 13.11-10.037 13.157H12zM7.354 4.225c-2.08 0-3.903 1.988-3.903 4.255 0 5.74 7.034 11.596 8.55 11.658 1.518-.062 8.55-5.917 8.55-11.658 0-2.267-1.823-4.255-3.903-4.255-2.528 0-3.94 2.936-3.952 2.965-.23.562-1.156.562-1.387 0-.014-.03-1.425-2.965-3.954-2.965z"
@@ -79,7 +80,11 @@ const getTweetOptions = function (id, likeCount, isLiked) {
   `;
 };
 
+<<<<<<< HEAD
 const getRightSideOptions = function (isUsersTweet, id) {
+=======
+const getRightSideOptions = function(isUsersTweet, id) {
+>>>>>>> |#6|revathi/rahit| added indicator for likes
   return isUsersTweet
     ? `
     <div class="options" id="tweetId-${id}" onmouseleave="hideOptions(${id})">
@@ -120,7 +125,13 @@ const createTweetHtml = function (tweet) {
   `;
 };
 
+<<<<<<< HEAD
 const updateLikes = function (tweetId) {
+=======
+// const changeLikeColour = function(tweetId, message) {};
+
+const updateLikes = function(tweetId) {
+>>>>>>> |#6|revathi/rahit| added indicator for likes
   const url = '/user/updateLikes';
   sendPOSTRequest(url, { tweetId }, ({ message }) => {
     const counterElement = document.querySelector(`#like-count-${tweetId}`);
@@ -129,11 +140,10 @@ const updateLikes = function (tweetId) {
 
     if (message === 'liked') {
       counterElement.innerText = count + 1;
-      likeSvg.style.fill = 'red';
-      likeSvg.style.stroke = 'red';
+      likeSvg.setAttribute('class', 'red');
       return;
     }
-    likeSvg.style.stroke = 'rgb(89, 85, 85)';
+    likeSvg.removeAttribute('class', 'red');
     counterElement.innerText = count - 1;
   });
 };
