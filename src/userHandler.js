@@ -9,10 +9,10 @@ const authorizeUser = function(req, res, next) {
   res.redirect('/login.html');
 };
 
-const postTweet = function(req, res) {
-  const {content} = req.body;
-  const {dataStore} = req.app.locals;
-  const postDetails = {userId: req.userId, content, type: 'tweet'};
+const postTweet = function (req, res) {
+  const { content, timeStamp } = req.body;
+  const { dataStore } = req.app.locals;
+  const postDetails = { userId: req.userId, content, type: 'tweet', timeStamp };
   dataStore.postTweet(postDetails).then(() => {
     res.json({status: true});
   });

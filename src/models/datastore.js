@@ -70,9 +70,9 @@ class DataStore {
   }
 
   postTweet(details) {
-    const {userId, type, content} = details;
-    const columns = 'id ,userId, _type, content,reference';
-    const values = `?,"${userId}", "${type}", "${content}",NULL`;
+    const { userId, type, content, timeStamp } = details;
+    const columns = 'id ,userId, _type, content, timeStamp';
+    const values = `?,"${userId}", "${type}", "${content}", "${timeStamp}"`;
     const queryString = getInsertionQuery('Tweet', columns, values);
     return this.runQuery(queryString, []);
   }

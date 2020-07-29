@@ -32,7 +32,7 @@ const getRetweet = function () {
   `;
 };
 
-const getLike = function(id, likeCount, isLiked) {
+const getLike = function (id, likeCount, isLiked) {
   const colour = isLiked === 'true' ? 'red' : 'black';
   return `
   <div class="like">
@@ -80,7 +80,7 @@ const getTweetOptions = function (id, likeCount, isLiked) {
   `;
 };
 
-const getRightSideOptions = function(isUsersTweet, id) {
+const getRightSideOptions = function (isUsersTweet, id) {
   return isUsersTweet
     ? `
     <div class="options" id="tweetId-${id}" onmouseleave="hideOptions(${id})">
@@ -95,8 +95,7 @@ const getRightSideOptions = function(isUsersTweet, id) {
 
 const createTweetHtml = function (tweet) {
   const { content, id, isUsersTweet, isLiked, likeCount } = tweet;
-  const { userId, image_url, name } = tweet;
-
+  const { userId, image_url, name, timeStamp } = tweet;
   return `
   <div class="content-section">
   <div class="dp">
@@ -110,7 +109,7 @@ const createTweetHtml = function (tweet) {
       <span class="user-name">${name}</span>
       <span class="user-id">@${userId}</span>
       <span></span>
-      <span class="time-stamp"> &nbsp; 4 min ago</span>
+      <span class="time-stamp"> &nbsp; ${moment(timeStamp).fromNow()}</span>
     </div>
     <div class="content">${content}</div>
   </div>
@@ -121,7 +120,7 @@ const createTweetHtml = function (tweet) {
   `;
 };
 
-const updateLikes = function(tweetId) {
+const updateLikes = function (tweetId) {
   const url = '/user/updateLikes';
   sendPOSTRequest(url, { tweetId }, ({ message }) => {
     const counterElement = document.querySelector(`#like-count-${tweetId}`);

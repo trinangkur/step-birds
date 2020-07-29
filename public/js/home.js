@@ -14,7 +14,7 @@ const postTweet = function(boxId) {
   const tweetText = document.getElementById(`tweetText${boxId}`);
   const url = '/user/postTweet';
   if (tweetText.value) {
-    const body = {content: tweetText.value};
+    const body = { content: tweetText.value, timeStamp: new Date() };
     sendPOSTRequest(url, body, getLatestTweet);
     tweetText.value = '';
     closeTweetPopUp();
