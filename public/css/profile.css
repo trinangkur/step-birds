@@ -7,9 +7,51 @@
   height: 25%;
 }
 
+#user-options input {
+  background-color: white;
+  border: solid 3px #4a61c8;
+  outline: none;
+  color: #4a61c8;
+  padding: 8px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 18px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 50px;
+  transition-duration: 0.2s;
+}
+
+#user-options :hover {
+  color: white;
+  background-color: #4a61c8;
+}
+
 #profile-pic {
   height: 70%;
   margin: 2% 0% 0% 4%;
   border-radius: 50%;
   border: solid 0.5px white;
+}
+
+#tweets {
+  height: 45%;
+}
+
+.tweet {
+  height: 50%;
+}
+
+#user-panel {
+  display: flex;
+  justify-content: space-between;
+}
+
+#user-info {
+  margin-left: 2%;
+}
+
+#user-options {
+  margin-right: 2%;
 }
