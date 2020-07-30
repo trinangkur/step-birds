@@ -28,11 +28,10 @@ describe('deleteTweet', () => {
     app.locals.sessions = sessions;
   });
   it('should be able to delete a new tweet', (done) => {
-    const body = JSON.stringify({ tweetId: '1' });
     request(app)
       .post('/user/deleteTweet')
       .set('Content-Type', 'application/json')
-      .send({ body, userId: 'revathi' })
+      .send({ tweetId: 1 })
       .expect({ status: true })
       .expect(200, done);
   });

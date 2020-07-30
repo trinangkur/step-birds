@@ -18,20 +18,20 @@ describe('postTweet', () => {
   });
 });
 
-describe('deleteTweet', function () {
-  it('should delete the tweet', (done) => {
-    const run = sinon.stub().yields(null);
-    const dataStore = new DataStore({ run });
-    const details = {
-      tweetId: 1,
-      userId: 'revathi',
-    };
-    dataStore.deleteTweet(details).then((message) => {
-      assert.strictEqual(message, 'OK');
-      done();
-    });
-  });
-});
+// describe('deleteTweet', function () {
+//   it('should delete the tweet', (done) => {
+//     const run = sinon.stub().yields(null);
+//     const dataStore = new DataStore({ run });
+//     const details = {
+//       tweetId: 1,
+//       userId: 'revathi',
+//     };
+//     dataStore.deleteTweet(details).then((message) => {
+//       assert.strictEqual(message, 'OK');
+//       done();
+//     });
+//   });
+// });
 
 describe('addTweeter', () => {
   it('should add a new tweeter in database', (done) => {
