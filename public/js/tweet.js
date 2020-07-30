@@ -166,3 +166,26 @@ const showTweet = function(tweet, parentElement) {
 const hideOptions = function(id) {
   document.getElementById(`tweetId-${id}`).style.display = 'none';
 };
+
+const getLatestTweet = function(res) {
+  if (res.status) {
+    const url = '/user/getLatestTweet';
+    sendGETRequest(url, tweet => {
+      const pageUserId = document.querySelector('#tweets').getAttribute('name');
+      if (pageUserId === tweet.userId) {
+        showTweet(tweet, 'tweets');
+      }
+    });
+  }
+};
+
+const postTweet = function(boxId) {
+  const tweetText = document.getElementById(`tweetText${boxId}`);
+  const url = '/user/postTweet';
+  if (tweetText.value) {
+    const body = {content: tweetText.value, timeStamp: new Date()};
+    sendPOSTRequest(url, body, getLatestTweet);
+    tweetText.value = '';
+    closeTweetPopUp();
+  }
+};

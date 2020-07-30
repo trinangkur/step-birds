@@ -252,3 +252,13 @@
 .black {
   stroke: rgb(151, 148, 148);
 }
+
+.remove-access {
+  pointer-events: none;
+  background-color: #bbc7ff;
+}
+
+.add-access {
+  background-color: #4a61c8;
+  cursor: pointer;
+}
