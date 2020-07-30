@@ -10,7 +10,8 @@ const {
   getRemoveFollowerQuery,
   getProfileInfoQuery,
   getAllTweetsQuery,
-  getUpdateProfileQuery
+  getUpdateProfileQuery,
+  getFollowersQuery,
 } = require('../queries/queryStringGenerator');
 
 class DataStore {
@@ -20,7 +21,7 @@ class DataStore {
 
   runQuery(queryString, params) {
     return new Promise((resolve, reject) => {
-      this.db.run(queryString, params, err => {
+      this.db.run(queryString, params, (err) => {
         if (err) {
           reject(err);
         }
@@ -42,7 +43,7 @@ class DataStore {
 
   executeTransaction(transaction) {
     return new Promise((resolve, reject) => {
-      this.db.exec(transaction, err => {
+      this.db.exec(transaction, (err) => {
         if (err) {
           this.db.exec('ROLLBACK');
           return reject(err);
@@ -54,14 +55,14 @@ class DataStore {
   }
 
   addTweeter(details) {
-    const {login, avatar_url, name} = details;
+    const { login, avatar_url, name } = details;
     const columns = 'id, image_url, name';
     const values = `"${login}", "${avatar_url}", "${name}"`;
     const queryString = getInsertionQuery('Tweeter', columns, values);
     return new Promise((res, rej) => {
       this.runQuery(queryString, [])
         .then(res)
-        .catch(err => {
+        .catch((err) => {
           if (err.code === 'SQLITE_CONSTRAINT') {
             return res('already have an account');
           }
@@ -79,7 +80,7 @@ class DataStore {
   }
 
   deleteTweet(details) {
-    const {tweetId} = details;
+    const { tweetId } = details;
     const queryString = getDeleteQuery('Tweet', `id = "${tweetId}"`);
     return this.runQuery(queryString, []);
   }
@@ -97,14 +98,14 @@ class DataStore {
   getUserInfo(userId) {
     const queryString = getSelectQuery('Tweeter', {
       columns: ['*'],
-      condition: `id="${userId}"`
+      condition: `id="${userId}"`,
     });
 
     return this.getAllRows(queryString, []);
   }
 
   updateLikes(tweetId, userId) {
-    return new Promise(res => {
+    return new Promise((res) => {
       const increaseLikeSql = getIncreaseLikesQuery(tweetId, userId);
       this.executeTransaction(increaseLikeSql)
         .then(() => res('liked'))
@@ -120,7 +121,7 @@ class DataStore {
       const addFollowerSql = getAddFollowerQuery(tweeterId, userId);
       this.executeTransaction(addFollowerSql)
         .then(() => resolve('followed'))
-        .catch(err => {
+        .catch((err) => {
           if (err.code === 'SQLITE_CONSTRAINT') {
             const removeFollowerSql = getRemoveFollowerQuery(tweeterId, userId);
             this.executeTransaction(removeFollowerSql).then(() =>
@@ -147,6 +148,11 @@ class DataStore {
     const queryString = getUpdateProfileQuery(userId, name, bio);
     return this.runQuery(queryString, []);
   }
+
+  getFollowers(userId) {
+    const queryString = getFollowersQuery(userId);
+    return this.getAllRows(queryString, []);
+  }
 }
 
-module.exports = {DataStore};
+module.exports = { DataStore };
