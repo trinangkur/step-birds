@@ -1,4 +1,4 @@
-const getReplay = function() {
+const getReplay = function () {
   return `
   <div class="replay">
                 <div class="replay-icon">
@@ -15,7 +15,7 @@ const getReplay = function() {
   `;
 };
 
-const getRetweet = function() {
+const getRetweet = function () {
   return `
   <div class="retweet">
   <div class="retweet-icon">
@@ -32,7 +32,7 @@ const getRetweet = function() {
   `;
 };
 
-const getLike = function(id, likeCount, isLiked) {
+const getLike = function (id, likeCount, isLiked) {
   const colour = isLiked === 'true' ? 'red' : 'black';
   return `
   <div class="like">
@@ -50,7 +50,7 @@ const getLike = function(id, likeCount, isLiked) {
   `;
 };
 
-const getBookmark = function() {
+const getBookmark = function () {
   return `
   <div class="bookmark">
   <div class="bookmark-icon">
@@ -69,7 +69,7 @@ const getBookmark = function() {
   `;
 };
 
-const getTweetOptions = function(id, likeCount, isLiked) {
+const getTweetOptions = function (id, likeCount, isLiked) {
   return `
   <div class="tweet-options">
     ${getReplay()}
@@ -80,7 +80,7 @@ const getTweetOptions = function(id, likeCount, isLiked) {
   `;
 };
 
-const getRightSideOptions = function(isUsersTweet, id) {
+const getRightSideOptions = function (isUsersTweet, id) {
   return isUsersTweet
     ? `
     <div class="options" id="tweetId-${id}" onmouseleave="hideOptions(${id})">
@@ -93,9 +93,9 @@ const getRightSideOptions = function(isUsersTweet, id) {
     : '';
 };
 
-const createTweetHtml = function(tweet) {
-  const {content, id, isUsersTweet, isLiked, likeCount} = tweet;
-  const {userId, image_url, name, timeStamp} = tweet;
+const createTweetHtml = function (tweet) {
+  const { content, id, isUsersTweet, isLiked, likeCount } = tweet;
+  const { userId, image_url, name, timeStamp } = tweet;
   return `
   <div class="content-section">
   <div class="dp" onclick="getUserProfile('${userId}')">
@@ -111,7 +111,7 @@ const createTweetHtml = function(tweet) {
       <span></span>
       <span class="time-stamp"> &nbsp; ${moment(timeStamp).fromNow()}</span>
     </div>
-    <div class="content">${content}</div>
+    <div class="content" onClick="openTweet(${id})">${content}</div>
   </div>
   <div class="right-side-options" onclick="showTweetOptions(${id})">v</div>
 </div>
@@ -120,9 +120,9 @@ const createTweetHtml = function(tweet) {
   `;
 };
 
-const updateLikes = function(tweetId) {
+const updateLikes = function (tweetId) {
   const url = '/user/updateLikes';
-  sendPOSTRequest(url, {tweetId}, ({message}) => {
+  sendPOSTRequest(url, { tweetId }, ({ message }) => {
     const counterElement = document.querySelector(`#like-count-${tweetId}`);
     const count = +counterElement.innerText;
     const likeSvg = document.querySelector(`#like-svg-${tweetId}`);
@@ -137,24 +137,34 @@ const updateLikes = function(tweetId) {
   });
 };
 
-const showTweetOptions = function(id) {
+const showTweetOptions = function (id) {
   document.getElementById(`tweetId-${id}`).style.display = 'block';
 };
 
-const updateTweets = function(id, res) {
+const updateTweets = function (id, res) {
   if (res.status) {
     const element = document.getElementById(id);
     element.parentNode.removeChild(element);
   }
 };
 
-const deleteTweet = function(tweetId) {
+const deleteTweet = function (tweetId) {
   const url = '/user/deleteTweet';
-  const body = {tweetId};
-  sendPOSTRequest(url, body, res => updateTweets(tweetId, res));
+  const body = { tweetId };
+  sendPOSTRequest(url, body, (res) => updateTweets(tweetId, res));
 };
 
-const showTweet = function(tweet, parentElement) {
+const deleteTweetPage = function (tweetId) {
+  const url = '/user/deleteTweet';
+  const body = { tweetId };
+  sendPOSTRequest(url, body, (res) => {
+    if (res.status) {
+      location.assign('/user/home');
+    }
+  });
+};
+
+const showTweet = function (tweet, parentElement) {
   const element = document.createElement('div');
   element.id = tweet.id;
   element.className = 'tweet';
@@ -163,14 +173,14 @@ const showTweet = function(tweet, parentElement) {
   allTweets.prepend(element);
 };
 
-const hideOptions = function(id) {
+const hideOptions = function (id) {
   document.getElementById(`tweetId-${id}`).style.display = 'none';
 };
 
-const getLatestTweet = function(res) {
+const getLatestTweet = function (res) {
   if (res.status) {
     const url = '/user/getLatestTweet';
-    sendGETRequest(url, tweet => {
+    sendGETRequest(url, (tweet) => {
       const pageUserId = document.querySelector('#tweets').getAttribute('name');
       if (pageUserId === tweet.userId) {
         showTweet(tweet, 'tweets');
@@ -179,13 +189,17 @@ const getLatestTweet = function(res) {
   }
 };
 
-const postTweet = function(boxId) {
+const postTweet = function (boxId) {
   const tweetText = document.getElementById(`tweetText${boxId}`);
   const url = '/user/postTweet';
   if (tweetText.value) {
-    const body = {content: tweetText.value, timeStamp: new Date()};
+    const body = { content: tweetText.value, timeStamp: new Date() };
     sendPOSTRequest(url, body, getLatestTweet);
     tweetText.value = '';
     closeTweetPopUp();
   }
+};
+
+const openTweet = function (id) {
+  location.assign(`/user/tweet/${id}`);
 };

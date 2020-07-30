@@ -133,6 +133,7 @@
 }
 
 .content {
+  cursor: pointer;
   height: 70%;
   padding: 2%;
 }
