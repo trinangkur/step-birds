@@ -43,10 +43,6 @@ const userOptions = function (userOption) {
   }
 };
 
-const closeEditor = function () {
-  document.querySelector('#editor').style.display = 'none';
-};
-
 const updateProfile = function () {
   const name = document.querySelector('#name').value;
   const bio = document.querySelector('#bio').value;
@@ -85,18 +81,6 @@ const indicate = function(id) {
 const removeIndication = function(id) {
   const element = document.querySelector(`#${id}`);
   element.classList.remove('indicator');
-};
-
-const show = function(elementId) {
-  const element = document.querySelector(`#${elementId}`);
-  element.classList.remove('hide');
-  element.classList.add('show');
-};
-
-const hide = function (elementId) {
-  const element = document.querySelector(`#${elementId}`);
-  element.classList.add('hide');
-  element.classList.remove('show');
 };
 
 const showUserLikedTweets = function () {

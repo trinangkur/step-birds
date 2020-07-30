@@ -204,7 +204,30 @@ const openTweet = function(id) {
   location.assign(`/user/tweet/${id}`);
 };
 
+const closeEditor = function() {
+  document.querySelector('#editor').classList.add('hide');
+};
+
+const show = function(elementId) {
+  const element = document.querySelector(`#${elementId}`);
+  element.classList.remove('hide');
+  element.classList.add('show');
+};
+
+const hide = function(elementId) {
+  const element = document.querySelector(`#${elementId}`);
+  element.classList.add('hide');
+  element.classList.remove('show');
+};
+
 const showLikedBy = function(tweetId) {
   const url = '/user/getLikedBy';
-  sendPOSTRequest(url, { tweetId }, (tweeters) => {});
+  const element = document.querySelector('#liked-user');
+  sendPOSTRequest(url, { tweetId }, (tweeters) => {
+    element.innerHTML = '';
+    tweeters.forEach((tweet) => {
+      element.innerHTML += createProfileTemplate(tweet);
+    });
+  });
+  show('editor');
 };

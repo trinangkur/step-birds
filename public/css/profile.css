@@ -68,7 +68,6 @@
   background-color: rgba(0, 0, 0, 0.4);
   position: absolute;
   padding: 2%;
-  display: none;
 }
 
 #edit-panel {
@@ -148,14 +147,6 @@
   color: #4a61c8;
 }
 
-.show {
-  display: block;
-}
-
-.hide {
-  display: none;
-}
-
 #user-tweets {
   width: 30%;
   cursor: pointer;
@@ -181,4 +172,12 @@
 
 .indicator {
   border-bottom: solid 2px #4a61c8;
+}
+
+.like-count > span {
+  cursor: pointer;
+}
+
+.like-count > span:hover {
+  border-bottom: 0.5px solid gray;
 }

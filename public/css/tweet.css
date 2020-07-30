@@ -263,3 +263,31 @@
   background-color: #4a61c8;
   cursor: pointer;
 }
+
+.tweet-reactions {
+  display: flex;
+}
+
+.popup-header {
+  display: flex;
+  height: 9%;
+  justify-content: start;
+  border-bottom: 0.5px solid lightgray;
+}
+
+.head {
+  margin: -0.8% 0% 0% 2%;
+  font-size: larger;
+}
+
+.show {
+  display: block;
+}
+
+.hide {
+  display: none;
+}
+
+#liked-user {
+  height: 100%;
+}
