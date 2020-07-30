@@ -98,7 +98,7 @@ const createTweetHtml = function (tweet) {
   const { userId, image_url, name, timeStamp } = tweet;
   return `
   <div class="content-section">
-  <div class="dp">
+  <div class="dp" onclick="getUserProfile('${userId}')">
     <img
       src="${image_url}"
       alt="not found"
@@ -106,7 +106,7 @@ const createTweetHtml = function (tweet) {
   </div>
   <div class="info">
     <div class="user-info">
-      <span class="user-name">${name}</span>
+      <span class="user-name" onclick="getUserProfile('${userId}')">${name}</span>
       <span class="user-id">@${userId}</span>
       <span></span>
       <span class="time-stamp"> &nbsp; ${moment(timeStamp).fromNow()}</span>

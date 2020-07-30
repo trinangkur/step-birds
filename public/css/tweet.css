@@ -93,6 +93,7 @@
 
 .dp {
   width: 10%;
+  cursor: pointer;
 }
 
 .dp > img {
@@ -115,8 +116,14 @@
 
 .user-name {
   font-size: larger;
+  color: #373737;
   margin: 1% 1% 0% 0%;
   font-weight: 500;
+  cursor: pointer;
+}
+
+.user-name :hover {
+  color: black;
 }
 
 .user-id,
