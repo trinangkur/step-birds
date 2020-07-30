@@ -31,12 +31,12 @@ INSERT INTO Followers (followerId, followingId) VALUES
 ('rahit', 'revathi');
 
 UPDATE Tweeter
-	SET followersCount =followersCount + 1
-	WHERE id is 'revathi';
+  SET followersCount =followersCount + 1
+  WHERE id is 'revathi';
 
 UPDATE Tweeter
-	SET followingCount = followingCount + 1
-	WHERE id is 'rahit';
+  SET followingCount = followingCount + 1
+  WHERE id is 'rahit';
 
 COMMIT;
 
@@ -48,12 +48,12 @@ INSERT INTO Followers (followerId, followingId) VALUES
 ('revathi', 'rahit');
 
 UPDATE Tweeter
-	SET followersCount = followersCount + 1
-	WHERE id is 'rahit';
+  SET followersCount = followersCount + 1
+  WHERE id is 'rahit';
 
 UPDATE Tweeter
-	SET followingCount = followingCount + 1
-	WHERE id is 'revathi';
+  SET followingCount = followingCount + 1
+  WHERE id is 'revathi';
 
 COMMIT;
 
@@ -63,12 +63,12 @@ INSERT INTO Followers (followerId, followingId) VALUES
 ('revathi', 'vikram');
 
 UPDATE Tweeter
-	SET followersCount = followersCount + 1
-	WHERE id is 'virkam';
+  SET followersCount = followersCount + 1
+  WHERE id is 'virkam';
 
 UPDATE Tweeter
-	SET followingCount = followingCount + 1
-	WHERE id is 'revathi';
+  SET followingCount = followingCount + 1
+  WHERE id is 'revathi';
 
 COMMIT;
 
@@ -80,11 +80,11 @@ SELECT * FROM Tweeter;
 BEGIN TRANSACTION;
 
 INSERT INTO Likes (tweetId,userId) 
-	VALUES('1','rahit');
+  VALUES('1','rahit');
 
 UPDATE Tweet
-	SET likeCount=likeCount + 1
-	WHERE id is 1;
+  SET likeCount=likeCount + 1
+  WHERE id is 1;
 
 COMMIT;
 
@@ -103,13 +103,13 @@ select  Tweet.id as id
   from Tweet
   left join Tweeter
     on Tweet.userId = Tweeter.id
-		where userId is 'rahit';
+    where userId is 'rahit';
 
 WITH homeDetails as (
-	SELECT * From Tweet
-	LEFT JOIN Followers
-	on Tweet.userId = Followers.followingId
-	WHERE Followers.followerId = 'revathi'
+  SELECT * From Tweet
+  LEFT JOIN Followers
+  on Tweet.userId = Followers.followingId
+  WHERE Followers.followerId = 'revathi'
 ) 
 SELECT *
  FROM homeDetails LEFT JOIN Tweeter
@@ -124,11 +124,11 @@ SELECT *
 BEGIN TRANSACTION;
 
 INSERT INTO Likes (tweetId,userId) 
-	VALUES('1','revathi');
+  VALUES('1','revathi');
 
 UPDATE Tweet
-	SET likeCount=likeCount + 1
-	WHERE id is 1;
+  SET likeCount=likeCount + 1
+  WHERE id is 1;
 
 COMMIT;
 
@@ -136,45 +136,60 @@ COMMIT;
 SELECT * from Tweeter;
 SELECT * from Tweet;
 SELECT 
-	t2.id as userId
-	,t2.name as userName
-	,t1.id as tweetId
-	,t1.content
-	,t1.timeStamp
-	,t1.likeCount
-	,t1.replyCount
-	,t1.replyCount
-	FROM Tweet t1 LEFT JOIN Tweeter t2 
-	on t2.id is t1.userId;
+  t2.id as userId
+  ,t2.name as userName
+  ,t1.id as tweetId
+  ,t1.content
+  ,t1.timeStamp
+  ,t1.likeCount
+  ,t1.replyCount
+  ,t1.replyCount
+  FROM Tweet t1 LEFT JOIN Tweeter t2 
+  on t2.id is t1.userId;
 
-SELECT * from Likes;
-SELECT * from Tweet;
-SELECT * from Likes;
 
 
 
 with tweets as
 (SELECT 
-	t2.id as user_id
-	,t2.name as userName
-	,t1.id as tweet_id
-	,t1.content
-	,t1.timeStamp
-	,t1.likeCount
-	,t1.replyCount
-	FROM Tweet t1 LEFT JOIN Tweeter t2 
-	on t2.id is t1.userId 
-	where t1.userId is 'revathi')
-	SELECT *,
-		CASE 
-			WHEN tweets.tweet_id is Likes.tweetId
-			and Likes.userId is 'revathi'
-			then 'true'
-			else 'false'
-			end status
-	FROM tweets LEFT JOIN Likes
-	on Likes.userId='revathi' 
-	and Likes.tweetId=tweets.tweet_id;
+  t2.id as user_id
+  ,t2.name as userName
+  ,t1.id as tweet_id
+  ,t1.content
+  ,t1.timeStamp
+  ,t1.likeCount
+  ,t1.replyCount
+  FROM Tweet t1 LEFT JOIN Tweeter t2 
+  on t2.id is t1.userId 
+  where t1.userId is 'revathi')
+  SELECT *,
+    CASE 
+      WHEN tweets.tweet_id is Likes.tweetId
+      and Likes.userId is 'revathi'
+      then 'true'
+      else 'false'
+      end status
+  FROM tweets LEFT JOIN Likes
+  on Likes.userId='revathi' 
+  and Likes.tweetId=tweets.tweet_id;
 
 -- working
 
+
+SELECT * from Likes where userId is 'revathi';
+SELECT * from Tweet;
+SELECT * from Likes;
+
+SELECT * from Tweet tab1 left join Likes tab2 where tab1.userId is 'revathi';
+
+with tweets as(SELECT * from Likes,Tweet where Likes.userId is 'revathi' and Tweet.id=Likes.tweetId)
+SELECT *,
+        CASE
+        when tweets.tweetId is Likes.tweetId
+        and Likes.userId is 'rahit'
+        then 'true'
+        else 'false'
+        end did_rahit_liked
+        from tweets LEFT JOIN Likes
+        on Likes.userId='rahit' 
+  and Likes.tweetId=tweets.tweetId;
