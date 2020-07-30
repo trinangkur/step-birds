@@ -15,6 +15,7 @@ const {
   getFollowingsQuery,
   getLikedTweetsQuery,
   getSpecificTweetQuery,
+  getLikedByQuery,
 } = require('../queries/queryStringGenerator');
 
 class DataStore {
@@ -168,6 +169,11 @@ class DataStore {
 
   getTweet(tweetId, userId) {
     const queryString = getSpecificTweetQuery(tweetId, userId);
+    return this.getAllRows(queryString, []);
+  }
+
+  getLikedBy(tweetId) {
+    const queryString = getLikedByQuery(tweetId);
     return this.getAllRows(queryString, []);
   }
 }

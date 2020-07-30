@@ -77,7 +77,17 @@ const getLikedTweets = function () {
   });
 };
 
-const show = function (elementId) {
+const indicate = function(id) {
+  const element = document.querySelector(`#${id}`);
+  element.classList.add('indicator');
+};
+
+const removeIndication = function(id) {
+  const element = document.querySelector(`#${id}`);
+  element.classList.remove('indicator');
+};
+
+const show = function(elementId) {
   const element = document.querySelector(`#${elementId}`);
   element.classList.remove('hide');
   element.classList.add('show');
@@ -93,15 +103,33 @@ const showUserLikedTweets = function () {
   hide('tweets');
   hide('tweets-and-replies');
   show('likes');
+  indicate('user-likes');
+  removeIndication('user-tweets');
+  removeIndication('user-tweets-and-replies');
+};
+
+const showUserTweetsAndReplies = function() {
+  hide('likes');
+  hide('tweets-and-replies');
+  show('tweets');
+  indicate('user-tweets-and-replies');
+  removeIndication('user-likes');
+  removeIndication('user-tweets');
 };
 
 const showUserTweets = function () {
   hide('likes');
   hide('tweets-and-replies');
   show('tweets');
+
+  indicate('user-tweets');
+  removeIndication('user-likes');
+  removeIndication('user-tweets-and-replies');
 };
 
-const main = function () {
+const showIndicator = function() {};
+
+const main = function() {
   getUserTweets();
   getLikedTweets();
 };

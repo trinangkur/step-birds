@@ -1,4 +1,4 @@
-const authorizeUser = function (req, res, next) {
+const authorizeUser = function(req, res, next) {
   const { sessions } = req.app.locals;
   const userId = sessions.getUserId(req.cookies._SID);
 
@@ -9,7 +9,7 @@ const authorizeUser = function (req, res, next) {
   res.redirect('/login.html');
 };
 
-const postTweet = function (req, res) {
+const postTweet = function(req, res) {
   const { content, timeStamp } = req.body;
   const { dataStore } = req.app.locals;
   const postDetails = { userId: req.userId, content, type: 'tweet', timeStamp };
@@ -18,7 +18,7 @@ const postTweet = function (req, res) {
   });
 };
 
-const deleteTweet = function (req, res) {
+const deleteTweet = function(req, res) {
   const { tweetId } = req.body;
   const { dataStore } = req.app.locals;
   dataStore.deleteTweet(tweetId).then(() => {
@@ -26,7 +26,7 @@ const deleteTweet = function (req, res) {
   });
 };
 
-const getLatestTweet = function (req, res) {
+const getLatestTweet = function(req, res) {
   const { dataStore } = req.app.locals;
 
   dataStore.getUserTweets(req.userId, req.userId).then((tweets) => {
@@ -36,7 +36,7 @@ const getLatestTweet = function (req, res) {
   });
 };
 
-const searchProfile = function (req, res) {
+const searchProfile = function(req, res) {
   const { dataStore } = req.app.locals;
   const { name } = req.body;
   dataStore.getUserProfiles(name).then((profiles) => {
@@ -44,7 +44,7 @@ const searchProfile = function (req, res) {
   });
 };
 
-const serveProfile = function (req, res) {
+const serveProfile = function(req, res) {
   const { dataStore } = req.app.locals;
   dataStore.getUserInfo(req.userId).then(([userInfo]) => {
     dataStore
@@ -66,7 +66,7 @@ const serveProfile = function (req, res) {
   });
 };
 
-const serveUserTweets = function (req, res) {
+const serveUserTweets = function(req, res) {
   req.app.locals.dataStore
     .getUserTweets(req.body.id, req.userId)
     .then((tweets) => {
@@ -77,11 +77,11 @@ const serveUserTweets = function (req, res) {
     });
 };
 
-const redirectUserProfile = function (req, res) {
+const redirectUserProfile = function(req, res) {
   res.redirect(`/user/profile/${req.userId}`);
 };
 
-const serveHome = function (req, res) {
+const serveHome = function(req, res) {
   const { dataStore } = req.app.locals;
   dataStore.getUserInfo(req.userId).then((userInfo) => {
     const { image_url, id } = userInfo[0];
@@ -93,7 +93,7 @@ const serveHome = function (req, res) {
   });
 };
 
-const updateLikes = function (req, res) {
+const updateLikes = function(req, res) {
   const { dataStore } = req.app.locals;
   const { tweetId } = req.body;
   dataStore.updateLikes(tweetId, req.userId).then((message) => {
@@ -101,7 +101,7 @@ const updateLikes = function (req, res) {
   });
 };
 
-const toggleFollow = function (req, res) {
+const toggleFollow = function(req, res) {
   const { dataStore } = req.app.locals;
   const { tweeter } = req.body;
   dataStore.toggleFollow(tweeter, req.userId).then((status) => {
@@ -109,7 +109,7 @@ const toggleFollow = function (req, res) {
   });
 };
 
-const serveAllTweets = function (req, res) {
+const serveAllTweets = function(req, res) {
   const { dataStore } = req.app.locals;
   dataStore.getAllTweets(req.userId, req.userId).then((tweets) => {
     tweets.forEach((tweet) => {
@@ -119,7 +119,7 @@ const serveAllTweets = function (req, res) {
   });
 };
 
-const updateProfile = function (req, res) {
+const updateProfile = function(req, res) {
   const { dataStore } = req.app.locals;
   const { name, bio } = req.body;
   dataStore.updateProfile(req.userId, name, bio).then(() => {
@@ -127,21 +127,21 @@ const updateProfile = function (req, res) {
   });
 };
 
-const serveFollowers = function (req, res) {
+const serveFollowers = function(req, res) {
   const { dataStore } = req.app.locals;
   dataStore.getFollowers(req.params.id).then((followers) => {
     res.render('follower', { followers, userId: req.params.id });
   });
 };
 
-const serveFollowings = function (req, res) {
+const serveFollowings = function(req, res) {
   const { dataStore } = req.app.locals;
   dataStore.getFollowings(req.params.id).then((followings) => {
     res.render('follower', { followings, userId: req.params.id });
   });
 };
 
-const getLikedTweets = function (req, res) {
+const getLikedTweets = function(req, res) {
   const { dataStore } = req.app.locals;
   const { id } = req.body;
   dataStore.getLikedTweets(id, req.userId).then((tweets) => {
@@ -152,12 +152,20 @@ const getLikedTweets = function (req, res) {
   });
 };
 
-const serveTweet = function (req, res) {
+const serveTweet = function(req, res) {
   const { dataStore } = req.app.locals;
   dataStore.getTweet(req.params.id, req.userId).then(([tweet]) => {
     tweet.isUsersTweet = tweet.userId === req.userId;
     tweet.timeStamp = new Date(tweet.timeStamp).toLocaleString();
     res.render('tweet', { tweet });
+  });
+};
+
+const getLikedBy = function(req, res) {
+  const { dataStore } = req.app.locals;
+  const { tweetId } = req.body;
+  dataStore.getLikedBy(tweetId).then((tweeters) => {
+    res.json(tweeters);
   });
 };
 
@@ -179,4 +187,5 @@ module.exports = {
   serveFollowings,
   getLikedTweets,
   serveTweet,
+  getLikedBy,
 };

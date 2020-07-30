@@ -175,4 +175,10 @@
 #option2,
 #option3 {
   font-size: larger;
+  text-align: center;
+  margin-top: 4%;
+}
+
+.indicator {
+  border-bottom: solid 2px #4a61c8;
 }

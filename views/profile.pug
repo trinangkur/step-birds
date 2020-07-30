@@ -26,15 +26,12 @@ body(onload="main()")
       div#user-options
         input(type="button", value=userOption onclick="userOptions(this);")
     div#option-bar
-      #user-tweets(onclick="showUserTweets()")
-        span#option1 Tweets 
-        span.indicator
+      #user-tweets.indicator(onclick="showUserTweets()")
+        #option1 Tweets 
       #user-tweets-and-replies(onclick="showUserTweetsAndReplies()")
-        span#option2 Tweets&Replies
-        span.indicator
+        #option2 Tweets&Replies
       #user-likes(onclick="showUserLikedTweets()")
-        span#option3 Likes 
-        span.indicator
+        #option3 Likes 
     div#tweets.show(name=id)
     div#tweets-and-replies.hide
     div#likes.hide
