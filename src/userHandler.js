@@ -131,7 +131,14 @@ const updateProfile = function (req, res) {
 const serveFollowers = function (req, res) {
   const { dataStore } = req.app.locals;
   dataStore.getFollowers(req.params.id).then((followers) => {
-    res.render('follower', followers);
+    res.render('follower', { followers, userId: req.params.id });
+  });
+};
+
+const serveFollowings = function (req, res) {
+  const { dataStore } = req.app.locals;
+  dataStore.getFollowings(req.params.id).then((followings) => {
+    res.render('follower', { followings, userId: req.params.id });
   });
 };
 
@@ -150,4 +157,5 @@ module.exports = {
   serveAllTweets,
   updateProfile,
   serveFollowers,
+  serveFollowings,
 };

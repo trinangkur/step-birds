@@ -4,7 +4,7 @@
   width: 100%;
   margin: 2% 0% 0% 2%;
   cursor: pointer;
-  border-bottom: solid 1px lightgrey
+  border-bottom: solid 1px lightgrey;
 }
 
 .profileLink > img {
@@ -20,4 +20,19 @@
 .profileLink > h3 {
   margin: 4.5% 0% 0% 1%;
   font-weight: 500;
+}
+
+#followers {
+  margin: 0%;
+}
+
+#header > a {
+  font-size: 0.8vw;
+  margin: 2%;
+}
+
+#header > span {
+  font-weight: 500;
+  font-size: 2vw;
+  margin: 1vw;
 }

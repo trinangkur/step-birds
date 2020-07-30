@@ -10,7 +10,7 @@ const getReplay = function () {
                     </g>
                   </svg>
                 </div>
-                <div class="replay-count">400</div>
+                <div class="replay-count">0</div>
               </div>
   `;
 };
@@ -27,7 +27,7 @@ const getRetweet = function () {
       </g>
     </svg>
   </div>
-  <div class="retweet-count">400</div>
+  <div class="retweet-count">0</div>
 </div>
   `;
 };

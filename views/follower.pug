@@ -1,0 +1,27 @@
+head
+  link(href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css' rel='stylesheet')
+
+  body(onload="()=>{}")
+  include ./commonPart.pug
+  #content-box()
+    #header()
+      a(href=`/user/profile/${userId}`)
+        i(class="fas fa-arrow-left fa-2x back-arrow")
+      - let list
+      - let header
+        if followers
+         - list = followers
+         - header = "Followers"
+        else
+         - list = followings
+         - header = "Following"
+        span= header
+    div#followers
+      each item in list
+        div(class="profileLink" onclick=`getUserProfile('${item.id}')`)
+          img(src=`${item.image_url}`)
+          h3= item.name
+          p @#{item.id} 
+
+  
+#right-side-bar

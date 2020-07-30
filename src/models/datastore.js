@@ -12,6 +12,7 @@ const {
   getAllTweetsQuery,
   getUpdateProfileQuery,
   getFollowersQuery,
+  getFollowingsQuery,
 } = require('../queries/queryStringGenerator');
 
 class DataStore {
@@ -151,6 +152,11 @@ class DataStore {
 
   getFollowers(userId) {
     const queryString = getFollowersQuery(userId);
+    return this.getAllRows(queryString, []);
+  }
+
+  getFollowings(userId) {
+    const queryString = getFollowingsQuery(userId);
     return this.getAllRows(queryString, []);
   }
 }

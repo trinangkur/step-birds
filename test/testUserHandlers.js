@@ -248,3 +248,15 @@ describe('getAllTweets', function () {
     request(app).get('/user/getAllTweets').expect(expected).expect(200, done);
   });
 });
+
+describe('/user/followers/:id', () => {
+  it('should redirect to the follower page of user', (done) => {
+    request(app).get('/user/followers/ramu').expect(200, done);
+  });
+});
+
+describe('/user/followings/:id', () => {
+  it('should redirect to the follower page of user', (done) => {
+    request(app).get('/user/followings/vikram').expect(200, done);
+  });
+});

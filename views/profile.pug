@@ -19,9 +19,9 @@ body(onload="main()")
           p #{bio}
         p#joined-at Joined: #{joinedAt}
         p 
-          span Following: 
+          span(class="follow-tags" onclick=`showFollowingList('${id}')`) Following: 
           span#following-count #{followingCount}
-          span  &nbsp&nbsp Followers: 
+          span(class="follow-tags" onclick=`showFollowersList('${id}')`)  &nbsp&nbsp Followers: 
           span#follower-count #{followersCount}
       div#user-options
         input(type="button", value=userOption onclick="userOptions(this);")

@@ -148,6 +148,13 @@ const getFollowersQuery = function (userId) {
     WHERE Followers.followingId is '${userId}';`;
 };
 
+const getFollowingsQuery = function (userId) {
+  return `SELECT * FROM 
+    Followers LEFT JOIN Tweeter
+    ON Tweeter.id = Followers.followingId
+    WHERE Followers.followerId is '${userId}';`;
+};
+
 module.exports = {
   getInsertionQuery,
   getDeleteQuery,
@@ -162,4 +169,5 @@ module.exports = {
   getAllTweetsQuery,
   getUpdateProfileQuery,
   getFollowersQuery,
+  getFollowingsQuery,
 };

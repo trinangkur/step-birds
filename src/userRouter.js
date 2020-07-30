@@ -14,6 +14,7 @@ const {
   serveAllTweets,
   updateProfile,
   serveFollowers,
+  serveFollowings,
 } = require('./userHandler');
 
 const userRouter = express.Router();
@@ -43,6 +44,8 @@ userRouter.get('/getAllTweets', serveAllTweets);
 
 userRouter.post('/updateProfile', updateProfile);
 
-userRouter.get('/follower/:id', serveFollowers);
+userRouter.get('/followers/:id', serveFollowers);
+
+userRouter.get('/followings/:id', serveFollowings);
 
 module.exports = { userRouter };
