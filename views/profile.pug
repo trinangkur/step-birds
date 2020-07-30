@@ -26,8 +26,18 @@ body(onload="main()")
       div#user-options
         input(type="button", value=userOption onclick="userOptions(this);")
     div#option-bar
-      h3 Tweets
-    div#tweets(name=id)
+      #user-tweets(onclick="showUserTweets()")
+        span#option1 Tweets 
+        span.indicator
+      #user-tweets-and-replies(onclick="showUserTweetsAndReplies()")
+        span#option2 Tweets&Replies
+        span.indicator
+      #user-likes(onclick="showUserLikedTweets()")
+        span#option3 Likes 
+        span.indicator
+    div#tweets.show(name=id)
+    div#tweets-and-replies.hide
+    div#likes.hide
   #editor
     #edit-panel
       #editor-header

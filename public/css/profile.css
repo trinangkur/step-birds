@@ -2,6 +2,7 @@
   display: flex;
   justify-content: space-around;
   border-bottom: 0.5px solid lightgray;
+  height: 6%;
 }
 
 #profile-icon {
@@ -36,7 +37,9 @@
   border: solid 0.5px white;
 }
 
-#tweets {
+#tweets,
+#replies,
+#likes {
   height: 100%;
   overflow-x: hidden;
   overflow-y: scroll;
@@ -143,4 +146,33 @@
 .follow-tags:hover {
   cursor: pointer;
   color: #4a61c8;
+}
+
+.show {
+  display: block;
+}
+
+.hide {
+  display: none;
+}
+
+#user-tweets {
+  width: 30%;
+  cursor: pointer;
+}
+
+#user-tweets-and-replies {
+  width: 40%;
+  cursor: pointer;
+}
+
+#user-likes {
+  width: 30%;
+  cursor: pointer;
+}
+
+#option1,
+#option2,
+#option3 {
+  font-size: larger;
 }
