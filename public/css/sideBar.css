@@ -10,6 +10,77 @@ body {
   display: flex;
 }
 
+#left-side-bar {
+  height: 100%;
+  width: 25%;
+  background-color: white;
+  border-right: solid 0.5px lightgray;
+}
+
+#logo {
+  height: 10%;
+  margin: 2% 0% 0% 20%;
+  border: solid 0.5px white;
+}
+
+.sideBarElements {
+  margin: 0% 0% 6% 20%;
+  font-weight: bold;
+  display: flex;
+  height: 8%;
+}
+
+#search-box {
+  height: 60%;
+  width: 80%;
+  border-radius: 50px;
+  padding-left: 16px;
+  font-size: larger;
+  outline: none;
+  color: rgb(75, 74, 74);
+}
+
+.icon {
+  margin-top: 12%;
+  margin-right: 6%;
+  margin-left: 2%;
+}
+
+.rapper {
+  display: flex;
+  width: 50%;
+  height: 60%;
+  padding-bottom: 10%;
+  padding-left: 4%;
+  cursor: pointer;
+}
+
+.rapper:hover {
+  color: #8296ec;
+  border-radius: 50px;
+  background-color: rgb(220, 220, 220);
+}
+
+#tweetLogo {
+  background-color: #4a61c8;
+  color: white;
+  width: 161%;
+  height: 60%;
+  cursor: pointer;
+  padding-left: 47%;
+  padding-top: 10%;
+  border-radius: 50px;
+  margin-left: 10%;
+  font-weight: 100;
+}
+
+#right-side-bar {
+  height: 100%;
+  width: 25%;
+  background-color: white;
+  border-left: solid 0.5px lightgray;
+}
+
 #tweetPopUp {
   background-color: white;
   display: none;
@@ -83,56 +154,9 @@ select:focus {
   height: 13%;
 }
 
-#left-side-bar {
-  height: 100%;
-  width: 25%;
-  background-color: white;
-  border-right: solid 0.5px lightgray;
-}
-
-.sideBarElements {
-  margin: 0% 0% 6% 20%;
-  font-weight: bold;
-  display: flex;
-  height: 8%;
-}
-
-#search-box {
-  height: 60%;
-  width: 80%;
-  border-radius: 50px;
-  padding-left: 16px;
-  font-size: larger;
-  outline: none;
-  color: rgb(75, 74, 74);
-}
-
-#tweetLogo {
-  background-color: #4a61c8;
-  color: white;
-  width: 161%;
-  height: 60%;
-  cursor: pointer;
-  padding-left: 47%;
-  padding-top: 10%;
-  border-radius: 50px;
-  margin-left: 10%;
-  font-weight: 100;
-}
-
-.rapper {
-  display: flex;
-  width: 50%;
-  height: 60%;
-  padding-bottom: 10%;
-  padding-left: 4%;
-  cursor: pointer;
-}
-
-.icon {
-  margin-top: 12%;
-  margin-right: 6%;
-  margin-left: 2%;
+.home {
+  color: #4a61c8;
+  font-weight: bolder;
 }
 
 .svg-icon {
@@ -145,33 +169,8 @@ select:focus {
   background-color: black;
 }
 
-#logo {
-  height: 10%;
-  margin: 2% 0% 0% 20%;
-  border: solid 0.5px white;
-}
-
-
-#home {
-  color: #4a61c8;
-  font-weight: bolder;
-}
-
 .change-svg-colour {
   fill: #4a61c8;
-}
-
-.rapper:hover {
-  color: #8296ec;
-  border-radius: 50px;
-  background-color: rgb(220, 220, 220);
-}
-
-#right-side-bar {
-  height: 100%;
-  width: 25%;
-  background-color: white;
-  border-left: solid 0.5px lightgray;
 }
 
 #tweet-box {

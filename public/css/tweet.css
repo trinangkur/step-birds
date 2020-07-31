@@ -165,10 +165,7 @@
   color: rgb(230, 91, 133);
 }
 
-.replay,
-.retweet,
-.like,
-.bookmark {
+.option {
   width: 25%;
   display: flex;
   padding: 1%;
@@ -178,7 +175,7 @@
 .retweet-icon,
 .like-icon,
 .bookmark-icon {
-  height: 58%;
+  height: 16%;
   width: 12%;
   margin-left: 36%;
   border-radius: 50%;
@@ -266,6 +263,9 @@
 
 .tweet-reactions {
   display: flex;
+  display: flex;
+  margin-top: -2%;
+  margin-left: 1%;
 }
 
 .popup-header {
@@ -276,7 +276,7 @@
 }
 
 .head {
-  margin: -0.8% 0% 0% 2%;
+  margin: 1.2% 0% 0% 2%;
   font-size: larger;
 }
 
@@ -290,4 +290,12 @@
 
 #liked-user {
   height: 100%;
+  overflow: scroll;
 }
+
+#specific-tweet {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  height: 10%;
+}
+

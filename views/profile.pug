@@ -38,13 +38,15 @@ body(onload="main()")
   #editor.hide
     #edit-panel
       #editor-header
-        #close(onclick="closeEditor()") X
+        #close(onclick="hide('editor')") X
         h3#heading Edit Profile
         button#save-button(onclick="updateProfile()") Save
       #user-profile
         img(src=image_url, alt="N/A")
-      #edit-username
-        input#name(type="text", name="name" placeholder=profile)
-      #edit-bio
-        textarea#bio(name="name", cols="28", rows="10" placeholder=bio )
+      .edit-details
+        span Name
+        textarea#name(name="name", cols="30", rows="10")
+      .edit-details
+        span Your Bio
+        textarea#bio(name="bio", cols="28", rows="10")
   #right-side-bar

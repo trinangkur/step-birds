@@ -84,15 +84,18 @@
   display: flex;
   height: 9%;
   justify-content: space-between;
+  margin-bottom: 4%;
 }
 
 #close {
   width: 10%;
   cursor: pointer;
+  margin-top: 2.4%;
 }
 
 #heading {
   width: 40%;
+  margin: 1%;  
 }
 
 #save-button {
@@ -108,17 +111,34 @@
 
 #user-profile {
   height: 30%;
+}
+
+/* #user-profile > span {
   border-radius: 50%;
-}
+} */
 
-#edit-username {
+.edit-details {
   height: 15%;
+  display: grid;
+  background-color: rgb(245, 248, 250);
+  border-bottom: 2px solid rgb(101, 119, 135);
+  padding: 2%;
+  margin-bottom: 10%;
 }
 
-#edit-username > input {
+.edit-details span {
+  color: rgb(101, 119, 135);
+  margin-bottom: 2%;
+}
+
+.edit-details > textarea {
   text-decoration: none;
+  border: none;
+  background-color: rgb(245, 248, 250);
+  font-size: x-large;
+  font-weight: 300;
 }
-
+/* 
 #edit-bio {
   height: 40%;
 }
@@ -127,12 +147,13 @@
   text-decoration: none;
   height: 100%;
   width: 100%;
-}
+} */
 
 #user-profile img {
   height: 110px;
   width: 110px;
-}
+  border-radius: 50%;
+} 
 
 #profile-name {
   font-size: x-large;

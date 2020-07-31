@@ -1,6 +1,6 @@
 const getReplay = function() {
   return `
-  <div class="replay">
+  <div class="option">
                 <div class="replay-icon">
                   <svg class="replay-svg" viewBox="0 0 24 24">
                     <g>
@@ -17,7 +17,7 @@ const getReplay = function() {
 
 const getRetweet = function() {
   return `
-  <div class="retweet">
+  <div class="option">
   <div class="retweet-icon">
     <svg class="retweet-svg" viewBox="0 0 24 24">
       <g>
@@ -35,7 +35,7 @@ const getRetweet = function() {
 const getLike = function(id, likeCount, isLiked) {
   const colour = isLiked === 'true' ? 'red' : 'black';
   return `
-  <div class="like">
+  <div class="option">
   <div class="like-icon" onclick="updateLikes('${id}')">
     <svg viewBox="0 0 24 24" class="like-svg ${colour}" id="like-svg-${id}">
       <g>
@@ -52,7 +52,7 @@ const getLike = function(id, likeCount, isLiked) {
 
 const getBookmark = function() {
   return `
-  <div class="bookmark">
+  <div class="option">
   <div class="bookmark-icon">
     <svg class="bookmark-svg">
       <g>
@@ -202,10 +202,6 @@ const postTweet = function(boxId) {
 
 const openTweet = function(id) {
   location.assign(`/user/tweet/${id}`);
-};
-
-const closeEditor = function() {
-  document.querySelector('#editor').classList.add('hide');
 };
 
 const show = function(elementId) {
