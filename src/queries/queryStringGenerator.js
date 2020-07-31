@@ -209,7 +209,7 @@ const getRepliedTweetQuery = function (userId, loggedInUser) {
   return `WITH tweets as ( WITH RepliedTweets as 
     (SELECT Tweet.id, Tweet.userId,
      Tweet.content, Tweet._type,
-     Tweet.replyCount, Tweet.likeCount
+     Tweet.replyCount, Tweet.likeCount, Tweet.retweetCount
     FROM Tweet LEFT JOIN Tweet as Replies
   ON Replies.reference = Tweet.id 
   AND Tweet._type = 'tweet' AND Replies._type = 'reply'

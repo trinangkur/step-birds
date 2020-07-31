@@ -264,7 +264,7 @@ describe('/user/postReply', function () {
   before(() => {
     app.locals.sessions = { getUserId: () => 'vikram' };
   });
-  it('should', function (done) {
+  it('should post a reply', function (done) {
     const body = {
       content: 'nice reply',
       timeStamp: 'oneTimeStamp',
@@ -282,7 +282,7 @@ describe('/user/getReplies', function () {
   before(() => {
     app.locals.sessions = { getUserId: () => 'revathi' };
   });
-  it('should', function (done) {
+  it('should get reply of a given tweet id', function (done) {
     const body = {
       tweetId: 7,
     };
@@ -298,6 +298,7 @@ describe('/user/getReplies', function () {
           timeStamp: 'oneTimeStamp',
           likeCount: 0,
           replyCount: 0,
+          retweetCount: 0,
           reference: 7,
           name: 'Vikram Singh',
           joiningDate: '11/06/2018',
@@ -317,7 +318,7 @@ describe('/user/getRepliedTweets', function () {
   before(() => {
     app.locals.sessions = { getUserId: () => 'vikram' };
   });
-  it('should', function (done) {
+  it('should get all tweets where user have replied', function (done) {
     const body = {
       userId: 'vikram',
     };
@@ -331,6 +332,7 @@ describe('/user/getRepliedTweets', function () {
           content: 'My laptop is broken :(',
           _type: 'tweet',
           replyCount: 1,
+          retweetCount: 0,
           likeCount: 0,
           'id:1': 'vikram',
           name: 'Vikram Singh',
