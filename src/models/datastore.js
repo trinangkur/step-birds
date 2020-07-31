@@ -16,6 +16,9 @@ const {
   getLikedTweetsQuery,
   getSpecificTweetQuery,
   getLikedByQuery,
+  getRepliedTweetQuery,
+  getReplyInsertionQuery,
+  getRepliesQuery,
 } = require('../queries/queryStringGenerator');
 
 class DataStore {
@@ -174,6 +177,26 @@ class DataStore {
 
   getLikedBy(tweetId) {
     const queryString = getLikedByQuery(tweetId);
+    return this.getAllRows(queryString, []);
+  }
+
+  postReply(reply) {
+    const { userId, type, content, timeStamp, tweetId } = reply;
+    const columns = 'id ,userId, _type, content, timeStamp, reference';
+    const values = `?,"${userId}", "${type}",
+     "${content}", "${timeStamp}", "${tweetId}"`;
+
+    const queryString = getReplyInsertionQuery(columns, values, tweetId);
+    return this.executeTransaction(queryString, []);
+  }
+
+  getReplies(tweetId) {
+    const queryString = getRepliesQuery(tweetId);
+    return this.getAllRows(queryString, []);
+  }
+
+  getRepliedTweet(userId, loggedInUser) {
+    const queryString = getRepliedTweetQuery(userId, loggedInUser);
     return this.getAllRows(queryString, []);
   }
 }

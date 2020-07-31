@@ -259,3 +259,93 @@ describe('/user/followings/:id', () => {
     request(app).get('/user/followings/vikram').expect(200, done);
   });
 });
+
+describe('/user/postReply', function () {
+  before(() => {
+    app.locals.sessions = { getUserId: () => 'vikram' };
+  });
+  it('should', function (done) {
+    const body = {
+      content: 'nice reply',
+      timeStamp: 'oneTimeStamp',
+      tweetId: 7,
+    };
+    request(app)
+      .post('/user/postReply')
+      .send(body)
+      .expect({ status: true })
+      .expect(200, done);
+  });
+});
+
+describe('/user/getReplies', function () {
+  before(() => {
+    app.locals.sessions = { getUserId: () => 'revathi' };
+  });
+  it('should', function (done) {
+    const body = {
+      tweetId: 7,
+    };
+    request(app)
+      .post('/user/getReplies')
+      .send(body)
+      .expect([
+        {
+          id: 12,
+          _type: 'reply',
+          userId: 'vikram',
+          content: 'nice reply',
+          timeStamp: 'oneTimeStamp',
+          likeCount: 0,
+          replyCount: 0,
+          reference: 7,
+          name: 'Vikram Singh',
+          joiningDate: '11/06/2018',
+          image_url: 'fakeUrl',
+          dob: '09/09/2000',
+          bio: 'My feets are not on ground',
+          followersCount: 0,
+          followingCount: 1,
+          isUsersTweet: false,
+        },
+      ])
+      .expect(200, done);
+  });
+});
+
+describe('/user/getRepliedTweets', function () {
+  before(() => {
+    app.locals.sessions = { getUserId: () => 'vikram' };
+  });
+  it('should', function (done) {
+    const body = {
+      userId: 'vikram',
+    };
+    request(app)
+      .post('/user/getRepliedTweets')
+      .send(body)
+      .expect([
+        {
+          id: 7,
+          userId: 'vikram',
+          content: 'My laptop is broken :(',
+          _type: 'tweet',
+          replyCount: 1,
+          likeCount: 0,
+          'id:1': 'vikram',
+          name: 'Vikram Singh',
+          joiningDate: '11/06/2018',
+          image_url: 'fakeUrl',
+          dob: '09/09/2000',
+          bio: 'My feets are not on ground',
+          followersCount: 0,
+          followingCount: 1,
+          'id:2': 7,
+          tweetId: null,
+          isLiked: 'false',
+          isUsersTweet: true,
+        },
+      ])
+      .expect(200, done);
+  });
+});

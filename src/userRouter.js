@@ -18,6 +18,9 @@ const {
   getLikedTweets,
   serveTweet,
   getLikedBy,
+  serveRepliedTweet,
+  serveReplies,
+  postReply,
 } = require('./userHandler');
 
 const userRouter = express.Router();
@@ -56,5 +59,11 @@ userRouter.post('/getLikedTweets', getLikedTweets);
 userRouter.get('/tweet/:id', serveTweet);
 
 userRouter.post('/getLikedBy', getLikedBy);
+
+userRouter.post('/postReply', postReply);
+
+userRouter.post('/getReplies', serveReplies);
+
+userRouter.post('/getRepliedTweets', serveRepliedTweet);
 
 module.exports = { userRouter };
