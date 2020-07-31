@@ -1,7 +1,12 @@
 head
   link(rel="stylesheet", href="/css/profile.css")
+  link(rel="stylesheet", href="/css/reply.css")
   link(href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css' rel='stylesheet')
-  body(onload="()=>{}")
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"
+    type="text/javascript")
+  script(src="/js/reply.js")
+
+  body(onload=`main(${tweet.id})`)
   include ./commonPart.pug
 #content-box
   #header()
@@ -60,6 +65,7 @@ head
         .retweet-options.hide(id=`retweet-${tweetId}` onmouseleave=`hide('retweet-${tweetId}')`)
             div(onclick=`updateRetweet('${tweetId}')`) Retweet
             div(onclick=`updateRetweetWithComment('${tweetId}')`) Retweet with Comment
+    #replies
 #editor.hide
   #edit-panel
     .popup-header
