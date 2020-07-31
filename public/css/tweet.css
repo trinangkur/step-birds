@@ -80,6 +80,7 @@
   height: 30%;
   width: 100%;
   border-bottom: solid 0.5px lightgray;
+  margin-bottom: 1%;
 }
 
 .tweet:hover {
@@ -168,7 +169,6 @@
 .option {
   width: 25%;
   display: flex;
-  padding: 1%;
 }
 
 .replay-icon,
@@ -325,4 +325,10 @@
 .retweet-options > div:hover {
   background-color: #f3eded;
   border-bottom: #bbc7ff;
+}
+
+.retweet-by {
+  margin-left: 2%;
+  margin-top: 0.5%;
+  color: gray;
 }

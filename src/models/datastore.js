@@ -88,8 +88,8 @@ class DataStore {
     return this.runQuery(queryString, []);
   }
 
-  deleteTweet(tweetId) {
-    const queryString = getDeleteQuery(tweetId);
+  deleteTweet(tweetId, reference, type) {
+    const queryString = getDeleteQuery(tweetId, reference, type);
     return this.executeTransaction(queryString, []);
   }
 

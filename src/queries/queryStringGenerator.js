@@ -3,11 +3,19 @@ const getInsertionQuery = function (table, columns, values) {
                   VALUES (${values})`;
 };
 
-const getDeleteQuery = function (tweetId) {
-  return `BEGIN TRANSACTION;
+const getDeleteQuery = function (tweetId, reference, type) {
+  let query = `BEGIN TRANSACTION;
    DELETE FROM Tweet WHERE id = ${tweetId}; 
    DELETE FROM Likes
-    WHERE tweetId = ${tweetId}`;
+    WHERE tweetId = ${tweetId}
+  ;
+  `;
+  if (type === 'retweet') {
+    query += ` UPDATE Tweet
+    SET retweetCount = retweetCount -1
+    WHERE id = '${reference}' `;
+  }
+  return query;
 };
 
 const getSelectQuery = function (table, { columns, condition }) {
@@ -30,9 +38,9 @@ const getTweetQuery = function (userId, loggedInUser) {
     ,t1.timeStamp
     ,t1.likeCount
     ,t1.replyCount
-    , t1.retweetCount
+    ,t1.retweetCount
     ,t2.image_url
-    , t1._type
+    ,t1._type as type
     FROM Tweet t1 LEFT JOIN Tweeter t2 
     on t2.id is t1.userId 
     where t1.userId is '${userId}')
@@ -43,12 +51,6 @@ const getTweetQuery = function (userId, loggedInUser) {
         then 'true'
         else 'false'
       end isLiked
-    , CASE 
-        WHEN tweets._type is 'retweet'
-        and '${userId}' is '${loggedInUser}'
-        then 'true'
-        else 'false'
-      end isRetweeted
     FROM tweets LEFT JOIN Likes
     on Likes.userId='${loggedInUser}' 
     and Likes.tweetId=tweets.id;`;

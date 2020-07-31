@@ -104,11 +104,11 @@ const getTweetOptions = function(tweet) {
   `;
 };
 
-const getRightSideOptions = function(isUsersTweet, id) {
+const getRightSideOptions = function (isUsersTweet, id, reference, type) {
   return isUsersTweet
     ? `
     <div class="options" id="tweetId-${id}" onmouseleave="hideOptions(${id})">
-          <div class="delete-tweet" onclick="deleteTweet(${id})">
+          <div class="delete-tweet" onclick="deleteTweet(${id}, ${reference}, '${type}')">
               <span>Delete</span>
               <img src="/assets/delete.png" alt="N/A"> 
            </div>
@@ -117,9 +117,14 @@ const getRightSideOptions = function(isUsersTweet, id) {
     : '';
 };
 
-const createTweetHtml = function(tweet) {
-  const {content, id, isUsersTweet} = tweet;
-  const {userId, image_url, name, timeStamp} = tweet;
+const createTweetHtml = function (tweet) {
+  const { content, id, isUsersTweet, reference } = tweet;
+  const { userId, image_url, name, timeStamp, type } = tweet;
+  if (type === 'retweet') {
+    let tweet = `<div class="retweet-by">@${userId} retweeted</div>`;
+    tweet += document.querySelector(`#_${reference}`).innerHTML;
+    return tweet;
+  }
   return `
   <div class="content-section">
   <div class="dp" onclick="getUserProfile('${userId}')">
@@ -140,10 +145,10 @@ const createTweetHtml = function(tweet) {
   <div class="right-side-options" onclick="showTweetOptions(${id})">v</div>
 </div>
   ${getTweetOptions(tweet)}
-  ${getRightSideOptions(isUsersTweet, id)}
+  ${getRightSideOptions(isUsersTweet, id, reference, type)}
   <div class="retweet-options hide" id="retweet-${id}" onmouseleave=hide('retweet-${id}')>
-    <div onclick="updateRetweet('${id}')"> Retweet </div>
-    <div onclick="updateRetweetWithComment(${id})"> Retweet with Comment </div>
+    <div id="retweet-${id}" onclick="updateRetweet('${id}')"> Retweet </div>
+    <div id="retweet-comment-${id}" onclick="updateRetweetWithComment(${id})"> Retweet with Comment </div>
   </div>
   `;
 };
@@ -176,10 +181,10 @@ const updateTweets = function(id, res) {
   }
 };
 
-const deleteTweet = function(tweetId) {
+const deleteTweet = function (tweetId, reference, type) {
   const url = '/user/deleteTweet';
-  const body = {tweetId};
-  sendPOSTRequest(url, body, res => updateTweets(tweetId, res));
+  const body = { tweetId, reference, type };
+  sendPOSTRequest(url, body, (res) => updateTweets(tweetId, res));
 };
 
 const deleteTweetPage = function(tweetId) {
@@ -194,7 +199,7 @@ const deleteTweetPage = function(tweetId) {
 
 const showTweet = function(tweet, parentElement) {
   const element = document.createElement('div');
-  element.id = tweet.id;
+  element.id = `_${tweet.id}`;
   element.className = 'tweet';
   element.innerHTML = createTweetHtml(tweet);
   const allTweets = document.getElementById(parentElement);
@@ -224,7 +229,7 @@ const postTweet = function(boxId) {
     const body = {
       content: tweetText.value,
       timeStamp: new Date(),
-      type: 'tweet'
+      type: 'tweet',
     };
     sendPOSTRequest(url, body, getLatestTweet);
     tweetText.value = '';
@@ -260,7 +265,13 @@ const showLikedBy = function(tweetId) {
   show('editor');
 };
 
-const updateRetweet = function(tweetId) {
+const updateCount = function (tweetId, isIncrease) {
+  const counterElement = document.querySelector(`#retweet-count-${tweetId}`);
+  const count = +counterElement.innerText;
+  counterElement.innerText = isIncrease ? count + 1 : count - 1;
+};
+
+const updateRetweet = function (tweetId) {
   const url = '/user/postRetweet';
   const content = document.querySelector(`#content-${tweetId}`).innerText;
   const body = {
@@ -269,15 +280,19 @@ const updateRetweet = function(tweetId) {
     type: 'retweet',
     reference: tweetId
   };
-
-  sendPOSTRequest(url, body, status => {
-    if (!status) {
-      return;
+  sendPOSTRequest(url, body, (status) => {
+    if (status) {
+      updateCount(tweetId, true);
+      const retweet = document.querySelector(`#retweet-${tweetId}`);
+      retweet.innerText = 'Undo Retweet';
+      retweet.onclick = `undoRetweet(${tweetId}t)`;
     }
-    const counterElement = document.querySelector(`#retweet-count-${tweetId}`);
-    const count = +counterElement.innerText;
-    const likeSvg = document.querySelector(`#retweet-svg-${tweetId}`);
-    counterElement.innerText = count + 1;
-    likeSvg.setAttribute('class', 'green');
   });
+};
+
+const undoRetweet = function (tweetId) {
+  updateCount(tweetId, false);
+  const retweet = document.querySelector(`#retweet-${tweetId}`);
+  retweet.innerText = 'Retweet';
+  retweet.onclick = `updateRetweet(${tweetId})`;
 };

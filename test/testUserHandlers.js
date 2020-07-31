@@ -53,10 +53,9 @@ describe('/getLatestTweet', () => {
       replyCount: 0,
       retweetCount: 0,
       image_url: 'fakeUrl',
-      _type: 'tweet',
+      type: 'tweet',
       tweetId: null,
       isLiked: 'false',
-      isRetweeted: 'false',
       isUsersTweet: true,
     };
     const expectedJson = JSON.stringify(expected);
@@ -70,11 +69,11 @@ describe('/getLatestTweet', () => {
   });
 });
 
-describe('searchProfile', function() {
+describe('searchProfile', function () {
   before(() => {
     app.locals.sessions = { getUserId: () => 'revathi' };
   });
-  it('should serve searchProfile', function(done) {
+  it('should serve searchProfile', function (done) {
     request(app)
       .post('/user/searchProfile')
       .set('Content-Type', 'application/json')
@@ -87,11 +86,11 @@ describe('searchProfile', function() {
   });
 });
 
-describe('showProfile', function() {
+describe('showProfile', function () {
   before(() => {
     app.locals.sessions = { getUserId: () => 'revathi' };
   });
-  it('should redirect to user profile', function(done) {
+  it('should redirect to user profile', function (done) {
     request(app)
       .get('/user/showProfile')
       .expect('Location', '/user/profile/revathi')
@@ -99,7 +98,7 @@ describe('showProfile', function() {
   });
 });
 
-describe('getUserTweets', function() {
+describe('getUserTweets', function () {
   before(() => {
     app.locals.sessions = { getUserId: () => 'revathi' };
   });
@@ -114,14 +113,13 @@ describe('getUserTweets', function() {
       replyCount: 0,
       retweetCount: 0,
       image_url: 'fakeUrl',
-      _type: 'tweet',
+      type: 'tweet',
       tweetId: null,
       isLiked: 'false',
-      isRetweeted: 'false',
       isUsersTweet: false,
     },
   ];
-  it('should get tweets for given user', function(done) {
+  it('should get tweets for given user', function (done) {
     request(app)
       .post('/user/getUserTweets')
       .set('Content-Type', 'application/json')
@@ -131,33 +129,29 @@ describe('getUserTweets', function() {
   });
 });
 
-describe('/profile/:profileName', function() {
+describe('/profile/:profileName', function () {
   before(() => {
     app.locals.sessions = { getUserId: () => 'revathi' };
   });
-  it('should get user profile', function(done) {
-    request(app)
-      .get('/user/profile/revathi')
-      .expect(200, done);
+  it('should get user profile', function (done) {
+    request(app).get('/user/profile/revathi').expect(200, done);
   });
 });
 
-describe('/profile/:profileName', function() {
+describe('/profile/:profileName', function () {
   before(() => {
     app.locals.sessions = { getUserId: () => 'revathi' };
   });
-  it('should redirect to user profile', function(done) {
-    request(app)
-      .get('/user/profile/revathi')
-      .expect(200, done);
+  it('should redirect to user profile', function (done) {
+    request(app).get('/user/profile/revathi').expect(200, done);
   });
 });
 
-describe('updateLikes', function() {
+describe('updateLikes', function () {
   before(() => {
     app.locals.sessions = { getUserId: () => 'revathi' };
   });
-  it('should like the tweet', function(done) {
+  it('should like the tweet', function (done) {
     request(app)
       .post('/user/updateLikes')
       .set('Content-Type', 'application/json')
@@ -166,7 +160,7 @@ describe('updateLikes', function() {
       .expect(200, done);
   });
 
-  it('should unLike the post', function(done) {
+  it('should unLike the post', function (done) {
     request(app)
       .post('/user/updateLikes')
       .set('Content-Type', 'application/json')
@@ -176,7 +170,7 @@ describe('updateLikes', function() {
   });
 });
 
-describe('/toggleFollowRequest', function() {
+describe('/toggleFollowRequest', function () {
   before(() => {
     app.locals.sessions = { getUserId: () => 'revathi' };
   });
@@ -203,7 +197,7 @@ describe('/toggleFollowRequest', function() {
   });
 });
 
-describe('getAllTweets', function() {
+describe('getAllTweets', function () {
   before(() => {
     app.locals.sessions = { getUserId: () => 'vikram' };
   });
@@ -255,27 +249,20 @@ describe('getAllTweets', function() {
       isUsersTweet: false,
     },
   ];
-  it('should get tweets for given user', function(done) {
-    request(app)
-      .get('/user/getAllTweets')
-      .expect(expected)
-      .expect(200, done);
+  it('should get tweets for given user', function (done) {
+    request(app).get('/user/getAllTweets').expect(expected).expect(200, done);
   });
 });
 
 describe('/user/followers/:id', () => {
   it('should redirect to the follower page of user', (done) => {
-    request(app)
-      .get('/user/followers/ramu')
-      .expect(200, done);
+    request(app).get('/user/followers/ramu').expect(200, done);
   });
 });
 
 describe('/user/followings/:id', () => {
   it('should redirect to the follower page of user', (done) => {
-    request(app)
-      .get('/user/followings/vikram')
-      .expect(200, done);
+    request(app).get('/user/followings/vikram').expect(200, done);
   });
 });
 
@@ -351,8 +338,8 @@ describe('/user/getRepliedTweets', function () {
           content: 'My laptop is broken :(',
           _type: 'tweet',
           replyCount: 1,
-          retweetCount: 0,
           likeCount: 0,
+          retweetCount: 0,
           'id:1': 'vikram',
           name: 'Vikram Singh',
           joiningDate: '11/06/2018',

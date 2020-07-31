@@ -25,9 +25,9 @@ const postTweet = function (req, res) {
 };
 
 const deleteTweet = function (req, res) {
-  const { tweetId } = req.body;
+  const { tweetId, reference, type } = req.body;
   const { dataStore } = req.app.locals;
-  dataStore.deleteTweet(tweetId).then(() => {
+  dataStore.deleteTweet(tweetId, reference, type).then(() => {
     res.json({ status: true });
   });
 };
