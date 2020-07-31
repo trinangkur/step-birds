@@ -10,27 +10,6 @@ const sendReplyFromTweet = function(tweetId) {
   }
 };
 
-const createReplyHtml = function(tweet) {
-  const {userId, image_url, name, id, timeStamp, content, isUsersTweet} = tweet;
-  return `<div class="reply-content-section">
-  <div class="dp" onclick="getUserProfile('${userId}')">
-    <img
-      src="${image_url}"
-      alt="not found"
-    />
-  </div>
-  <div class="info">
-    <div class="user-info">
-      <span class="user-name" onclick="getUserProfile('${userId}')">${name}</span>
-      <span class="user-id">@${userId}</span>
-      <span class="time-stamp"> &nbsp; ${moment(timeStamp).fromNow()}</span>
-    </div>
-    <div class="reply-content" id="content-${id}">${content}</div>
-  </div>
-  <div class="right-side-options" >v</div>
-</div>`;
-};
-
 const showReply = function(reply, parentElement) {
   const element = document.createElement('div');
   element.id = reply.id;

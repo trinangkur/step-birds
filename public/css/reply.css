@@ -13,3 +13,16 @@
   width: 100%;
   border-bottom: solid 0.5px lightgray;
 }
+
+.reply-options {
+  display: none;
+  position: relative;
+  z-index: 1;
+  height: 27%;
+  width: 16%;
+  margin-left: 79%;
+  margin-top: -13%;
+  border: 0.1vw solid lightgray;
+  border-radius: 6px;
+  background: white;
+}
