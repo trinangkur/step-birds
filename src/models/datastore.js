@@ -19,7 +19,7 @@ const {
   getRepliedTweetQuery,
   getReplyInsertionQuery,
   getRepliesQuery,
-  increaseRetweetCountQuery,
+  getRetweetQuery,
 } = require('../queries/queryStringGenerator');
 
 class DataStore {
@@ -149,7 +149,6 @@ class DataStore {
 
   getAllTweets(userId, loggedInUser) {
     const queryString = getAllTweetsQuery(userId, loggedInUser);
-
     return this.getAllRows(queryString, []);
   }
 
@@ -203,13 +202,13 @@ class DataStore {
     return this.getAllRows(queryString, []);
   }
 
-  postRetweet(postDetails) {
-    return new Promise((res) => {
-      this.postTweet(postDetails).then(() => {
-        const queryString = increaseRetweetCountQuery(+postDetails.reference);
-        this.runQuery(queryString, []).then(res(true));
-      });
-    });
+  postRetweet(retweet) {
+    const { userId, type, content, timeStamp, reference } = retweet;
+    const columns = 'id ,userId, _type, content, timeStamp, reference';
+    const values = `?,"${userId}", "${type}", "${content}", "${timeStamp}",
+     "${reference}"`;
+    const queryString = getRetweetQuery(columns, values, reference);
+    return this.executeTransaction(queryString);
   }
 }
 
