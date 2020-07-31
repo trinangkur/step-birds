@@ -1,7 +1,51 @@
-const getReplay = function() {
+const sendReply = function(tweetId) {
+  const textArea = document.querySelector('#reply-content');
+  const content = textArea.value;
+  if (content) {
+    const timeStamp = new Date();
+    const url = '/user/postReply';
+    sendPOSTRequest(url, {tweetId, content, timeStamp}, res => {
+      if (res.status) {
+        textArea.value = '';
+        closeReplyPopup();
+        location.reload();
+      }
+    });
+  }
+};
+
+const closeReplyPopup = function() {
+  document.querySelector('#replyPopup').style.display = 'none';
+};
+
+const fillReplyPopup = function(tweetId, content, image_url, name) {
+  return `
+  <div class="reply-top-bar">
+    <div class="profile"><img src="${image_url}" alt="N/A"/><span class="user-name">${name}</span></div>
+    <p onclick="closeReplyPopup()">X</p>
+  </div>
+  <div id="tweet-content">
+    <p>${content}</p>
+  </div>
+  <div id="reply-text-area">
+    <textarea id="reply-content" name="name" cols="120" rows="3" placeholder="give your reply"></textarea>
+  </div>
+  <div id="reply-button" onclick="sendReply(${tweetId})">
+    <button class="primary-btn add-access">Reply</button>
+</div>`;
+};
+
+const showReplyPopup = function(tweetId, content, image_url, name) {
+  const popup = document.querySelector('#replyPopup');
+  popup.style.display = 'block';
+  popup.innerHTML = fillReplyPopup(tweetId, content, image_url, name);
+};
+
+const getReplay = function(tweet) {
+  const {tweetId, content, image_url, name, replyCount} = tweet;
   return `
   <div class="option">
-                <div class="replay-icon">
+                <div class="replay-icon" onclick="showReplyPopup('${tweetId}','${content}','${image_url}','${name}')">
                   <svg class="replay-svg" viewBox="0 0 24 24">
                     <g>
                       <path
@@ -10,7 +54,7 @@ const getReplay = function() {
                     </g>
                   </svg>
                 </div>
-                <div class="replay-count">0</div>
+                <div class="replay-count">${replyCount}</div>
               </div>
   `;
 };
@@ -69,10 +113,11 @@ const getBookmark = function() {
   `;
 };
 
-const getTweetOptions = function(id, likeCount, isLiked) {
+const getTweetOptions = function(tweet) {
+  const {id, likeCount, isLiked} = tweet;
   return `
   <div class="tweet-options">
-    ${getReplay()}
+    ${getReplay(tweet)}
     ${getRetweet()}
     ${getLike(id, likeCount, isLiked)}
     ${getBookmark()}
@@ -94,8 +139,8 @@ const getRightSideOptions = function(isUsersTweet, id) {
 };
 
 const createTweetHtml = function(tweet) {
-  const { content, id, isUsersTweet, isLiked, likeCount } = tweet;
-  const { userId, image_url, name, timeStamp } = tweet;
+  const {content, id, isUsersTweet, isLiked, likeCount} = tweet;
+  const {userId, image_url, name, timeStamp} = tweet;
   return `
   <div class="content-section">
   <div class="dp" onclick="getUserProfile('${userId}')">
@@ -115,14 +160,14 @@ const createTweetHtml = function(tweet) {
   </div>
   <div class="right-side-options" onclick="showTweetOptions(${id})">v</div>
 </div>
-  ${getTweetOptions(id, likeCount, isLiked)}
+  ${getTweetOptions(tweet)}
   ${getRightSideOptions(isUsersTweet, id)}
   `;
 };
 
 const updateLikes = function(tweetId) {
   const url = '/user/updateLikes';
-  sendPOSTRequest(url, { tweetId }, ({ message }) => {
+  sendPOSTRequest(url, {tweetId}, ({message}) => {
     const counterElement = document.querySelector(`#like-count-${tweetId}`);
     const count = +counterElement.innerText;
     const likeSvg = document.querySelector(`#like-svg-${tweetId}`);
@@ -150,14 +195,14 @@ const updateTweets = function(id, res) {
 
 const deleteTweet = function(tweetId) {
   const url = '/user/deleteTweet';
-  const body = { tweetId };
-  sendPOSTRequest(url, body, (res) => updateTweets(tweetId, res));
+  const body = {tweetId};
+  sendPOSTRequest(url, body, res => updateTweets(tweetId, res));
 };
 
 const deleteTweetPage = function(tweetId) {
   const url = '/user/deleteTweet';
-  const body = { tweetId };
-  sendPOSTRequest(url, body, (res) => {
+  const body = {tweetId};
+  sendPOSTRequest(url, body, res => {
     if (res.status) {
       location.assign('/user/home');
     }
@@ -180,7 +225,7 @@ const hideOptions = function(id) {
 const getLatestTweet = function(res) {
   if (res.status) {
     const url = '/user/getLatestTweet';
-    sendGETRequest(url, (tweet) => {
+    sendGETRequest(url, tweet => {
       const pageUserId = document.querySelector('#tweets').getAttribute('name');
       if (pageUserId === tweet.userId) {
         showTweet(tweet, 'tweets');
@@ -193,7 +238,7 @@ const postTweet = function(boxId) {
   const tweetText = document.getElementById(`tweetText${boxId}`);
   const url = '/user/postTweet';
   if (tweetText.value) {
-    const body = { content: tweetText.value, timeStamp: new Date() };
+    const body = {content: tweetText.value, timeStamp: new Date()};
     sendPOSTRequest(url, body, getLatestTweet);
     tweetText.value = '';
     closeTweetPopUp();
@@ -219,9 +264,9 @@ const hide = function(elementId) {
 const showLikedBy = function(tweetId) {
   const url = '/user/getLikedBy';
   const element = document.querySelector('#liked-user');
-  sendPOSTRequest(url, { tweetId }, (tweeters) => {
+  sendPOSTRequest(url, {tweetId}, tweeters => {
     element.innerHTML = '';
-    tweeters.forEach((tweet) => {
+    tweeters.forEach(tweet => {
       element.innerHTML += createProfileTemplate(tweet);
     });
   });

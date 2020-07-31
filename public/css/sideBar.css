@@ -185,3 +185,72 @@ select:focus {
   width: 26px;
   margin: 0% 0% 0% -10%;
 }
+
+#replyPopup {
+  background-color: white;
+  display: none;
+  top: 50px;
+  left: 70px;
+  right: 0;
+  margin: auto;
+  position: absolute;
+  height: 29vw;
+  width: 37vw;
+  border: 0.1px solid black;
+  border-radius: 10px;
+  box-shadow: 1px 1px 1px 3px lightgrey;
+}
+
+.reply-top-bar {
+  display: flex;
+  justify-content: space-between;
+  padding: 2%;
+}
+
+.profile {
+  display: flex;
+}
+
+.profile span {
+  margin-top: 6.5%;
+  margin-left: 3%;
+}
+
+.profile img {
+  width: 14%;
+  margin-top: 1vw;
+  margin-left: 1vw;
+  border-radius: 50%;
+}
+
+#tweet-content {
+  height: 23%;
+  padding: 5%;
+}
+
+#reply-text-area textarea {
+  border: none;
+  width: 28vw;
+  text-decoration: none;
+  margin-top: 1vw;
+  margin-left: 2vw;
+  font-size: 1.5vw;
+  border-bottom: solid lightgray;
+}
+
+#reply-button button {
+  position: relative;
+  font-size: 1.2vw;
+  left: 75%;
+  border: none;
+  color: white;
+  outline: none;
+  border-radius: 50px;
+  margin: 1% 0% 0% 4%;
+  height: 10%;
+  width: 17%;
+}
+
+.reply-top-bar > p {
+  cursor: pointer;
+}
