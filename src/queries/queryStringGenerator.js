@@ -10,7 +10,7 @@ const getDeleteQuery = function(tweetId) {
     WHERE tweetId = ${tweetId}`;
 };
 
-const getSelectQuery = function(table, {columns, condition}) {
+const getSelectQuery = function(table, { columns, condition }) {
   return `SELECT ${columns.join(',')} FROM ${table}
              WHERE ${condition}`;
 };
@@ -30,7 +30,9 @@ const getTweetQuery = function(userId, loggedInUser) {
     ,t1.timeStamp
     ,t1.likeCount
     ,t1.replyCount
+    , t1.retweetCount
     ,t2.image_url
+    , t1._type
     FROM Tweet t1 LEFT JOIN Tweeter t2 
     on t2.id is t1.userId 
     where t1.userId is '${userId}')
@@ -40,7 +42,13 @@ const getTweetQuery = function(userId, loggedInUser) {
         and Likes.userId is '${loggedInUser}'
         then 'true'
         else 'false'
-        end isLiked
+      end isLiked
+    , CASE 
+        WHEN tweets._type is 'retweet'
+        and '${userId}' is '${loggedInUser}'
+        then 'true'
+        else 'false'
+      end isRetweeted
     FROM tweets LEFT JOIN Likes
     on Likes.userId='${loggedInUser}' 
     and Likes.tweetId=tweets.id;`;
@@ -107,9 +115,10 @@ const getProfileInfoQuery = function(tweeterId, userId) {
           where Tweeter.id = '${tweeterId}'`;
 };
 
-const createTweetView = userId => `WITH homeDetails as (
+const createTweetView = (userId) => `WITH homeDetails as (
   SELECT DISTINCT(Tweet.id), Tweet.replyCount as replyCount,
   Tweet.likeCount as likeCount,
+  Tweet.retweetCount as retweetCount,
   Tweet.userId as userId,
   Tweet._type as type,
   Tweet.content as content,
@@ -246,6 +255,13 @@ const getRepliesQuery = function(tweetId) {
     WHERE Tweet._type is 'reply' AND Tweet.reference is '${tweetId}';`;
 };
 
+const increaseRetweetCountQuery = function(tweetId) {
+  return `
+  UPDATE Tweet 
+  SET retweetCount=retweetCount + 1
+  Where id=${tweetId}`;
+};
+
 module.exports = {
   getInsertionQuery,
   getDeleteQuery,
@@ -266,5 +282,6 @@ module.exports = {
   getLikedByQuery,
   getRepliedTweetQuery,
   getReplyInsertionQuery,
-  getRepliesQuery
+  getRepliesQuery,
+  increaseRetweetCountQuery,
 };

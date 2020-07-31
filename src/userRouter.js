@@ -21,6 +21,7 @@ const {
   serveRepliedTweet,
   serveReplies,
   postReply,
+  postRetweet,
 } = require('./userHandler');
 
 const userRouter = express.Router();
@@ -65,5 +66,7 @@ userRouter.post('/postReply', postReply);
 userRouter.post('/getReplies', serveReplies);
 
 userRouter.post('/getRepliedTweets', serveRepliedTweet);
+
+userRouter.post('/postRetweet', postRetweet);
 
 module.exports = { userRouter };

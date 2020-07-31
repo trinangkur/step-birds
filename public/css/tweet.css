@@ -247,6 +247,11 @@
   stroke: red;
 }
 
+.green {
+  fill: rgb(22, 191, 99);
+  stroke: rgb(22, 191, 99);
+}
+
 .black {
   stroke: rgb(151, 148, 148);
 }
@@ -299,3 +304,25 @@
   height: 10%;
 }
 
+.retweet-options {
+  cursor: pointer;
+  width: 25%;
+  height: 25%;
+  position: relative;
+  margin: -2% 0% 0% 34%;
+  background-color: white;
+  padding: 2%;
+  border: 0.5px solid lightgray;
+  border-radius: 6px;
+}
+
+.retweet-options > div {
+  margin-top: 2%;
+  margin-bottom: 6%;
+  border-bottom: 0.5px lightgray;
+}
+
+.retweet-options > div:hover {
+  background-color: #f3eded;
+  border-bottom: #bbc7ff;
+}
