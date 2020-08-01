@@ -157,7 +157,7 @@ describe('updateLikes', function () {
     request(app)
       .post('/user/updateLikes')
       .set('Content-Type', 'application/json')
-      .send({ tweetId: 1, userId: 'revathi' })
+      .send({ tweetId: 4, userId: 'revathi' })
       .expect({ message: 'liked' })
       .expect(200, done);
   });
@@ -166,8 +166,17 @@ describe('updateLikes', function () {
     request(app)
       .post('/user/updateLikes')
       .set('Content-Type', 'application/json')
-      .send({ tweetId: 1, userId: 'revathi' })
+      .send({ tweetId: 4, userId: 'revathi' })
       .expect({ message: 'unLiked' })
+      .expect(200, done);
+  });
+
+  it('should like the tweet', function (done) {
+    request(app)
+      .post('/user/updateLikes')
+      .set('Content-Type', 'application/json')
+      .send({ tweetId: 4, userId: 'revathi' })
+      .expect({ message: 'liked' })
       .expect(200, done);
   });
 });
@@ -363,6 +372,88 @@ describe('/user/getRepliedTweets', function () {
           isLiked: 'false',
           isRetweeted: 'false',
           isUsersTweet: true,
+        },
+      ])
+      .expect(200, done);
+  });
+});
+
+describe('/user/updateProfile', function () {
+  before(() => {
+    app.locals.sessions = { getUserId: () => 'vikram' };
+  });
+  it('should post a reply', function (done) {
+    const body = {
+      name: 'viky',
+      bio: 'it is your life make it large',
+    };
+    request(app)
+      .post('/user/updateProfile')
+      .send(body)
+      .expect({ status: true })
+      .expect(200, done);
+  });
+});
+
+describe('/user/getLikedTweets', function () {
+  before(() => {
+    app.locals.sessions = { getUserId: () => 'revathi' };
+  });
+  it('should get all tweets where user have replied', function (done) {
+    const body = {
+      id: 'revathi',
+    };
+    request(app)
+      .post('/user/getLikedTweets')
+      .send(body)
+      .expect([
+        {
+          userId: 'rahit',
+          id: 4,
+          content: 'Barcelona Jindabaad',
+          likeCount: 1,
+          _type: 'tweet',
+          replyCount: 0,
+          reference: null,
+          'id:1': 'rahit',
+          name: 'Rahit Kar',
+          joiningDate: '11/06/2020',
+          image_url: 'fakeUrl',
+          dob: '09/09/1998',
+          bio: 'Enjoy Netflix',
+          followersCount: 0,
+          followingCount: 0,
+          'id:2': 4,
+          tweetId: 4,
+          isLiked: 'true',
+          isUsersTweet: false,
+        },
+      ])
+      .expect(200, done);
+  });
+});
+
+describe('/user/getLikedBy', function () {
+  before(() => {
+    app.locals.sessions = { getUserId: () => 'vikram' };
+  });
+  it('should post a reply', function (done) {
+    const body = { tweetId: 4 };
+    request(app)
+      .post('/user/getLikedBy')
+      .send(body)
+      .expect([
+        {
+          tweetId: 4,
+          userId: 'revathi',
+          id: 'revathi',
+          name: 'Revathi Dhurai',
+          joiningDate: '07/07/2019',
+          image_url: 'fakeUrl',
+          dob: '21/12/2000',
+          bio: 'Enjoy Life',
+          followersCount: 0,
+          followingCount: 0,
         },
       ])
       .expect(200, done);
