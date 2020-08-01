@@ -93,6 +93,7 @@ const serveHome = function (req, res) {
     const { image_url, id } = userInfo[0];
     res.render('home', {
       title: 'Twitter',
+      userUrl: image_url,
       image_url,
       userId: id,
     });
@@ -160,10 +161,16 @@ const getLikedTweets = function (req, res) {
 
 const serveTweet = function (req, res) {
   const { dataStore } = req.app.locals;
-  dataStore.getTweet(req.params.id, req.userId).then(([tweet]) => {
-    tweet.isUsersTweet = tweet.userId === req.userId;
-    tweet.timeStamp = new Date(tweet.timeStamp).toLocaleString();
-    res.render('tweet', { tweet });
+  dataStore.getUserInfo(req.userId).then(([userInfo]) => {
+    dataStore.getTweet(req.params.id, req.userId).then(([tweet]) => {
+      tweet.isUsersTweet = tweet.userId === req.userId;
+      tweet.timeStamp = new Date(tweet.timeStamp).toLocaleString();
+      res.render('tweet', {
+        tweet,
+        userId: userInfo.id,
+        userUrl: userInfo.image_url,
+      });
+    });
   });
 };
 

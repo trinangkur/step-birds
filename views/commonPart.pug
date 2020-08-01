@@ -24,7 +24,7 @@ html(lang="en")
           span#user-id @#{userId}
         #tweetArea
           div
-            img.profileIcon(src=image_url alt='/assets/profileIcon.png')
+            img.profileIcon(src=userUrl alt='/assets/profileIcon.png')
           .text-area
             textarea#tweetText1(name="name", cols="90", rows="10" placeholder="what's happening..." onkeydown="showCharCount('tweetText1','count-indicator1', 'counter1', 'popUpFooter')")
             .char-count
