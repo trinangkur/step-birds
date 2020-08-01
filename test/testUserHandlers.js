@@ -415,6 +415,7 @@ describe('/user/getLikedTweets', function () {
           _type: 'tweet',
           replyCount: 0,
           reference: null,
+          retweetCount: 0,
           'id:1': 'rahit',
           name: 'Rahit Kar',
           joiningDate: '11/06/2020',
@@ -424,8 +425,9 @@ describe('/user/getLikedTweets', function () {
           followersCount: 0,
           followingCount: 0,
           'id:2': 4,
-          tweetId: 4,
+          tweetId: null,
           isLiked: 'true',
+          isRetweeted: 'false',
           isUsersTweet: false,
         },
       ])
