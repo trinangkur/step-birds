@@ -26,6 +26,28 @@ const getProfileSearchQuery = function (name) {
   WHERE id like "%${name}%" OR name like "%${name}%"`;
 };
 
+const getUserAction = function (loggedInUser) {
+  return `SELECT *, tweets.userId as userId,
+      CASE 
+        WHEN tweets.id is Likes.tweetId
+        and Likes.userId is '${loggedInUser}'
+        then 'true'
+        else 'false'
+      end isLiked,
+      CASE 
+        WHEN tweets.id is Retweet.tweetId
+        and Retweet.userId is '${loggedInUser}'
+        then 'true'
+        else 'false'
+      end isRetweeted
+    FROM tweets LEFT JOIN Likes
+    on Likes.userId='${loggedInUser}' 
+    and Likes.tweetId=tweets.id
+    Left Join Retweet
+    on Retweet.userId='${loggedInUser}'
+    and Retweet.tweetId=tweets.id`;
+};
+
 const getTweetQuery = function (userId, loggedInUser) {
   return `with tweets as
   (SELECT 
@@ -41,17 +63,10 @@ const getTweetQuery = function (userId, loggedInUser) {
     ,t1._type as type
     FROM Tweet t1 LEFT JOIN Tweeter t2 
     on t2.id is t1.userId 
-    where t1.userId is '${userId}' AND t1._type is 'tweet')
-    SELECT *, tweets.userId as userId,
-      CASE 
-        WHEN tweets.id is Likes.tweetId
-        and Likes.userId is '${loggedInUser}'
-        then 'true'
-        else 'false'
-      end isLiked
-    FROM tweets LEFT JOIN Likes
-    on Likes.userId='${loggedInUser}' 
-    and Likes.tweetId=tweets.id;`;
+    where t1.userId is '${userId}' 
+    AND t1._type is "tweet") 
+    ${getUserAction(loggedInUser)}
+    `;
 };
 
 const getIncreaseLikesQuery = function (tweetId, userId) {
@@ -137,17 +152,7 @@ const getAllTweetsQuery = function (userId, loggedInUser) {
        FROM homeDetails LEFT JOIN Tweeter
        ON homeDetails.userId = Tweeter.id
        WHERE homeDetails.type = 'tweet' OR homeDetails.type = 'retweet'
-    ) SELECT *,
-      tweets.userId as userId,
-          CASE 
-            WHEN tweets.id is Likes.tweetId
-            and Likes.userId is '${loggedInUser}'
-            then 'true'
-            else 'false'
-            end isLiked
-        FROM tweets LEFT JOIN Likes
-        on Likes.userId='${loggedInUser}' 
-        and Likes.tweetId=tweets.id;`;
+    ) ${getUserAction(loggedInUser)}`;
 };
 
 const getUpdateProfileQuery = function (userId, name, bio) {
@@ -171,7 +176,7 @@ const getFollowingsQuery = function (userId) {
 const getLikedTweetsQuery = function (userId, loggedInUser) {
   return `with Tweets as (WITH homeDetails as (
     SELECT tweet.userId, tweet.id, tweet.content, tweet.likeCount, 
-    tweet._type, tweet.replyCount, tweet.reference
+    tweet._type, tweet.replyCount, tweet.reference, tweet.retweetCount
      From likes
     LEFT JOIN tweet
     on Tweet.id = likes.tweetId
@@ -179,34 +184,14 @@ const getLikedTweetsQuery = function (userId, loggedInUser) {
   SELECT *, homeDetails.id as id
          FROM homeDetails LEFT JOIN Tweeter
          ON homeDetails.userId = Tweeter.id
-      ) SELECT *,
-        tweets.userId as userId,
-            CASE 
-              WHEN tweets.id is Likes.tweetId
-              and Likes.userId is '${loggedInUser}'
-              then 'true'
-              else 'false'
-              end isLiked
-          FROM tweets LEFT JOIN Likes
-          on Likes.userId='${loggedInUser}' 
-          and Likes.tweetId=tweets.id;`;
+      )${getUserAction(loggedInUser)}`;
 };
 
 const getSpecificTweetQuery = function (tweetId, userId) {
   return `with tweets as (SELECT *, tweet.id as id from Tweet
   LEFT JOIN tweeter on tweet.userId = tweeter.id
   Where Tweet.id = ${tweetId})
-  SELECT *,
-      tweets.userId as userId,
-          CASE 
-            WHEN tweets.id is Likes.tweetId
-            and Likes.userId is '${userId}'
-            then 'true'
-            else 'false'
-            end isLiked
-        FROM tweets LEFT JOIN Likes
-        on Likes.userId='${userId}' 
-        and Likes.tweetId=tweets.id;`;
+  ${getUserAction(userId)}`;
 };
 
 const getLikedByQuery = function (tweetId) {
@@ -227,16 +212,7 @@ const getRepliedTweetQuery = function (userId, loggedInUser) {
   SELECT *, RepliedTweets.id as id
     FROM RepliedTweets LEFT JOIN Tweeter
     ON RepliedTweets.userId = Tweeter.id )
-    SELECT *, tweets.userId as userId,
-      CASE 
-        WHEN tweets.id is Likes.tweetId
-        and Likes.userId is '${loggedInUser}'
-        then 'true'
-        else 'false'
-        end isLiked
-    FROM tweets LEFT JOIN Likes
-    on Likes.userId='${loggedInUser}'
-    and Likes.tweetId=tweets.id;`;
+    ${getUserAction(loggedInUser)}`;
 };
 
 const getReplyInsertionQuery = function (columns, values, tweetId) {
@@ -255,12 +231,22 @@ const getRepliesQuery = function (tweetId) {
     WHERE Tweet._type is 'reply' AND Tweet.reference is '${tweetId}';`;
 };
 
-const getRetweetQuery = function (columns, values, tweetId) {
-  return `BEGIN TRANSACTION;  
-    ${getInsertionQuery('Tweet', columns, values)};
-  UPDATE Tweet 
-  SET retweetCount = retweetCount + 1
-  Where id=${tweetId}`;
+const getIncreaseRetweetsQuery = function (tweetId, userId) {
+  return `BEGIN TRANSACTION;
+  INSERT INTO Retweet (tweetId,userId) 
+    VALUES('${tweetId}','${userId}');
+  UPDATE Tweet
+    SET retweetCount=retweetCount + 1
+    WHERE id is ${tweetId};`;
+};
+
+const getDecreaseRetweetsQuery = function (tweetId, userId) {
+  return `BEGIN TRANSACTION;
+  DELETE FROM Retweet
+    WHERE userId = '${userId}' AND tweetId='${tweetId}';
+  UPDATE Tweet
+    SET retweetCount=retweetCount - 1
+    WHERE id is '${tweetId}';`;
 };
 
 module.exports = {
@@ -284,5 +270,6 @@ module.exports = {
   getRepliedTweetQuery,
   getReplyInsertionQuery,
   getRepliesQuery,
-  getRetweetQuery,
+  getIncreaseRetweetsQuery,
+  getDecreaseRetweetsQuery,
 };

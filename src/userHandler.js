@@ -215,18 +215,11 @@ const serveRepliedTweet = function (req, res) {
   });
 };
 
-const postRetweet = function (req, res) {
-  const { content, timeStamp, type, reference } = req.body;
+const updateRetweets = function (req, res) {
   const { dataStore } = req.app.locals;
-  const postDetails = {
-    userId: req.userId,
-    content,
-    type,
-    timeStamp,
-    reference,
-  };
-  dataStore.postRetweet(postDetails).then(() => {
-    res.json({ status: true });
+  const { tweetId } = req.body;
+  dataStore.updateRetweets(tweetId, req.userId).then((isRetweeted) => {
+    res.json({ isRetweeted });
   });
 };
 
@@ -252,5 +245,7 @@ module.exports = {
   postReply,
   serveReplies,
   serveRepliedTweet,
-  postRetweet,
+  updateRetweets,
+  // postRetweet,
+  // getTweetDetails,
 };

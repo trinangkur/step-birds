@@ -128,34 +128,23 @@ const showLikedBy = function (tweetId) {
   show('editor');
 };
 
-const updateCount = function (tweetId, isIncrease) {
-  const counterElement = document.querySelector(`#retweet-count-${tweetId}`);
-  const count = +counterElement.innerText;
-  counterElement.innerText = isIncrease ? count + 1 : count - 1;
-};
-
 const updateRetweet = function (tweetId) {
-  const url = '/user/postRetweet';
-  const content = document.querySelector(`#content-${tweetId}`).innerText;
-  const body = {
-    content,
-    timeStamp: new Date(),
-    type: 'retweet',
-    reference: tweetId,
-  };
-  sendPOSTRequest(url, body, (status) => {
-    if (status) {
-      updateCount(tweetId, true);
-      const retweet = document.querySelector(`#retweet-${tweetId}`);
-      retweet.innerText = 'Undo Retweet';
-      retweet.onclick = `undoRetweet(${tweetId}t)`;
+  const url = '/user/updateRetweets';
+  const counterElement = document.querySelector(`#retweet-count-${tweetId}`);
+  const retweetSvg = document.querySelector(`#retweet-svg-${tweetId}`);
+  sendPOSTRequest(url, { tweetId }, ({ isRetweeted }) => {
+    const count = +counterElement.innerText;
+    const retweetContent = document.querySelector(
+      `#retweet-without-comment-${tweetId}`
+    );
+    if (isRetweeted) {
+      retweetContent.innerText = 'Undo Retweet';
+      counterElement.innerText = count + 1;
+      retweetSvg.setAttribute('class', 'green');
+      return;
     }
+    retweetSvg.removeAttribute('class', 'green');
+    retweetContent.innerText = 'Retweet';
+    counterElement.innerText = count - 1;
   });
-};
-
-const undoRetweet = function (tweetId) {
-  updateCount(tweetId, false);
-  const retweet = document.querySelector(`#retweet-${tweetId}`);
-  retweet.innerText = 'Retweet';
-  retweet.onclick = `updateRetweet(${tweetId})`;
 };

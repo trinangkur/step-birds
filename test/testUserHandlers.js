@@ -56,6 +56,7 @@ describe('/getLatestTweet', () => {
       type: 'tweet',
       tweetId: null,
       isLiked: 'false',
+      isRetweeted: 'false',
       isUsersTweet: true,
     };
     const expectedJson = JSON.stringify(expected);
@@ -116,6 +117,7 @@ describe('getUserTweets', function () {
       type: 'tweet',
       tweetId: null,
       isLiked: 'false',
+      isRetweeted: 'false',
       isUsersTweet: false,
     },
   ];
@@ -223,6 +225,7 @@ describe('getAllTweets', function () {
       'id:2': 7,
       tweetId: null,
       isLiked: 'false',
+      isRetweeted: 'false',
       isUsersTweet: true,
     },
     {
@@ -246,6 +249,7 @@ describe('getAllTweets', function () {
       'id:2': 9,
       tweetId: null,
       isLiked: 'false',
+      isRetweeted: 'false',
       isUsersTweet: false,
     },
   ];
@@ -357,6 +361,7 @@ describe('/user/getRepliedTweets', function () {
           'id:2': 7,
           tweetId: null,
           isLiked: 'false',
+          isRetweeted: 'false',
           isUsersTweet: true,
         },
       ])

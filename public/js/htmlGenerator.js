@@ -40,7 +40,7 @@ const getRetweet = function ({ id, retweetCount, isRetweeted }) {
   return `
   <div class="option">
   <div class="retweet-icon" onclick="show('retweet-${id}')">
-    <svg class="retweet-svg" viewBox="0 0 24 24" class="retweet-svg ${colour}" id="retweet-svg-${id}">
+    <svg class="retweet-svg ${colour}" viewBox="0 0 24 24"  id="retweet-svg-${id}">
       ${getRetweetSvgPath()}
     </svg>
   </div>
@@ -99,18 +99,23 @@ const getRightSideOptions = function (isUsersTweet, id, reference, type) {
     : '';
 };
 
+const getRetweetOptionHtml = function (tweet) {
+  const { id, isRetweeted } = tweet;
+  const content = isRetweeted === 'true' ? 'Undo Retweet' : 'Retweet';
+  return `<div class="retweet-options hide" id="retweet-${id}" onmouseleave=hide('retweet-${id}')>
+    <div id="retweet-without-comment-${id}" onclick="updateRetweet('${id}')"> ${content} </div>
+    <div id="retweet-comment-${id}" onclick="updateRetweetWithComment(${id})"> Retweet with Comment </div>
+  </div>`;
+};
+
 const createTweetHtml = function (tweet) {
   const { content, id, isUsersTweet, reference } = tweet;
   const { userId, image_url, name, timeStamp, type } = tweet;
-  if (type === 'retweet') {
-    let tweet = `<div class="retweet-by">@${userId} retweeted</div>`;
-    tweet += document.querySelector(`#_${reference}`).innerHTML;
-    return tweet;
-  }
   return `
   <div class="content-section">
   <div class="dp" onclick="getUserProfile('${userId}')">
     <img
+      id="dp-${userId}"
       src="${image_url}"
       alt="not found"
     />
@@ -128,10 +133,7 @@ const createTweetHtml = function (tweet) {
 </div>
   ${getTweetOptions(tweet)}
   ${getRightSideOptions(isUsersTweet, id, reference, type)}
-  <div class="retweet-options hide" id="retweet-${id}" onmouseleave=hide('retweet-${id}')>
-    <div id="retweet-${id}" onclick="updateRetweet('${id}')"> Retweet </div>
-    <div id="retweet-comment-${id}" onclick="updateRetweetWithComment(${id})"> Retweet with Comment </div>
-  </div>
+  ${getRetweetOptionHtml(tweet)}
   `;
 };
 
