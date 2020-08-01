@@ -214,6 +214,12 @@ const getLikedByQuery = function(tweetId) {
   where Likes.tweetId is '${tweetId}'`;
 };
 
+const getRetweetedByQuery = function(tweetId) {
+  return `SELECT * from Retweet left join tweeter
+  on Tweeter.id=Retweet.userId
+  where Retweet.tweetId is '${tweetId}'`;
+};
+
 const getRepliedTweetQuery = function(userId, loggedInUser) {
   return `WITH tweets as ( WITH RepliedTweets as 
     (SELECT Tweet.id, Tweet.userId,
@@ -286,5 +292,6 @@ module.exports = {
   getRepliesQuery,
   getIncreaseRetweetsQuery,
   getDecreaseRetweetsQuery,
-  getRetweetedTweetsQuery
+  getRetweetedTweetsQuery,
+  getRetweetedByQuery
 };

@@ -28,7 +28,7 @@ head
           .content #{tweet.content} 
         .right-side-options(onclick=`showTweetOptions(${tweet.id})`) V
       .tweet-reactions
-        .retweet-count 
+        .retweet-count(onclick=`showRetweetedBy(${tweet.id})`) 
           span(id=`retweet-count-${tweet.id}`) #{tweet.retweetCount} 
           span &nbsp; Retweets and comments 
         .like-count(onclick=`showLikedBy(${tweet.id})`)
@@ -65,9 +65,15 @@ head
             span Delete
             img(src="/assets/delete.png", alt="", srcset="")
     #replies
-#editor.hide
+#editor-liked.hide
   #edit-panel
     .popup-header
-      #close(onclick="hide('editor')") X
+      #close(onclick="hide('editor-liked')") X
       span.head Liked By
     #liked-user
+#editor-retweeted.hide
+  #edit-panel
+    .popup-header
+      #close(onclick="hide('editor-retweeted')") X
+      span.head Retweeted By
+    #retweeted-user

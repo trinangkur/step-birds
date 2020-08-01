@@ -70,6 +70,15 @@
   padding: 2%;
 }
 
+#editor-liked,
+#editor-retweeted {
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.4);
+  position: absolute;
+  padding: 2%;
+}
+
 #edit-panel {
   height: 54vh;
   width: 30vw;
@@ -199,6 +208,7 @@
   cursor: pointer;
 }
 
-.like-count > span:hover {
+.like-count > span:hover,
+.retweet-count > span:hover {
   border-bottom: 0.5px solid gray;
 }

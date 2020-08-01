@@ -193,6 +193,14 @@ const getLikedBy = function(req, res) {
   });
 };
 
+const getRetweetedBy = function(req, res) {
+  const { dataStore } = req.app.locals;
+  const { tweetId } = req.body;
+  dataStore.getRetweetedBy(tweetId).then((tweeters) => {
+    res.json(tweeters);
+  });
+};
+
 const postReply = function(req, res) {
   const { dataStore } = req.app.locals;
   const { userId } = req;
@@ -258,4 +266,5 @@ module.exports = {
   serveRepliedTweet,
   updateRetweets,
   getRetweetedTweets,
+  getRetweetedBy,
 };

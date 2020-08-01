@@ -111,7 +111,6 @@ const show = function(elementId) {
 };
 
 const hide = function(elementId) {
-  
   const element = document.querySelector(`#${elementId}`);
   element.classList.add('hide');
   element.classList.remove('show');
@@ -126,7 +125,19 @@ const showLikedBy = function(tweetId) {
       element.innerHTML += createProfileTemplate(tweet);
     });
   });
-  show('editor');
+  show('editor-liked');
+};
+
+const showRetweetedBy = function(tweetId) {
+  const url = '/user/getRetweetedBy';
+  const element = document.querySelector('#retweeted-user');
+  sendPOSTRequest(url, { tweetId }, (tweeters) => {
+    element.innerHTML = '';
+    tweeters.forEach((tweet) => {
+      element.innerHTML += createProfileTemplate(tweet);
+    });
+  });
+  show('editor-retweeted');
 };
 
 const updateRetweet = function(tweetId) {
