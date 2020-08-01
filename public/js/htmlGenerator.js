@@ -25,7 +25,7 @@ const getReplay = function (tweet) {
   const { id, content, image_url, name, replyCount } = tweet;
   return `
   <div class="option">
-    <div class="replay-icon" onclick="showReplyPopup('${id}','${content}','${image_url}','${name}')">
+    <div class="replay-icon" onclick="showReplyPopup('${id}',\`${content}\`,'${image_url}','${name}')">
       <svg class="replay-svg" viewBox="0 0 24 24">
        ${getReplySvgPath()}
       </svg>
