@@ -12,7 +12,7 @@ const sendReplyFromTweet = function(tweetId) {
 
 const showReply = function(reply, parentElement) {
   const element = document.createElement('div');
-  element.id = reply.id;
+  element.id = `_${reply.id}`;
   element.className = 'reply';
   element.innerHTML = createReplyHtml(reply);
   const allTweets = document.getElementById(parentElement);

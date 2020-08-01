@@ -22,8 +22,7 @@ const {
   serveReplies,
   postReply,
   updateRetweets,
-  // postRetweet,
-  // getTweetDetails,
+  getRetweetedTweets
 } = require('./userHandler');
 
 const userRouter = express.Router();
@@ -58,6 +57,8 @@ userRouter.get('/followers/:id', serveFollowers);
 userRouter.get('/followings/:id', serveFollowings);
 
 userRouter.post('/getLikedTweets', getLikedTweets);
+
+userRouter.post('/getRetweetedTweets', getRetweetedTweets);
 
 userRouter.get('/tweet/:id', serveTweet);
 

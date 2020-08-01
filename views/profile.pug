@@ -28,12 +28,12 @@ body(onload="main()")
     div#option-bar
       #user-tweets.indicator(onclick="showUserTweets()")
         #option1 Tweets 
-      #user-tweets-and-replies(onclick="showUserTweetsAndReplies()")
-        #option2 Tweets&Replies
+      #user-tweets-and-replies(onclick="showUserRetweets()")
+        #option2 Retweets
       #user-likes(onclick="showUserLikedTweets()")
         #option3 Likes 
     div#tweets.show(name=id)
-    div#tweets-and-replies.hide
+    div#retweeted.hide
     div#likes.hide
   #editor.hide
     #edit-panel

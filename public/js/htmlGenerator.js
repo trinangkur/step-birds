@@ -1,4 +1,4 @@
-const fillReplyPopup = function (tweetId, content, image_url, name) {
+const fillReplyPopup = function(tweetId, content, image_url, name) {
   return `
   <div class="reply-top-bar">
     <div class="profile"><img src="${image_url}" alt="N/A"/><span class="user-name">${name}</span></div>
@@ -15,13 +15,13 @@ const fillReplyPopup = function (tweetId, content, image_url, name) {
 </div>`;
 };
 
-const showReplyPopup = function (tweetId, content, image_url, name) {
+const showReplyPopup = function(tweetId, content, image_url, name) {
   const popup = document.querySelector('#replyPopup');
   popup.style.display = 'block';
   popup.innerHTML = fillReplyPopup(tweetId, content, image_url, name);
 };
 
-const getReplay = function (tweet) {
+const getReplay = function(tweet) {
   const { id, content, image_url, name, replyCount } = tweet;
   return `
   <div class="option">
@@ -35,7 +35,7 @@ const getReplay = function (tweet) {
   `;
 };
 
-const getRetweet = function ({ id, retweetCount, isRetweeted }) {
+const getRetweet = function({ id, retweetCount, isRetweeted }) {
   const colour = isRetweeted === 'true' ? 'green' : 'black';
   return `
   <div class="option">
@@ -49,7 +49,7 @@ const getRetweet = function ({ id, retweetCount, isRetweeted }) {
   `;
 };
 
-const getLike = function ({ id, likeCount, isLiked }) {
+const getLike = function({ id, likeCount, isLiked }) {
   const colour = isLiked === 'true' ? 'red' : 'black';
   return `
   <div class="option">
@@ -63,7 +63,7 @@ const getLike = function ({ id, likeCount, isLiked }) {
   `;
 };
 
-const getBookmark = function () {
+const getBookmark = function() {
   return `
   <div class="option">
   <div class="bookmark-icon">
@@ -75,7 +75,7 @@ const getBookmark = function () {
   `;
 };
 
-const getTweetOptions = function (tweet) {
+const getTweetOptions = function(tweet) {
   return `
   <div class="tweet-options">
     ${getReplay(tweet)}
@@ -86,7 +86,8 @@ const getTweetOptions = function (tweet) {
   `;
 };
 
-const getRightSideOptions = function (isUsersTweet, id, reference, type) {
+const getRightSideOptions = function({ isUsersTweet, id, reference, type }) {
+
   return isUsersTweet
     ? `
     <div class="options" id="tweetId-${id}" onmouseleave="hideOptions(${id})">
@@ -99,7 +100,7 @@ const getRightSideOptions = function (isUsersTweet, id, reference, type) {
     : '';
 };
 
-const getRetweetOptionHtml = function (tweet) {
+const getRetweetOptionHtml = function(tweet) {
   const { id, isRetweeted } = tweet;
   const content = isRetweeted === 'true' ? 'Undo Retweet' : 'Retweet';
   return `<div class="retweet-options hide" id="retweet-${id}" onmouseleave=hide('retweet-${id}')>
@@ -108,9 +109,9 @@ const getRetweetOptionHtml = function (tweet) {
   </div>`;
 };
 
-const createTweetHtml = function (tweet) {
-  const { content, id, isUsersTweet, reference } = tweet;
-  const { userId, image_url, name, timeStamp, type } = tweet;
+const createTweetHtml = function(tweet) {
+  const { content, id } = tweet;
+  const { userId, image_url, name, timeStamp } = tweet;
   return `
   <div class="content-section">
   <div class="dp" onclick="getUserProfile('${userId}')">
@@ -132,12 +133,12 @@ const createTweetHtml = function (tweet) {
   <div class="right-side-options" onclick="showTweetOptions(${id})">v</div>
 </div>
   ${getTweetOptions(tweet)}
-  ${getRightSideOptions(isUsersTweet, id, reference, type)}
+  ${getRightSideOptions(tweet)}
   ${getRetweetOptionHtml(tweet)}
   `;
 };
 
-const createReplyHtml = function (tweet) {
+const createReplyHtml = function(tweet) {
   const { userId, image_url, name, reference, _type } = tweet;
   const { id, timeStamp, content, isUsersTweet } = tweet;
   return `<div class="reply-content-section">
@@ -159,7 +160,7 @@ const createReplyHtml = function (tweet) {
   </div>${replyOptions(id, isUsersTweet, reference, _type)}`;
 };
 
-const replyOptions = function (id, isUsersTweet, reference, type) {
+const replyOptions = function(id, isUsersTweet, reference, type) {
   const deleteOptions = `<div class="reply-options" id="tweetId-${id}" onmouseleave="hideOptions(${id})">
   <div class="delete-tweet" onclick="deleteTweet(${id}, ${reference}, '${type}')">
       <span>Delete</span>
