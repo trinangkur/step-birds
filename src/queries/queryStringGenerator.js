@@ -8,6 +8,11 @@ const getDeleteQuery = function (tweetId, reference, type) {
    DELETE FROM Tweet WHERE id = ${tweetId} or reference = ${tweetId}; 
    DELETE FROM Likes
     WHERE tweetId = ${tweetId};`;
+  if (type !== 'tweet') {
+    query += ` UPDATE Tweet
+    SET ${type}Count = ${type}Count -1
+    WHERE id = '${reference}' `;
+  }
   return query;
 };
 

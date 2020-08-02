@@ -5,7 +5,7 @@ const { app } = require('../src/app');
 const Sqlite3 = require('sqlite3').verbose();
 const db = new Sqlite3.Database(getDB());
 
-describe('postTweet', () => {
+describe('/postTweet', () => {
   before(() => {
     const sessions = { getUserId: () => 'revathi' };
     app.locals.sessions = sessions;
@@ -22,7 +22,7 @@ describe('postTweet', () => {
   });
 });
 
-describe('deleteTweet', () => {
+describe('/deleteTweet', () => {
   before(() => {
     const sessions = { getUserId: () => 'revathi' };
     app.locals.sessions = sessions;
@@ -245,6 +245,21 @@ describe('/user/postReply', function () {
     request(app)
       .post('/user/postReply')
       .send(body)
+      .expect({ status: true })
+      .expect(200, done);
+  });
+});
+
+describe('/deleteTweet', () => {
+  before(() => {
+    const sessions = { getUserId: () => 'revathi' };
+    app.locals.sessions = sessions;
+  });
+  it('should be able to delete a reply', (done) => {
+    request(app)
+      .post('/user/deleteTweet')
+      .set('Content-Type', 'application/json')
+      .send({ tweetId: 13, type: 'reply' })
       .expect({ status: true })
       .expect(200, done);
   });
