@@ -31,3 +31,20 @@ BEGIN TRANSACTION;
   INSERT INTO Followers (followerId, followingId)
     VALUES('vikram','ramu');
 COMMIT;
+
+BEGIN TRANSACTION;
+  INSERT INTO Likes (tweetId,userId) 
+    VALUES(7,'vikram');
+  UPDATE Tweet
+    SET likeCount=likeCount + 1
+    WHERE id is 7;
+COMMIT;
+
+BEGIN TRANSACTION;
+  INSERT INTO Retweets (tweetId,userId) 
+    VALUES(10,'vikram');
+  UPDATE Tweet
+    SET retweetCount=retweetCount + 1
+    WHERE id is 10;
+COMMIT;
+

@@ -168,6 +168,7 @@ class DataStore {
     if (activity === 'tweets') {
       return this.getUserTweets(userId, loggedInUser);
     }
+
     const queryString = getProfileTweetsQuery(userId, activity, loggedInUser);
     return this.getAllRows(queryString, []);
   }
