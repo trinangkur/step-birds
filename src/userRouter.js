@@ -6,24 +6,21 @@ const {
   getLatestTweet,
   searchProfile,
   serveProfile,
-  serveUserTweets,
   serveHome,
   redirectUserProfile,
   updateLikes,
   toggleFollow,
   serveAllTweets,
   updateProfile,
-  serveFollowers,
-  serveFollowings,
-  getLikedTweets,
+  serveFollowPage,
   serveTweet,
   getLikedBy,
   serveRepliedTweet,
   serveReplies,
   postReply,
   updateRetweets,
-  getRetweetedTweets,
   getRetweetedBy,
+  getActivitySpecificTweets,
 } = require('./userHandler');
 
 const userRouter = express.Router();
@@ -43,8 +40,6 @@ userRouter.post('/deleteTweet', deleteTweet);
 
 userRouter.get('/getLatestTweet', getLatestTweet);
 
-userRouter.post('/getUserTweets', serveUserTweets);
-
 userRouter.post('/updateLikes', updateLikes);
 
 userRouter.post('/toggleFollowRequest', toggleFollow);
@@ -53,13 +48,9 @@ userRouter.get('/getAllTweets', serveAllTweets);
 
 userRouter.post('/updateProfile', updateProfile);
 
-userRouter.get('/followers/:id', serveFollowers);
+userRouter.get('/followList/:listName/:id', serveFollowPage);
 
-userRouter.get('/followings/:id', serveFollowings);
-
-userRouter.post('/getLikedTweets', getLikedTweets);
-
-userRouter.post('/getRetweetedTweets', getRetweetedTweets);
+userRouter.post('/getActivitySpecificTweets', getActivitySpecificTweets);
 
 userRouter.get('/tweet/:id', serveTweet);
 

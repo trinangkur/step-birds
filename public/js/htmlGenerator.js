@@ -20,74 +20,54 @@ const showReplyPopup = function(tweetId, content, image_url, name) {
   popup.style.display = 'block';
   popup.innerHTML = fillReplyPopup(tweetId, content, image_url, name);
 };
-
-const getReplay = function(tweet) {
-  const { id, content, image_url, name, replyCount } = tweet;
-  return `
-  <div class="option">
-    <div class="replay-icon" onclick="showReplyPopup('${id}',\`${content}\`,'${image_url}','${name}')">
-      <svg class="replay-svg" viewBox="0 0 24 24">
-       ${getReplySvgPath()}
-      </svg>
-    </div>
-      <div class="replay-count" id="reply-count-${id}">${replyCount}</div>
-  </div>
-  `;
+const getSvgHandlers = function(id, content, image_url, name) {
+  return {
+    retweet: `show('retweet-${id}')`,
+    like: `updateLikes(${id})`,
+    reply: `showReplyPopup('${id}',\`${content}\`,'${image_url}','${name}')`,
+    bookmark: '',
+  };
 };
-
-const getRetweet = function({ id, retweetCount, isRetweeted }) {
-  const colour = isRetweeted === 'true' ? 'green' : 'black';
+const getCountHandlers = function(id) {
+  return {
+    retweet: `showRetweetedBy(${id})`,
+    like: `showLikedBy(${id})`,
+    reply: '',
+    bookmark: '',
+  };
+};
+const getTweetReactionHtml = function(tweet, type, colour, count) {
+  const { id, content, image_url, name } = tweet;
+  const countHandlers = getCountHandlers(id);
+  const svgHandlers = getSvgHandlers(id, content, image_url, name);
   return `
   <div class="option">
-  <div class="retweet-icon" onclick="show('retweet-${id}')">
-    <svg class="retweet-svg ${colour}" viewBox="0 0 24 24"  id="retweet-svg-${id}">
-      ${getRetweetSvgPath()}
+  <div class="${type}-icon" onclick="${svgHandlers[type]}">
+    <svg viewBox="0 0 24 24" class="${type}-svg ${colour}" id="${type}-svg-${id}">
+      ${getSvg(type)}
     </svg>
   </div>
-  <div id="retweet-count-${id}" class="retweet-count">${retweetCount}</div>
-</div>
-  `;
-};
-
-const getLike = function({ id, likeCount, isLiked }) {
-  const colour = isLiked === 'true' ? 'red' : 'black';
-  return `
-  <div class="option">
-  <div class="like-icon" onclick="updateLikes('${id}')">
-    <svg viewBox="0 0 24 24" class="like-svg ${colour}" id="like-svg-${id}">
-      ${getLikeSvgPath()}
-    </svg>
-  </div>
-  <div id="like-count-${id}" class="like-count" onclick="showLikedBy('${id}')">${likeCount}</div>
-</div>
-  `;
-};
-
-const getBookmark = function() {
-  return `
-  <div class="option">
-  <div class="bookmark-icon">
-    <svg class="bookmark-svg">
-      ${getBookmarkSvgPath()}
-    </svg>
-  </div>
+  <div id="${type}-count-${id}" class="${type}-count" 
+  onclick="${countHandlers[type]}">${count}</div>
 </div>
   `;
 };
 
 const getTweetOptions = function(tweet) {
+  const { replyCount, retweetCount, likeCount } = tweet;
+  const likeColour = tweet.isLiked === 'true' ? 'red' : 'black';
+  const retweetColour = tweet.isRetweeted === 'true' ? 'green' : 'black';
   return `
   <div class="tweet-options">
-    ${getReplay(tweet)}
-    ${getRetweet(tweet)}
-    ${getLike(tweet)}
-    ${getBookmark()}
+    ${getTweetReactionHtml(tweet, 'reply', 'black', replyCount)}
+    ${getTweetReactionHtml(tweet, 'retweet', retweetColour, retweetCount)}
+    ${getTweetReactionHtml(tweet, 'like', likeColour, likeCount)}
+    ${getTweetReactionHtml(tweet, 'bookmark', 'black', '')}
   </div>
   `;
 };
 
 const getRightSideOptions = function({ isUsersTweet, id, reference, type }) {
-
   return isUsersTweet
     ? `
     <div class="options" id="tweetId-${id}" onmouseleave="hideOptions(${id})">

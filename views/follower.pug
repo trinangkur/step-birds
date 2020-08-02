@@ -5,19 +5,17 @@ head
   include ./commonPart.pug
   #content-box()
     #header()
-      a(href=`/user/profile/${userId}`)
+      a(href=`/user/profile/${id}`)
         i(class="fas fa-arrow-left fa-2x back-arrow")
       - let list
       - let header
-        if followers
-         - list = followers
+        if listName === 'follower'
          - header = "Followers"
         else
-         - list = followings
          - header = "Following"
         span= header
     div#followers
-      each item in list
+      each item in followList
         div(class="profileLink" onclick=`getUserProfile('${item.id}')`)
           img(src=`${item.image_url}`)
           h3= item.name

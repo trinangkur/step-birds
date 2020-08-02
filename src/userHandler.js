@@ -72,17 +72,6 @@ const serveProfile = function(req, res) {
   });
 };
 
-const serveUserTweets = function(req, res) {
-  req.app.locals.dataStore
-    .getUserTweets(req.body.id, req.userId)
-    .then((tweets) => {
-      tweets.forEach((tweet) => {
-        tweet.isUsersTweet = req.userId === tweet.userId;
-      });
-      res.json(tweets);
-    });
-};
-
 const redirectUserProfile = function(req, res) {
   res.redirect(`/user/profile/${req.userId}`);
 };
@@ -134,40 +123,25 @@ const updateProfile = function(req, res) {
   });
 };
 
-const serveFollowers = function(req, res) {
+const serveFollowPage = function(req, res) {
   const { dataStore } = req.app.locals;
-  dataStore.getFollowers(req.params.id).then((followers) => {
-    res.render('follower', { followers, userId: req.params.id });
+  const { listName, id } = req.params;
+  dataStore.getFollow(listName, id).then((followList) => {
+
+    res.render('follower', { followList, id, listName });
   });
 };
 
-const serveFollowings = function(req, res) {
-  const { dataStore } = req.app.locals;
-  dataStore.getFollowings(req.params.id).then((followings) => {
-    res.render('follower', { followings, userId: req.params.id });
-  });
-};
-
-const getLikedTweets = function(req, res) {
-  const { dataStore } = req.app.locals;
-  const { id } = req.body;
-  dataStore.getLikedTweets(id, req.userId).then((tweets) => {
-    tweets.forEach((tweet) => {
-      tweet.isUsersTweet = req.userId === tweet.userId;
+const getActivitySpecificTweets = function(req, res) {
+  const { id, activity } = req.body;
+  req.app.locals.dataStore
+    .getActivitySpecificTweets(id, activity, req.userId)
+    .then((tweets) => {
+      tweets.forEach((tweet) => {
+        tweet.isUsersTweet = req.userId === tweet.userId;
+      });
+      res.json(tweets);
     });
-    res.json(tweets);
-  });
-};
-
-const getRetweetedTweets = function(req, res) {
-  const { dataStore } = req.app.locals;
-  const { id } = req.body;
-  dataStore.getRetweetedTweets(id, req.userId).then((tweets) => {
-    tweets.forEach((tweet) => {
-      tweet.isUsersTweet = req.userId === tweet.userId;
-    });
-    res.json(tweets);
-  });
 };
 
 const serveTweet = function(req, res) {
@@ -249,22 +223,19 @@ module.exports = {
   searchProfile,
   getLatestTweet,
   serveProfile,
-  serveUserTweets,
   redirectUserProfile,
   serveHome,
   updateLikes,
   toggleFollow,
   serveAllTweets,
   updateProfile,
-  serveFollowers,
-  serveFollowings,
-  getLikedTweets,
+  serveFollowPage,
   serveTweet,
   getLikedBy,
   postReply,
   serveReplies,
   serveRepliedTweet,
   updateRetweets,
-  getRetweetedTweets,
   getRetweetedBy,
+  getActivitySpecificTweets,
 };

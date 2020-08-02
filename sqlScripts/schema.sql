@@ -43,8 +43,8 @@ CREATE TABLE Likes (
   FOREIGN KEY (userId) REFERENCES Tweeter(id)
 );
 
-DROP TABLE IF EXISTS Retweet;
-CREATE TABLE Retweet (
+DROP TABLE IF EXISTS Retweets;
+CREATE TABLE Retweets (
   tweetId NUMERIC(10) NOT NULL,
   userId VARCHAR(20) NOT NULL,
   PRIMARY KEY (tweetId, userId),

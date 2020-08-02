@@ -112,6 +112,7 @@ const show = function(elementId) {
 
 const hide = function(elementId) {
   const element = document.querySelector(`#${elementId}`);
+  
   element.classList.add('hide');
   element.classList.remove('show');
 };

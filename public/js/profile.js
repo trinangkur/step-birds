@@ -1,38 +1,24 @@
-const getUserTweets = function() {
-  const url = '/user/getUserTweets';
-  const id = document.querySelector('#profile-id').innerText.slice(1);
-  sendPOSTRequest(url, { id }, (tweets) => {
-    document.querySelector('#tweets').innerHTML = '';
-    tweets.forEach((tweet) => {
-      showTweet(tweet, 'tweets');
-    });
-  });
-};
+const select = document.querySelector.bind(document);
 
-const showFollow = function(userOption) {
-  userOption.value = 'Unfollow';
-  const followers = document.querySelector('#follower-count');
+const toggleFollow = function(userOption, status) {
+  let value = 'Unfollow';
+  let count = -1;
+  if (status) {
+    value = 'Follow';
+    count = 1;
+  }
+  userOption.value = value;
+  const followers = select('#follower-count');
   const followersCount = Number(followers.innerText);
-  followers.innerText = followersCount + 1;
-};
-
-const showUnfollow = function(userOption) {
-  userOption.value = 'Follow';
-  const followers = document.querySelector('#follower-count');
-  const followersCount = Number(followers.innerText);
-  followers.innerText = followersCount - 1;
+  followers.innerText = followersCount + count;
 };
 
 const userOptions = function(userOption) {
   if (userOption.value !== 'Edit Profile') {
-    const tweeter = document.querySelector('#profile-id').innerText.slice(1);
+    const tweeter = select('#profile-id').innerText.slice(1);
     const url = '/user/toggleFollowRequest';
-    const lookup = {
-      followed: showFollow.bind(null, userOption),
-      unFollowed: showUnfollow.bind(null, userOption),
-    };
     sendPOSTRequest(url, { tweeter }, ({ status }) => {
-      lookup[status]();
+      toggleFollow(userOption, status);
     });
   } else {
     show('editor');
@@ -40,8 +26,8 @@ const userOptions = function(userOption) {
 };
 
 const updateProfile = function() {
-  const name = document.querySelector('#name').value;
-  const bio = document.querySelector('#bio').value;
+  const name = select('#name').value;
+  const bio = select('#bio').value;
   const url = '/user/updateProfile';
   sendPOSTRequest(url, { name, bio }, ({ status }) => {
     if (status) {
@@ -50,80 +36,45 @@ const updateProfile = function() {
   });
 };
 
-const showFollowersList = function(userId) {
-  location.assign(`/user/followers/${userId}`);
+const showFollowList = function(listName, userId) {
+  location.assign(`/user/followList/${listName}/${userId}`);
 };
 
-const showFollowingList = function(userId) {
-  location.assign(`/user/followings/${userId}`);
-};
-
-const getLikedTweets = function() {
-  const id = document.querySelector('#profile-id').innerText.slice(1);
-  const url = '/user/getLikedTweets';
-  sendPOSTRequest(url, { id }, (tweets) => {
-    document.querySelector('#likes').innerHTML = '';
+const getActivitySpecificTweets = function(activity) {
+  const id = select('#profile-id').innerText.slice(1);
+  const url = '/user/getActivitySpecificTweets';
+  sendPOSTRequest(url, { id, activity }, (tweets) => {
+    select(`#${activity}`).innerHTML = '';
     tweets.forEach((tweet) => {
-      showTweet(tweet, 'likes');
-    });
-  });
-};
-
-const getRetweetedTweets = function() {
-  const id = document.querySelector('#profile-id').innerText.slice(1);
-  const url = '/user/getRetweetedTweets';
-  sendPOSTRequest(url, { id }, (tweets) => {
-    document.querySelector('#retweeted').innerHTML = '';
-    tweets.forEach((tweet) => {
-      showTweet(tweet, 'retweeted');
+      showTweet(tweet, activity);
     });
   });
 };
 
 const indicate = function(id) {
-  const element = document.querySelector(`#${id}`);
+  const element = select(`#${id}`);
   element.classList.add('indicator');
 };
 
 const removeIndication = function(id) {
-  const element = document.querySelector(`#${id}`);
+  const element = select(`#${id}`);
   element.classList.remove('indicator');
 };
 
-const showUserLikedTweets = function() {
-  hide('tweets');
-  hide('retweeted');
-  show('likes');
-  indicate('user-likes');
-  removeIndication('user-tweets');
-  removeIndication('user-tweets-and-replies');
+const showUserActivities = function(toBeShow) {
+  const activities = ['tweets', 'retweets', 'likes'];
+  activities.forEach((activity) => {
+    hide(activity);
+    removeIndication(`user-${activity}`);
+  });
+  show(toBeShow);
+  indicate(`user-${toBeShow}`);
 };
-
-const showUserRetweets = function() {
-  hide('likes');
-  hide('tweets');
-  show('retweeted');
-  indicate('user-tweets-and-replies');
-  removeIndication('user-likes');
-  removeIndication('user-tweets');
-};
-
-const showUserTweets = function() {
-  hide('likes');
-  hide('retweeted');
-  show('tweets');
-
-  indicate('user-tweets');
-  removeIndication('user-likes');
-  removeIndication('user-tweets-and-replies');
-};
-
-const showIndicator = function() {};
 
 const main = function() {
-  getUserTweets();
-  getLikedTweets();
-  getRetweetedTweets();
+  getActivitySpecificTweets('tweets');
+  getActivitySpecificTweets('retweets');
+  getActivitySpecificTweets('likes');
 };
 
 setInterval(main, 5000);

@@ -122,10 +122,6 @@
   height: 30%;
 }
 
-/* #user-profile > span {
-  border-radius: 50%;
-} */
-
 .edit-details {
   height: 15%;
   display: grid;
@@ -147,16 +143,6 @@
   font-size: x-large;
   font-weight: 300;
 }
-/* 
-#edit-bio {
-  height: 40%;
-}
-
-#edit-bio textarea {
-  text-decoration: none;
-  height: 100%;
-  width: 100%;
-} */
 
 #user-profile img {
   height: 110px;
@@ -182,7 +168,7 @@
   cursor: pointer;
 }
 
-#user-tweets-and-replies {
+#user-retweets {
   width: 40%;
   cursor: pointer;
 }

@@ -19,21 +19,21 @@ body(onload="main()")
           p #{bio}
         p#joined-at Joined: #{joinedAt}
         p 
-          span(class="follow-tags" onclick=`showFollowingList('${id}')`) Following: 
+          span(class="follow-tags" onclick=`showFollowList('following', '${id}')`) Following: 
           span#following-count #{followingCount}
-          span(class="follow-tags" onclick=`showFollowersList('${id}')`)  &nbsp&nbsp Followers: 
+          span(class="follow-tags" onclick=`showFollowList('follower', '${id}')`)  &nbsp&nbsp Followers: 
           span#follower-count #{followersCount}
       div#user-options
         input(type="button", value=userOption onclick="userOptions(this);")
     div#option-bar
-      #user-tweets.indicator(onclick="showUserTweets()")
+      #user-tweets.indicator(onclick="showUserActivities('tweets')")
         #option1 Tweets 
-      #user-tweets-and-replies(onclick="showUserRetweets()")
+      #user-retweets(onclick="showUserActivities('retweets')")
         #option2 Retweets
-      #user-likes(onclick="showUserLikedTweets()")
+      #user-likes(onclick="showUserActivities('likes')")
         #option3 Likes 
     div#tweets.show(name=id)
-    div#retweeted.hide
+    div#retweets.hide
     div#likes.hide
   #editor.hide
     #edit-panel

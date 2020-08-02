@@ -35,17 +35,17 @@ const getUserAction = function(loggedInUser) {
         else 'false'
       end isLiked,
       CASE 
-        WHEN tweets.id is Retweet.tweetId
-        and Retweet.userId is '${loggedInUser}'
+        WHEN tweets.id is Retweets.tweetId
+        and Retweets.userId is '${loggedInUser}'
         then 'true'
         else 'false'
       end isRetweeted
     FROM tweets LEFT JOIN Likes
     on Likes.userId='${loggedInUser}' 
     and Likes.tweetId=tweets.id
-    Left Join Retweet
-    on Retweet.userId='${loggedInUser}'
-    and Retweet.tweetId=tweets.id`;
+    Left Join Retweets
+    on Retweets.userId='${loggedInUser}'
+    and Retweets.tweetId=tweets.id`;
 };
 
 const getTweetQuery = function(userId, loggedInUser) {
@@ -67,6 +67,20 @@ const getTweetQuery = function(userId, loggedInUser) {
     AND t1._type is "tweet") 
     ${getUserAction(loggedInUser)}
     `;
+};
+
+const getProfileTweetsQuery = function(userId, activity, loggedInUser) {
+  return `with Tweets as (WITH homeDetails as (
+    SELECT tweet.userId, tweet.id, tweet.content, tweet.likeCount, 
+    tweet._type, tweet.replyCount, tweet.reference, tweet.retweetCount
+     From ${activity}
+    LEFT JOIN tweet
+    on Tweet.id = ${activity}.tweetId
+    WHERE ${activity}.userId = '${userId}')
+  SELECT *, homeDetails.id as id
+         FROM homeDetails LEFT JOIN Tweeter
+         ON homeDetails.userId = Tweeter.id
+      )${getUserAction(loggedInUser)}`;
 };
 
 const getIncreaseLikesQuery = function(tweetId, userId) {
@@ -159,46 +173,15 @@ const getUpdateProfileQuery = function(userId, name, bio) {
   return `UPDATE Tweeter SET name='${name}', bio='${bio}' where id='${userId}'`;
 };
 
-const getFollowersQuery = function(userId) {
+const getFollowListQuery = function(listName, userId) {
+  let column = 'following';
+  if (listName === column) {
+    column = 'follower';
+  }
   return `SELECT * FROM 
     Followers LEFT JOIN Tweeter
-    ON Tweeter.id = Followers.followerId
-    WHERE Followers.followingId is '${userId}';`;
-};
-
-const getFollowingsQuery = function(userId) {
-  return `SELECT * FROM 
-    Followers LEFT JOIN Tweeter
-    ON Tweeter.id = Followers.followingId
-    WHERE Followers.followerId is '${userId}';`;
-};
-
-const getLikedTweetsQuery = function(userId, loggedInUser) {
-  return `with Tweets as (WITH homeDetails as (
-    SELECT tweet.userId, tweet.id, tweet.content, tweet.likeCount, 
-    tweet._type, tweet.replyCount, tweet.reference, tweet.retweetCount
-     From likes
-    LEFT JOIN tweet
-    on Tweet.id = likes.tweetId
-    WHERE likes.userId = '${userId}')
-  SELECT *, homeDetails.id as id
-         FROM homeDetails LEFT JOIN Tweeter
-         ON homeDetails.userId = Tweeter.id
-      )${getUserAction(loggedInUser)}`;
-};
-
-const getRetweetedTweetsQuery = function(userId, loggedInUser) {
-  return `with Tweets as (WITH homeDetails as (
-    SELECT tweet.userId, tweet.id, tweet.content, tweet.likeCount, 
-    tweet._type, tweet.replyCount, tweet.reference, tweet.retweetCount
-     From Retweet
-    LEFT JOIN tweet
-    on Tweet.id = retweet.tweetId
-    WHERE retweet.userId = '${userId}')
-  SELECT *, homeDetails.id as id
-         FROM homeDetails LEFT JOIN Tweeter
-         ON homeDetails.userId = Tweeter.id
-      )${getUserAction(loggedInUser)}`;
+    ON Tweeter.id = Followers.${listName}Id
+    WHERE Followers.${column}Id is '${userId}';`;
 };
 
 const getSpecificTweetQuery = function(tweetId, userId) {
@@ -215,9 +198,9 @@ const getLikedByQuery = function(tweetId) {
 };
 
 const getRetweetedByQuery = function(tweetId) {
-  return `SELECT * from Retweet left join tweeter
-  on Tweeter.id=Retweet.userId
-  where Retweet.tweetId is '${tweetId}'`;
+  return `SELECT * from Retweets left join tweeter
+  on Tweeter.id=Retweets.userId
+  where Retweets.tweetId is '${tweetId}'`;
 };
 
 const getRepliedTweetQuery = function(userId, loggedInUser) {
@@ -253,7 +236,7 @@ const getRepliesQuery = function(tweetId) {
 
 const getIncreaseRetweetsQuery = function(tweetId, userId) {
   return `BEGIN TRANSACTION;
-  INSERT INTO Retweet (tweetId,userId) 
+  INSERT INTO Retweets (tweetId,userId) 
     VALUES('${tweetId}','${userId}');
   UPDATE Tweet
     SET retweetCount=retweetCount + 1
@@ -262,7 +245,7 @@ const getIncreaseRetweetsQuery = function(tweetId, userId) {
 
 const getDecreaseRetweetsQuery = function(tweetId, userId) {
   return `BEGIN TRANSACTION;
-  DELETE FROM Retweet
+  DELETE FROM Retweets
     WHERE userId = '${userId}' AND tweetId='${tweetId}';
   UPDATE Tweet
     SET retweetCount=retweetCount - 1
@@ -282,9 +265,7 @@ module.exports = {
   getProfileInfoQuery,
   getAllTweetsQuery,
   getUpdateProfileQuery,
-  getFollowersQuery,
-  getFollowingsQuery,
-  getLikedTweetsQuery,
+  getFollowQuery,
   getSpecificTweetQuery,
   getLikedByQuery,
   getRepliedTweetQuery,
@@ -292,6 +273,7 @@ module.exports = {
   getRepliesQuery,
   getIncreaseRetweetsQuery,
   getDecreaseRetweetsQuery,
-  getRetweetedTweetsQuery,
-  getRetweetedByQuery
+  getRetweetedByQuery,
+  getProfileTweetsQuery,
+  getFollowListQuery,
 };

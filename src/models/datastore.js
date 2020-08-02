@@ -11,9 +11,6 @@ const {
   getProfileInfoQuery,
   getAllTweetsQuery,
   getUpdateProfileQuery,
-  getFollowersQuery,
-  getFollowingsQuery,
-  getLikedTweetsQuery,
   getSpecificTweetQuery,
   getLikedByQuery,
   getRepliedTweetQuery,
@@ -21,8 +18,9 @@ const {
   getRepliesQuery,
   getIncreaseRetweetsQuery,
   getDecreaseRetweetsQuery,
-  getRetweetedTweetsQuery,
-  getRetweetedByQuery
+  getRetweetedByQuery,
+  getProfileTweetsQuery,
+  getFollowListQuery,
 } = require('../queries/queryStringGenerator');
 
 class DataStore {
@@ -96,11 +94,6 @@ class DataStore {
     return this.executeTransaction(queryString, []);
   }
 
-  getUserTweets(userId, loggedInUser) {
-    const queryString = getTweetQuery(userId, loggedInUser);
-    return this.getAllRows(queryString, []);
-  }
-
   getUserProfiles(name) {
     const queryString = getProfileSearchQuery(name);
     return this.getAllRows(queryString, []);
@@ -130,13 +123,14 @@ class DataStore {
   toggleFollow(tweeterId, userId) {
     return new Promise((resolve, reject) => {
       const addFollowerSql = getAddFollowerQuery(tweeterId, userId);
+
       this.executeTransaction(addFollowerSql)
-        .then(() => resolve('followed'))
+        .then(() => resolve(true))
         .catch((err) => {
           if (err.code === 'SQLITE_CONSTRAINT') {
             const removeFollowerSql = getRemoveFollowerQuery(tweeterId, userId);
             this.executeTransaction(removeFollowerSql).then(() =>
-              resolve('unFollowed')
+              resolve(false)
             );
           } else {
             reject(err);
@@ -160,23 +154,21 @@ class DataStore {
     return this.runQuery(queryString, []);
   }
 
-  getFollowers(userId) {
-    const queryString = getFollowersQuery(userId);
+  getFollow(listName, userId) {
+    const queryString = getFollowListQuery(listName, userId);
     return this.getAllRows(queryString, []);
   }
 
-  getFollowings(userId) {
-    const queryString = getFollowingsQuery(userId);
+  getUserTweets(userId, loggedInUser) {
+    const queryString = getTweetQuery(userId, loggedInUser);
     return this.getAllRows(queryString, []);
   }
 
-  getLikedTweets(userId, loggedInUser) {
-    const queryString = getLikedTweetsQuery(userId, loggedInUser);
-    return this.getAllRows(queryString, []);
-  }
-
-  getRetweetedTweets(userId, loggedInUser) {
-    const queryString = getRetweetedTweetsQuery(userId, loggedInUser);
+  getActivitySpecificTweets(userId, activity, loggedInUser) {
+    if (activity === 'tweets') {
+      return this.getUserTweets(userId, loggedInUser);
+    }
+    const queryString = getProfileTweetsQuery(userId, activity, loggedInUser);
     return this.getAllRows(queryString, []);
   }
 
