@@ -163,7 +163,7 @@ const serveTweet = function(req, res) {
 const getLikedBy = function(req, res) {
   const {dataStore} = req.app.locals;
   const {tweetId} = req.body;
-  dataStore.getLikedBy(tweetId).then(tweeters => {
+  dataStore.getActionBy(tweetId, 'Likes').then(tweeters => {
     res.json(tweeters);
   });
 };
@@ -171,7 +171,7 @@ const getLikedBy = function(req, res) {
 const getRetweetedBy = function(req, res) {
   const {dataStore} = req.app.locals;
   const {tweetId} = req.body;
-  dataStore.getRetweetedBy(tweetId).then(tweeters => {
+  dataStore.getActionBy(tweetId, 'Retweets').then(tweeters => {
     res.json(tweeters);
   });
 };

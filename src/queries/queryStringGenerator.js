@@ -173,16 +173,10 @@ const getSpecificTweetQuery = function(tweetId, userId) {
   ${getUserAction(userId)}`;
 };
 
-const getLikedByQuery = function(tweetId) {
-  return `SELECT * from Likes left join tweeter
-  on Tweeter.id=Likes.userId
-  where Likes.tweetId is '${tweetId}'`;
-};
-
-const getRetweetedByQuery = function(tweetId) {
-  return `SELECT * from Retweets left join tweeter
-  on Tweeter.id=Retweets.userId
-  where Retweets.tweetId is '${tweetId}'`;
+const getActionByQuery = function(tweetId, table) {
+  return `SELECT * from ${table} left join tweeter
+  on Tweeter.id=${table}.userId
+  where ${table}.tweetId is '${tweetId}'`;
 };
 
 const getRepliedTweetQuery = function(userId, loggedInUser) {
@@ -249,13 +243,12 @@ module.exports = {
   getUpdateProfileQuery,
   getFollowQuery,
   getSpecificTweetQuery,
-  getLikedByQuery,
   getRepliedTweetQuery,
   getReplyInsertionQuery,
   getRepliesQuery,
-  getRetweetedByQuery,
   getProfileTweetsQuery,
   getFollowListQuery,
   getIncreaseQuery,
-  getDecreaseQuery
+  getDecreaseQuery,
+  getActionByQuery
 };

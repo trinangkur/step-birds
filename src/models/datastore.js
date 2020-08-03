@@ -10,15 +10,14 @@ const {
   getAllTweetsQuery,
   getUpdateProfileQuery,
   getSpecificTweetQuery,
-  getLikedByQuery,
   getRepliedTweetQuery,
   getReplyInsertionQuery,
   getRepliesQuery,
-  getRetweetedByQuery,
   getProfileTweetsQuery,
   getFollowListQuery,
   getIncreaseQuery,
-  getDecreaseQuery
+  getDecreaseQuery,
+  getActionByQuery
 } = require('../queries/queryStringGenerator');
 
 class DataStore {
@@ -164,13 +163,8 @@ class DataStore {
     return this.getAllRows(queryString, []);
   }
 
-  getLikedBy(tweetId) {
-    const queryString = getLikedByQuery(tweetId);
-    return this.getAllRows(queryString, []);
-  }
-
-  getRetweetedBy(tweetId) {
-    const queryString = getRetweetedByQuery(tweetId);
+  getActionBy(tweetId, table) {
+    const queryString = getActionByQuery(tweetId, table);
     return this.getAllRows(queryString, []);
   }
 
