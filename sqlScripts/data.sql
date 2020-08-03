@@ -16,7 +16,7 @@ INSERT INTO Tweet (id, _type, userId, content, reference, timeStamp) VALUES
 (?,'reply', 'trinangkur', 'I am amazed by the performance',3, 'someDate'),
 (?,'tweet', 'vikram', 'My laptop is broken :(',?, 'someDate'),
 (?,'reply', 'rahit', 'Do not worry brother',5, 'someDate'),
-(?,'tweet', 'ramu', 'I am amazed by the performance',3, 'someDate');
+(?,'tweet', 'ramu', 'I am amazed by the performance', ?, 'someDate');
 
 INSERT INTO Tweet (id, _type, userId, content, reference) VALUES
 (?,'reply', 'revathi', 'Nice weather',1);

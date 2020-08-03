@@ -1,89 +1,106 @@
-const getInsertionQuery = function(table, columns, values) {
+const getInsertionQuery = function (table, columns, values) {
   return `INSERT INTO ${table} (${columns})
                   VALUES (${values})`;
 };
 
-const getDeleteQuery = function(tweetId, reference, type) {
+const getDeleteQuery = function (table, condition) {
+  return `DELETE FROM ${table}
+    WHERE ${condition};`;
+};
+
+const getDeleteTweetQuery = function (tweetId, reference, type) {
+  const conditionOfTweet = `id = ${tweetId} or reference = ${tweetId}`;
+  const conditionOfAction = `tweetId = ${tweetId}`;
   let query = `BEGIN TRANSACTION;
-   DELETE FROM Tweet WHERE id = ${tweetId} or reference = ${tweetId}; 
-   DELETE FROM Likes
-    WHERE tweetId = ${tweetId};`;
+  ${getDeleteQuery('Tweet', conditionOfTweet)}
+  ${getDeleteQuery('Likes', conditionOfAction)}
+  ${getDeleteQuery('Retweets', conditionOfAction)}`;
+
   if (type !== 'tweet') {
     query += ` UPDATE Tweet
     SET ${type}Count = ${type}Count -1
-    WHERE id = '${reference}' `;
+    WHERE id = '${reference}'`;
   }
+
   return query;
 };
 
-const getSelectQuery = function(table, {columns, condition}) {
+const getSelectQuery = function (table, { columns, condition }) {
   return `SELECT ${columns.join(',')} FROM ${table}
              WHERE ${condition}`;
 };
 
-const getProfileSearchQuery = function(name) {
+const getProfileSearchQuery = function (name) {
   return `SELECT id, name, image_url FROM Tweeter
   WHERE id like "%${name}%" OR name like "%${name}%"`;
 };
 
-const getUserAction = function(loggedInUser) {
-  return `SELECT *, tweets.userId as userId,
+const createUserProjection = function (condition, t1, t2) {
+  return `
+  SELECT DISTINCT(${t1}.id)
+          ,${t1}.userId AS userId
+          ,${t1}._type AS _type
+          ,${t1}.reference AS reference
+          ,${t1}.timeStamp AS timeStamp
+          ,${t1}.content AS content
+          ,${t1}.replyCount AS replyCount
+          ,${t1}.retweetCount AS retweetCount
+          ,${t1}.likeCount AS likeCount 
+          ,${t2}.name AS name
+          ,${t2}.image_url AS image_url
+          ,${t1}.isLiked as isLiked
+          ,${t1}.isRetweeted as isRetweeted
+    FROM ${t1} LEFT JOIN ${t2}
+    ${condition}`;
+};
+
+const getUserAction = function (loggedInUser, table) {
+  return `SELECT *, ${table}.userId as userId,
       CASE 
-        WHEN tweets.id is Likes.tweetId
+        WHEN ${table}.id is Likes.tweetId
         and Likes.userId is '${loggedInUser}'
         then 'true'
         else 'false'
       end isLiked,
       CASE 
-        WHEN tweets.id is Retweets.tweetId
+        WHEN ${table}.id is Retweets.tweetId
         and Retweets.userId is '${loggedInUser}'
         then 'true'
         else 'false'
       end isRetweeted
-    FROM tweets LEFT JOIN Likes
+    FROM ${table} LEFT JOIN Likes
     on Likes.userId='${loggedInUser}' 
-    and Likes.tweetId=tweets.id
+    and Likes.tweetId=${table}.id
     Left Join Retweets
     on Retweets.userId='${loggedInUser}'
-    and Retweets.tweetId=tweets.id`;
+    and Retweets.tweetId=${table}.id`;
 };
 
-const getTweetQuery = function(userId, loggedInUser) {
-  return `with tweets as
-  (SELECT 
-    t2.id as userId
-    ,t2.name as name
-    ,t1.id as id
-    ,t1.content
-    ,t1.timeStamp
-    ,t1.likeCount
-    ,t1.replyCount
-    ,t1.retweetCount
-    ,t2.image_url
-    ,t1._type as type
-    FROM Tweet t1 LEFT JOIN Tweeter t2 
-    on t2.id is t1.userId 
-    where t1.userId is '${userId}' 
-    AND t1._type is "tweet") 
-    ${getUserAction(loggedInUser)}
-    `;
+const getTweetQuery = function (userId, loggedInUser) {
+  const t1 = 'Tweets';
+  const t2 = 'Tweeter';
+  const condition = `ON Tweeter.id is ${t1}.userId
+      WHERE ${t1}.userId IS '${userId}'
+      AND ${t1}._type IS "tweet"`;
+  return `WITH ${t1} AS
+          (${getUserAction(loggedInUser, 'Tweet')})
+          ${createUserProjection(condition, t1, t2)}`;
 };
 
-const getProfileTweetsQuery = function(userId, activity, loggedInUser) {
-  return `with Tweets as (WITH homeDetails as (
-    SELECT tweet.userId, tweet.id, tweet.content, tweet.likeCount, 
-    tweet._type, tweet.replyCount, tweet.reference, tweet.retweetCount
-     From ${activity}
-    LEFT JOIN tweet
-    on Tweet.id = ${activity}.tweetId
-    WHERE ${activity}.userId = '${userId}')
-  SELECT *, homeDetails.id as id
-         FROM homeDetails LEFT JOIN Tweeter
-         ON homeDetails.userId = Tweeter.id
-      )${getUserAction(loggedInUser)}`;
+const getProfileTweetsQuery = function (userId, activityTable, loggedInUser) {
+  const t1 = 'Tweets';
+  const t2 = 'Tweeter';
+  const t3 = 'homeDetails';
+  const condition = `ON ${t3}.userId = ${t2}.id`;
+  return `WITH ${t3} AS (WITH ${t1} as (
+    SELECT Tweet.userId as userId,* FROM ${activityTable}
+    LEFT JOIN Tweet ON Tweet.id = ${activityTable}.tweetId
+    WHERE ${activityTable}.userId = '${userId}')
+    ${getUserAction(loggedInUser, t1)})
+    ${createUserProjection(condition, t3, t2)}`;
 };
 
-const getFollowQuery = function(tweeterId, userId, operator) {
+const getFollowQuery = function (tweeterId, userId, operator) {
   return `BEGIN TRANSACTION;
           UPDATE Tweeter
           SET followersCount=followersCount ${operator} 1
@@ -93,7 +110,7 @@ const getFollowQuery = function(tweeterId, userId, operator) {
             WHERE id is '${userId}'; `;
 };
 
-const getAddFollowerQuery = function(tweeterId, userId) {
+const getAddFollowerQuery = function (tweeterId, userId) {
   const followQuery = getFollowQuery(tweeterId, userId, '+');
   return (
     followQuery +
@@ -102,16 +119,13 @@ const getAddFollowerQuery = function(tweeterId, userId) {
   );
 };
 
-const getRemoveFollowerQuery = function(tweeterId, userId) {
+const getRemoveFollowerQuery = function (tweeterId, userId) {
+  const condition = `followerId = '${userId}' AND followingId = '${tweeterId}'`;
   const followQuery = getFollowQuery(tweeterId, userId, '-');
-  return (
-    followQuery +
-    `DELETE FROM Followers
-              WHERE followerId = '${userId}' AND followingId = '${tweeterId}';`
-  );
+  return followQuery + getDeleteQuery('Followers', condition);
 };
 
-const getProfileInfoQuery = function(tweeterId, userId) {
+const getProfileInfoQuery = function (tweeterId, userId) {
   return `SELECT *,
             CASE
               WHEN Tweeter.id = '${userId}'
@@ -126,36 +140,29 @@ const getProfileInfoQuery = function(tweeterId, userId) {
           where Tweeter.id = '${tweeterId}'`;
 };
 
-const createTweetView = userId => `WITH homeDetails as (
-  SELECT DISTINCT(Tweet.id), Tweet.replyCount as replyCount,
-  Tweet.likeCount as likeCount,
-  Tweet.retweetCount as retweetCount,
-  Tweet.userId as userId,
-  Tweet._type as type,
-  Tweet.content as content,
-  Tweet.reference as reference,
-  Tweet.timeStamp as timeStamp
-   From Tweet
-  LEFT JOIN Followers
-  on Tweet.userId = Followers.followingId OR Tweet.userId = '${userId}'
-  WHERE Followers.followerId = '${userId}' OR Tweet.userId = '${userId}'`;
+const createTweetView = (userId) => `
+    SELECT *
+    FROM Tweet LEFT JOIN Followers
+    ON Tweet.userId = Followers.followingId OR Tweet.userId = '${userId}'
+    WHERE Followers.followerId = '${userId}' OR Tweet.userId = '${userId}'`;
 
-const getAllTweetsQuery = function(userId, loggedInUser) {
-  return `WITH tweets as (
-          ${createTweetView(userId)}
-      )
-      SELECT *, homeDetails.id as id
-       FROM homeDetails LEFT JOIN Tweeter
-       ON homeDetails.userId = Tweeter.id
-       WHERE homeDetails.type = 'tweet' OR homeDetails.type = 'retweet'
-    ) ${getUserAction(loggedInUser)}`;
+const getAllTweetsQuery = function (userId) {
+  const t1 = 'homeDetails';
+  const t2 = 'Tweeter';
+  const t3 = 'tweets';
+  const condition = `ON ${t1}.userId = ${t2}.id
+                    WHERE ${t1}._type = 'tweet'`;
+  return `WITH ${t1} as (WITH ${t3} as (
+            ${createTweetView(userId)}
+          ) ${getUserAction(userId, t3)})
+          ${createUserProjection(condition, t1, t2)}`;
 };
 
-const getUpdateProfileQuery = function(userId, name, bio) {
+const getUpdateProfileQuery = function (userId, name, bio) {
   return `UPDATE Tweeter SET name='${name}', bio='${bio}' where id='${userId}'`;
 };
 
-const getFollowListQuery = function(listName, userId) {
+const getFollowListQuery = function (listName, userId) {
   let column = 'following';
   if (listName === column) {
     column = 'follower';
@@ -166,20 +173,20 @@ const getFollowListQuery = function(listName, userId) {
     WHERE Followers.${column}Id is '${userId}';`;
 };
 
-const getSpecificTweetQuery = function(tweetId, userId) {
+const getSpecificTweetQuery = function (tweetId, userId) {
   return `with tweets as (SELECT *, tweet.id as id from Tweet
   LEFT JOIN tweeter on tweet.userId = tweeter.id
   Where Tweet.id = ${tweetId})
-  ${getUserAction(userId)}`;
+  ${getUserAction(userId, 'tweets')}`;
 };
 
-const getActionByQuery = function(tweetId, table) {
+const getActionByQuery = function (tweetId, table) {
   return `SELECT * from ${table} left join tweeter
   on Tweeter.id=${table}.userId
   where ${table}.tweetId is '${tweetId}'`;
 };
 
-const getRepliedTweetQuery = function(userId, loggedInUser) {
+const getRepliedTweetQuery = function (userId, loggedInUser) {
   return `WITH tweets as ( WITH RepliedTweets as 
     (SELECT Tweet.id, Tweet.userId,
      Tweet.content, Tweet._type,
@@ -191,10 +198,10 @@ const getRepliedTweetQuery = function(userId, loggedInUser) {
   SELECT *, RepliedTweets.id as id
     FROM RepliedTweets LEFT JOIN Tweeter
     ON RepliedTweets.userId = Tweeter.id )
-    ${getUserAction(loggedInUser)}`;
+    ${getUserAction(loggedInUser, 'tweets')}`;
 };
 
-const getReplyInsertionQuery = function(columns, values, tweetId) {
+const getReplyInsertionQuery = function (columns, values, tweetId) {
   return ` BEGIN TRANSACTION;
   ${getInsertionQuery('Tweet', columns, values)};
   UPDATE Tweet
@@ -202,7 +209,7 @@ const getReplyInsertionQuery = function(columns, values, tweetId) {
   WHERE Tweet.id = '${tweetId}';`;
 };
 
-const getRepliesQuery = function(tweetId) {
+const getRepliesQuery = function (tweetId) {
   return `
   SELECT *, Tweet.id as id
     FROM Tweet LEFT JOIN Tweeter
@@ -210,29 +217,29 @@ const getRepliesQuery = function(tweetId) {
     WHERE Tweet._type is 'reply' AND Tweet.reference is '${tweetId}';`;
 };
 
-const updateActionCount = function(tweetId, field, operator) {
+const updateActionCount = function (tweetId, field, operator) {
   return `UPDATE Tweet
             SET ${field}=${field} ${operator} 1
           WHERE id IS ${tweetId};`;
 };
 
-const getIncreaseQuery = function(tweetId, userId, table, field) {
+const getIncreaseQuery = function (tweetId, userId, table, field) {
   return `BEGIN TRANSACTION;
             INSERT INTO ${table} (tweetId,userId) 
             VALUES('${tweetId}','${userId}');
             ${updateActionCount(tweetId, field, '+')}`;
 };
 
-const getDecreaseQuery = function(tweetId, userId, table, field) {
+const getDecreaseQuery = function (tweetId, userId, table, field) {
+  const condition = `userId = '${userId}' AND tweetId='${tweetId}';`;
   return `BEGIN TRANSACTION;
-            DELETE FROM ${table}
-            WHERE userId = '${userId}' AND tweetId='${tweetId}';
+            ${getDeleteQuery(table, condition)}
             ${updateActionCount(tweetId, field, '-')}`;
 };
 
 module.exports = {
   getInsertionQuery,
-  getDeleteQuery,
+  getDeleteTweetQuery,
   getProfileSearchQuery,
   getSelectQuery,
   getTweetQuery,
@@ -250,5 +257,5 @@ module.exports = {
   getFollowListQuery,
   getIncreaseQuery,
   getDecreaseQuery,
-  getActionByQuery
+  getActionByQuery,
 };

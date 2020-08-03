@@ -1,4 +1,4 @@
-const fillReplyPopup = function(tweetId, content, image_url, name) {
+const fillReplyPopup = function (tweetId, content, image_url, name) {
   return `
   <div class="reply-top-bar">
     <div class="profile"><img src="${image_url}" alt="N/A"/><span class="user-name">${name}</span></div>
@@ -15,12 +15,12 @@ const fillReplyPopup = function(tweetId, content, image_url, name) {
 </div>`;
 };
 
-const showReplyPopup = function(tweetId, content, image_url, name) {
+const showReplyPopup = function (tweetId, content, image_url, name) {
   const popup = document.querySelector('#replyPopup');
   popup.style.display = 'block';
   popup.innerHTML = fillReplyPopup(tweetId, content, image_url, name);
 };
-const getSvgHandlers = function(id, content, image_url, name) {
+const getSvgHandlers = function (id, content, image_url, name) {
   return {
     retweet: `show('retweet-${id}')`,
     like: `updateLikes(${id})`,
@@ -28,7 +28,7 @@ const getSvgHandlers = function(id, content, image_url, name) {
     bookmark: '',
   };
 };
-const getCountHandlers = function(id) {
+const getCountHandlers = function (id) {
   return {
     retweet: `showRetweetedBy(${id})`,
     like: `showLikedBy(${id})`,
@@ -36,7 +36,7 @@ const getCountHandlers = function(id) {
     bookmark: '',
   };
 };
-const getTweetReactionHtml = function(tweet, type, colour, count) {
+const getTweetReactionHtml = function (tweet, type, colour, count) {
   const { id, content, image_url, name } = tweet;
   const countHandlers = getCountHandlers(id);
   const svgHandlers = getSvgHandlers(id, content, image_url, name);
@@ -53,7 +53,7 @@ const getTweetReactionHtml = function(tweet, type, colour, count) {
   `;
 };
 
-const getTweetOptions = function(tweet) {
+const getTweetOptions = function (tweet) {
   const { replyCount, retweetCount, likeCount } = tweet;
   const likeColour = tweet.isLiked === 'true' ? 'red' : 'black';
   const retweetColour = tweet.isRetweeted === 'true' ? 'green' : 'black';
@@ -67,11 +67,11 @@ const getTweetOptions = function(tweet) {
   `;
 };
 
-const getRightSideOptions = function({ isUsersTweet, id, reference, type }) {
+const getRightSideOptions = function ({ isUsersTweet, id, reference, _type }) {
   return isUsersTweet
     ? `
     <div class="options" id="tweetId-${id}" onmouseleave="hideOptions(${id})">
-          <div class="delete-tweet" onclick="deleteTweet(${id}, ${reference}, '${type}')">
+          <div class="delete-tweet" onclick="deleteTweet(${id}, ${reference}, '${_type}')">
               <span>Delete</span>
               <img src="/assets/delete.png" alt="N/A"> 
            </div>
@@ -80,7 +80,7 @@ const getRightSideOptions = function({ isUsersTweet, id, reference, type }) {
     : '';
 };
 
-const getRetweetOptionHtml = function(tweet) {
+const getRetweetOptionHtml = function (tweet) {
   const { id, isRetweeted } = tweet;
   const content = isRetweeted === 'true' ? 'Undo Retweet' : 'Retweet';
   return `<div class="retweet-options hide" id="retweet-${id}" onmouseleave=hide('retweet-${id}')>
@@ -89,7 +89,7 @@ const getRetweetOptionHtml = function(tweet) {
   </div>`;
 };
 
-const createTweetHtml = function(tweet) {
+const createTweetHtml = function (tweet) {
   const { content, id } = tweet;
   const { userId, image_url, name, timeStamp } = tweet;
   return `
@@ -118,7 +118,7 @@ const createTweetHtml = function(tweet) {
   `;
 };
 
-const createReplyHtml = function(tweet) {
+const createReplyHtml = function (tweet) {
   const { userId, image_url, name, reference, _type } = tweet;
   const { id, timeStamp, content, isUsersTweet } = tweet;
   return `<div class="reply-content-section">
@@ -140,7 +140,7 @@ const createReplyHtml = function(tweet) {
   </div>${replyOptions(id, isUsersTweet, reference, _type)}`;
 };
 
-const replyOptions = function(id, isUsersTweet, reference, type) {
+const replyOptions = function (id, isUsersTweet, reference, type) {
   const deleteOptions = `<div class="reply-options" id="tweetId-${id}" onmouseleave="hideOptions(${id})">
   <div class="delete-tweet" onclick="deleteTweet(${id}, ${reference}, '${type}')">
       <span>Delete</span>
