@@ -4,7 +4,7 @@ const sendReply = function(tweetId) {
   if (content) {
     const timeStamp = new Date();
     const url = '/user/postReply';
-    sendPOSTRequest(url, { tweetId, content, timeStamp }, (res) => {
+    sendPOSTRequest(url, {tweetId, content, timeStamp}, res => {
       if (res.status) {
         location.reload();
       }
@@ -18,12 +18,12 @@ const closeReplyPopup = function() {
 
 const updateLikes = function(tweetId) {
   const url = '/user/updateLikes';
-  sendPOSTRequest(url, { tweetId }, ({ message }) => {
+  sendPOSTRequest(url, {tweetId}, ({isLiked}) => {
     const counterElement = document.querySelector(`#like-count-${tweetId}`);
     const count = +counterElement.innerText;
     const likeSvg = document.querySelector(`#like-svg-${tweetId}`);
 
-    if (message === 'liked') {
+    if (isLiked) {
       counterElement.innerText = count + 1;
       likeSvg.setAttribute('class', 'red');
       return;
@@ -46,14 +46,14 @@ const updateTweets = function(id, res) {
 
 const deleteTweet = function(tweetId, reference, type) {
   const url = '/user/deleteTweet';
-  const body = { tweetId, reference, type };
-  sendPOSTRequest(url, body, (res) => updateTweets(tweetId, res));
+  const body = {tweetId, reference, type};
+  sendPOSTRequest(url, body, res => updateTweets(tweetId, res));
 };
 
 const deleteTweetPage = function(tweetId) {
   const url = '/user/deleteTweet';
-  const body = { tweetId, type: 'tweet' };
-  sendPOSTRequest(url, body, (res) => {
+  const body = {tweetId, type: 'tweet'};
+  sendPOSTRequest(url, body, res => {
     if (res.status) {
       location.assign('/user/home');
     }
@@ -76,7 +76,7 @@ const hideOptions = function(id) {
 const getLatestTweet = function(res) {
   if (res.status) {
     const url = '/user/getLatestTweet';
-    sendGETRequest(url, (tweet) => {
+    sendGETRequest(url, tweet => {
       const pageUserId = document.querySelector('#tweets').getAttribute('name');
       if (pageUserId === tweet.userId) {
         showTweet(tweet, 'tweets');
@@ -92,7 +92,7 @@ const postTweet = function(boxId) {
     const body = {
       content: tweetText.value,
       timeStamp: new Date(),
-      type: 'tweet',
+      type: 'tweet'
     };
     sendPOSTRequest(url, body, getLatestTweet);
     tweetText.value = '';
@@ -112,7 +112,7 @@ const show = function(elementId) {
 
 const hide = function(elementId) {
   const element = document.querySelector(`#${elementId}`);
-  
+
   element.classList.add('hide');
   element.classList.remove('show');
 };
@@ -120,9 +120,9 @@ const hide = function(elementId) {
 const showLikedBy = function(tweetId) {
   const url = '/user/getLikedBy';
   const element = document.querySelector('#liked-user');
-  sendPOSTRequest(url, { tweetId }, (tweeters) => {
+  sendPOSTRequest(url, {tweetId}, tweeters => {
     element.innerHTML = '';
-    tweeters.forEach((tweet) => {
+    tweeters.forEach(tweet => {
       element.innerHTML += createProfileTemplate(tweet);
     });
   });
@@ -132,9 +132,9 @@ const showLikedBy = function(tweetId) {
 const showRetweetedBy = function(tweetId) {
   const url = '/user/getRetweetedBy';
   const element = document.querySelector('#retweeted-user');
-  sendPOSTRequest(url, { tweetId }, (tweeters) => {
+  sendPOSTRequest(url, {tweetId}, tweeters => {
     element.innerHTML = '';
-    tweeters.forEach((tweet) => {
+    tweeters.forEach(tweet => {
       element.innerHTML += createProfileTemplate(tweet);
     });
   });
@@ -145,7 +145,7 @@ const updateRetweet = function(tweetId) {
   const url = '/user/updateRetweets';
   const counterElement = document.querySelector(`#retweet-count-${tweetId}`);
   const retweetSvg = document.querySelector(`#retweet-svg-${tweetId}`);
-  sendPOSTRequest(url, { tweetId }, ({ isRetweeted }) => {
+  sendPOSTRequest(url, {tweetId}, ({isRetweeted}) => {
     const count = +counterElement.innerText;
     const retweetContent = document.querySelector(
       `#retweet-without-comment-${tweetId}`
