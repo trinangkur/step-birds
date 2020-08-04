@@ -44,8 +44,8 @@ const getLatestTweet = function(req, res) {
 
 const searchProfile = function(req, res) {
   const {dataStore} = req.app.locals;
-  const {name} = req.body;
-  dataStore.getUserProfiles(name).then(profiles => {
+  const {searchBy} = req.body;
+  dataStore.getUserProfiles(searchBy).then(profiles => {
     res.json(profiles);
   });
 };
@@ -219,6 +219,14 @@ const updateRetweets = function(req, res) {
     });
 };
 
+const searchHashtag = function(req, res) {
+  const {dataStore} = req.app.locals;
+  const {searchBy} = req.body;
+  dataStore.searchHashtag(searchBy).then(tweets => {
+    res.json(tweets);
+  });
+};
+
 module.exports = {
   authorizeUser,
   postTweet,
@@ -240,5 +248,6 @@ module.exports = {
   serveRepliedTweet,
   updateRetweets,
   getRetweetedBy,
-  getActivitySpecificTweets
+  getActivitySpecificTweets,
+  searchHashtag
 };

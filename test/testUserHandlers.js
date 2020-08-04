@@ -77,7 +77,7 @@ describe('searchProfile', function() {
     request(app)
       .post('/user/searchProfile')
       .set('Content-Type', 'application/json')
-      .send({name: 'rahit'})
+      .send({searchBy: 'rahit'})
       .expect([
         {id: 'rahit', name: 'Rahit Kar', image_url: 'fakeUrl'},
         {id: 'rahitkar', name: 'Rahit Kar', image_url: 'fakeUrl'}
@@ -503,6 +503,55 @@ describe('updateRetweets', function() {
       .set('Content-Type', 'application/json')
       .send({tweetId: 4, userId: 'revathi'})
       .expect({isRetweeted: false})
+      .expect(200, done);
+  });
+});
+
+describe('searchHashTag', function() {
+  before(() => {
+    app.locals.sessions = {getUserId: () => 'ramu'};
+  });
+  it('should be able to post a new tweet', done => {
+    app.locals.dataStore = new DataStore(db);
+    request(app)
+      .post('/user/postTweet')
+      .set('Content-Type', 'application/json')
+      .send({
+        content: 'new tweet #goodTweet',
+        timeStamp: 'someDate',
+        type: 'tweet',
+        userId: 'revathi'
+      })
+      .expect({status: true})
+      .expect(200, done);
+  });
+  it('should serve the tweets of the given hashtag', function(done) {
+    request(app)
+      .post('/user/searchHashtag')
+      .set('Content-Type', 'application/json')
+      .send({searchBy: '#goodTweet'})
+      .expect([
+        {
+          tweetId: 13,
+          tag: '#goodTweet',
+          id: 'ramu',
+          _type: 'tweet',
+          userId: 'ramu',
+          content: 'new tweet #goodTweet',
+          timeStamp: 'someDate',
+          likeCount: 0,
+          replyCount: 0,
+          retweetCount: 0,
+          reference: 'null',
+          name: 'Ramu kaka',
+          joiningDate: '11/06/2018',
+          image_url: 'fakeUrl',
+          dob: '09/09/2000',
+          bio: 'Work is Worship',
+          followersCount: 1,
+          followingCount: 0
+        }
+      ])
       .expect(200, done);
   });
 });

@@ -36,11 +36,6 @@ const getSelectQuery = function(table, {columns, condition}) {
              WHERE ${condition}`;
 };
 
-const getProfileSearchQuery = function(name) {
-  return `SELECT id, name, image_url FROM Tweeter
-  WHERE id like "%${name}%" OR name like "%${name}%"`;
-};
-
 const createUserProjection = function(condition, t1, t2) {
   return `
   SELECT DISTINCT(${t1}.id)
@@ -243,10 +238,18 @@ const getDecreaseQuery = function(tweetId, userId, table, field) {
             ${updateActionCount(tweetId, field, '-')}`;
 };
 
+const getSearchHashtagQuery = function(hashtag) {
+  return `with tweets as(SELECT *
+          FROM Hashes LEFT JOIN Tweet
+          ON Hashes.tweetId = Tweet.id
+          WHERE tag is '${hashtag}') 
+          SELECT * from tweets left join Tweeter
+          on tweets.userId is Tweeter.id`;
+};
+
 module.exports = {
   getInsertionQuery,
   getDeleteTweetQuery,
-  getProfileSearchQuery,
   getSelectQuery,
   getTweetQuery,
   getAddFollowerQuery,
@@ -264,5 +267,6 @@ module.exports = {
   getIncreaseQuery,
   getDecreaseQuery,
   getActionByQuery,
-  getInsertTagQuery
+  getInsertTagQuery,
+  getSearchHashtagQuery
 };

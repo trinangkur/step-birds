@@ -3,7 +3,6 @@ const {
   getDeleteTweetQuery,
   getSelectQuery,
   getTweetQuery,
-  getProfileSearchQuery,
   getAddFollowerQuery,
   getRemoveFollowerQuery,
   getProfileInfoQuery,
@@ -18,7 +17,8 @@ const {
   getIncreaseQuery,
   getDecreaseQuery,
   getActionByQuery,
-  getInsertTagQuery
+  getInsertTagQuery,
+  getSearchHashtagQuery
 } = require('../queries/queryStringGenerator');
 
 const filterBy = function(symbol, text) {
@@ -113,7 +113,9 @@ class DataStore {
   }
 
   getUserProfiles(name) {
-    const queryString = getProfileSearchQuery(name);
+    const condition = `id like "%${name}%" OR name like "%${name}%"`;
+    const columns = ['id', 'name', 'image_url'];
+    const queryString = getSelectQuery('Tweeter', {columns, condition});
     return this.getAllRows(queryString, []);
   }
 
@@ -224,6 +226,11 @@ class DataStore {
           this.executeTransaction(decreaseLikeSql).then(() => res(false));
         });
     });
+  }
+
+  searchHashtag(hashTag) {
+    const queryString = getSearchHashtagQuery(hashTag);
+    return this.getAllRows(queryString, []);
   }
 }
 
