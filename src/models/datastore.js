@@ -18,7 +18,13 @@ const {
   getIncreaseQuery,
   getDecreaseQuery,
   getActionByQuery,
+  getInsertTagQuery
 } = require('../queries/queryStringGenerator');
+
+const filterBy = function(symbol, text) {
+  const pattern = new RegExp(`${symbol}[A-Z]+`, 'ig');
+  return text.match(pattern);
+};
 
 class DataStore {
   constructor(db) {
@@ -27,7 +33,7 @@ class DataStore {
 
   runQuery(queryString, params) {
     return new Promise((resolve, reject) => {
-      this.db.run(queryString, params, (err) => {
+      this.db.run(queryString, params, err => {
         if (err) {
           reject(err);
         }
@@ -49,7 +55,7 @@ class DataStore {
 
   executeTransaction(transaction) {
     return new Promise((resolve, reject) => {
-      this.db.exec(transaction, (err) => {
+      this.db.exec(transaction, err => {
         if (err) {
           this.db.exec('ROLLBACK');
           return reject(err);
@@ -61,14 +67,14 @@ class DataStore {
   }
 
   addTweeter(details) {
-    const { login, avatar_url, name } = details;
+    const {login, avatar_url, name} = details;
     const columns = 'id, image_url, name';
     const values = `"${login}", "${avatar_url}", "${name}"`;
     const queryString = getInsertionQuery('Tweeter', columns, values);
     return new Promise((res, rej) => {
       this.runQuery(queryString, [])
         .then(res)
-        .catch((err) => {
+        .catch(err => {
           if (err.code === 'SQLITE_CONSTRAINT') {
             return res('already have an account');
           }
@@ -78,12 +84,27 @@ class DataStore {
   }
 
   postTweet(details) {
-    const { userId, type, content, timeStamp, reference } = details;
-    const columns = 'id ,userId, _type, content, timeStamp, reference';
+    const {userId, type, content, timeStamp, reference} = details;
+    const columns = 'id, userId, _type, content, timeStamp, reference';
     const values = `?,"${userId}", "${type}", "${content}", "${timeStamp}",
-     "${reference}"`;
-    const queryString = getInsertionQuery('Tweet', columns, values);
-    return this.runQuery(queryString, []);
+    "${reference}"`;
+    const condition = `content='${content}' AND timestamp='${timeStamp}'
+                       AND _type='${type}';`;
+    const hashTags = filterBy('#', content);
+    const field = {columns: ['id'], condition};
+    return new Promise(res => {
+      this.runQuery(getInsertionQuery('Tweet', columns, values), []).then(
+        () => {
+          this.getAllRows(getSelectQuery('Tweet', field)).then(([{id}]) => {
+            if (hashTags) {
+              const queryString = getInsertTagQuery('Hashes', id, hashTags);
+              this.runQuery(queryString).then(() => res(true));
+            }
+            res(true);
+          });
+        }
+      );
+    });
   }
 
   deleteTweet(tweetId, reference, type) {
@@ -99,7 +120,7 @@ class DataStore {
   getUserInfo(userId) {
     const queryString = getSelectQuery('Tweeter', {
       columns: ['*'],
-      condition: `id="${userId}"`,
+      condition: `id="${userId}"`
     });
 
     return this.getAllRows(queryString, []);
@@ -111,7 +132,7 @@ class DataStore {
 
       this.executeTransaction(addFollowerSql)
         .then(() => resolve(true))
-        .catch((err) => {
+        .catch(err => {
           if (err.code === 'SQLITE_CONSTRAINT') {
             const removeFollowerSql = getRemoveFollowerQuery(tweeterId, userId);
             this.executeTransaction(removeFollowerSql).then(() =>
@@ -169,7 +190,7 @@ class DataStore {
   }
 
   postReply(reply) {
-    const { userId, type, content, timeStamp, tweetId } = reply;
+    const {userId, type, content, timeStamp, tweetId} = reply;
     const columns = 'id ,userId, _type, content, timeStamp, reference';
     const values = `?,"${userId}", "${type}",
      "${content}", "${timeStamp}", "${tweetId}"`;
@@ -189,7 +210,7 @@ class DataStore {
   }
 
   updateAction(tweetId, userId, table, field) {
-    return new Promise((res) => {
+    return new Promise(res => {
       const increaseLikeSql = getIncreaseQuery(tweetId, userId, table, field);
       this.executeTransaction(increaseLikeSql)
         .then(() => res(true))
@@ -206,4 +227,4 @@ class DataStore {
   }
 }
 
-module.exports = { DataStore };
+module.exports = {DataStore};

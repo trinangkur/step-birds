@@ -1,4 +1,4 @@
-const fillReplyPopup = function (tweetId, content, image_url, name) {
+const fillReplyPopup = function(tweetId, content, image_url, name) {
   return `
   <div class="reply-top-bar">
     <div class="profile"><img src="${image_url}" alt="N/A"/><span class="user-name">${name}</span></div>
@@ -15,29 +15,29 @@ const fillReplyPopup = function (tweetId, content, image_url, name) {
 </div>`;
 };
 
-const showReplyPopup = function (tweetId, content, image_url, name) {
+const showReplyPopup = function(tweetId, content, image_url, name) {
   const popup = document.querySelector('#replyPopup');
   popup.style.display = 'block';
   popup.innerHTML = fillReplyPopup(tweetId, content, image_url, name);
 };
-const getSvgHandlers = function (id, content, image_url, name) {
+const getSvgHandlers = function(id, content, image_url, name) {
   return {
     retweet: `show('retweet-${id}')`,
     like: `updateLikes(${id})`,
     reply: `showReplyPopup('${id}',\`${content}\`,'${image_url}','${name}')`,
-    bookmark: '',
+    bookmark: ''
   };
 };
-const getCountHandlers = function (id) {
+const getCountHandlers = function(id) {
   return {
     retweet: `showRetweetedBy(${id})`,
     like: `showLikedBy(${id})`,
     reply: '',
-    bookmark: '',
+    bookmark: ''
   };
 };
-const getTweetReactionHtml = function (tweet, type, colour, count) {
-  const { id, content, image_url, name } = tweet;
+const getTweetReactionHtml = function(tweet, type, colour, count) {
+  const {id, content, image_url, name} = tweet;
   const countHandlers = getCountHandlers(id);
   const svgHandlers = getSvgHandlers(id, content, image_url, name);
   return `
@@ -53,8 +53,8 @@ const getTweetReactionHtml = function (tweet, type, colour, count) {
   `;
 };
 
-const getTweetOptions = function (tweet) {
-  const { replyCount, retweetCount, likeCount } = tweet;
+const getTweetOptions = function(tweet) {
+  const {replyCount, retweetCount, likeCount} = tweet;
   const likeColour = tweet.isLiked === 'true' ? 'red' : 'black';
   const retweetColour = tweet.isRetweeted === 'true' ? 'green' : 'black';
   return `
@@ -67,7 +67,7 @@ const getTweetOptions = function (tweet) {
   `;
 };
 
-const getRightSideOptions = function ({ isUsersTweet, id, reference, _type }) {
+const getRightSideOptions = function({isUsersTweet, id, reference, _type}) {
   return isUsersTweet
     ? `
     <div class="options" id="tweetId-${id}" onmouseleave="hideOptions(${id})">
@@ -80,8 +80,8 @@ const getRightSideOptions = function ({ isUsersTweet, id, reference, _type }) {
     : '';
 };
 
-const getRetweetOptionHtml = function (tweet) {
-  const { id, isRetweeted } = tweet;
+const getRetweetOptionHtml = function(tweet) {
+  const {id, isRetweeted} = tweet;
   const content = isRetweeted === 'true' ? 'Undo Retweet' : 'Retweet';
   return `<div class="retweet-options hide" id="retweet-${id}" onmouseleave=hide('retweet-${id}')>
     <div id="retweet-without-comment-${id}" onclick="updateRetweet('${id}')"> ${content} </div>
@@ -89,9 +89,17 @@ const getRetweetOptionHtml = function (tweet) {
   </div>`;
 };
 
-const createTweetHtml = function (tweet) {
-  const { content, id } = tweet;
-  const { userId, image_url, name, timeStamp } = tweet;
+const createContent = function(content) {
+  const words = content.split(' ');
+  return words.reduce((contentHtml, word) => {
+    const wordHtml = word[0] === '#' ? `<a href="/hello">${word}</a>` : word;
+    return contentHtml + ' ' + wordHtml;
+  }, '');
+};
+
+const createTweetHtml = function(tweet) {
+  const {content, id} = tweet;
+  const {userId, image_url, name, timeStamp} = tweet;
   return `
   <div class="content-section">
   <div class="dp" onclick="getUserProfile('${userId}')">
@@ -108,7 +116,8 @@ const createTweetHtml = function (tweet) {
       <span></span>
       <span class="time-stamp"> &nbsp; ${moment(timeStamp).fromNow()}</span>
     </div>
-    <div class="content" id="content-${id}" onClick="openTweet(${id})">${content}</div>
+    <div class="content" id="content-${id}" onClick="openTweet(${id})">
+    ${createContent(content)}</div>
   </div>
   <div class="right-side-options" onclick="showTweetOptions(${id})">v</div>
 </div>
@@ -118,9 +127,9 @@ const createTweetHtml = function (tweet) {
   `;
 };
 
-const createReplyHtml = function (tweet) {
-  const { userId, image_url, name, reference, _type } = tweet;
-  const { id, timeStamp, content, isUsersTweet } = tweet;
+const createReplyHtml = function(tweet) {
+  const {userId, image_url, name, reference, _type} = tweet;
+  const {id, timeStamp, content, isUsersTweet} = tweet;
   return `<div class="reply-content-section">
   <div class="dp" onclick="getUserProfile('${userId}')">
     <img
@@ -140,7 +149,7 @@ const createReplyHtml = function (tweet) {
   </div>${replyOptions(id, isUsersTweet, reference, _type)}`;
 };
 
-const replyOptions = function (id, isUsersTweet, reference, type) {
+const replyOptions = function(id, isUsersTweet, reference, type) {
   const deleteOptions = `<div class="reply-options" id="tweetId-${id}" onmouseleave="hideOptions(${id})">
   <div class="delete-tweet" onclick="deleteTweet(${id}, ${reference}, '${type}')">
       <span>Delete</span>

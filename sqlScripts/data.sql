@@ -47,4 +47,3 @@ BEGIN TRANSACTION;
     SET retweetCount=retweetCount + 1
     WHERE id is 10;
 COMMIT;
-
