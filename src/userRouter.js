@@ -1,7 +1,7 @@
 const express = require('express');
 const {
   authorizeUser,
-  postTweet,
+  postResponse,
   deleteTweet,
   getLatestTweet,
   searchProfile,
@@ -17,11 +17,11 @@ const {
   getLikedBy,
   serveRepliedTweet,
   serveReplies,
-  postReply,
   updateRetweets,
   getRetweetedBy,
   getActivitySpecificTweets,
-  searchHashtag
+  searchHashtag,
+  getLatestRetweet,
 } = require('./userHandler');
 
 const userRouter = express.Router();
@@ -35,7 +35,7 @@ userRouter.get('/profile/:userId', serveProfile);
 
 userRouter.get('/showProfile', redirectUserProfile);
 
-userRouter.post('/postTweet', postTweet);
+userRouter.post('/postResponse', postResponse);
 
 userRouter.post('/deleteTweet', deleteTweet);
 
@@ -59,8 +59,6 @@ userRouter.post('/getLikedBy', getLikedBy);
 
 userRouter.post('/getRetweetedBy', getRetweetedBy);
 
-userRouter.post('/postReply', postReply);
-
 userRouter.post('/getReplies', serveReplies);
 
 userRouter.post('/getRepliedTweets', serveRepliedTweet);
@@ -69,4 +67,6 @@ userRouter.post('/updateRetweets', updateRetweets);
 
 userRouter.post('/searchHashtag', searchHashtag);
 
-module.exports = {userRouter};
+userRouter.get('/getLatestRetweet', getLatestRetweet);
+
+module.exports = { userRouter };

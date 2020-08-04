@@ -82,7 +82,7 @@ const getTweetQuery = function(userId, loggedInUser) {
   const t2 = 'Tweeter';
   const condition = `ON Tweeter.id is ${t1}.userId
       WHERE ${t1}.userId IS '${userId}'
-      AND ${t1}._type IS "tweet"`;
+      AND ${t1}._type IS "tweet" OR ${t1}._type IS "retweet"`;
   return `WITH ${t1} AS
           (${getUserAction(loggedInUser, 'Tweet')})
           ${createUserProjection(condition, t1, t2)}`;
@@ -174,11 +174,15 @@ const getFollowListQuery = function(listName, userId) {
     WHERE Followers.${column}Id is '${userId}';`;
 };
 
-const getSpecificTweetQuery = function(tweetId, userId) {
-  return `with tweets as (SELECT *, tweet.id as id from Tweet
-  LEFT JOIN tweeter on tweet.userId = tweeter.id
-  Where Tweet.id = ${tweetId})
-  ${getUserAction(userId, 'tweets')}`;
+const getSpecificTweetQuery = function (tweetId, userId) {
+  const t1 = 'Tweets';
+  const t2 = 'Tweeter';
+  const condition = `ON Tweeter.id is ${t1}.userId
+      WHERE ${t1}.userId IS '${userId}'
+      AND ${t1}.id IS ${tweetId}`;
+  return `WITH ${t1} AS
+          (${getUserAction(userId, 'Tweet')})
+          ${createUserProjection(condition, t1, t2)}`;
 };
 
 const getActionByQuery = function(tweetId, table) {
@@ -202,11 +206,11 @@ const getRepliedTweetQuery = function(userId, loggedInUser) {
     ${getUserAction(loggedInUser, 'tweets')}`;
 };
 
-const getReplyInsertionQuery = function(columns, values, tweetId) {
+const getResponseInsertionQuery = function (columns, values, tweetId, type) {
   return ` BEGIN TRANSACTION;
   ${getInsertionQuery('Tweet', columns, values)};
   UPDATE Tweet
-  SET replyCount = replyCount + 1
+  SET ${type}Count = ${type}Count + 1
   WHERE Tweet.id = '${tweetId}';`;
 };
 
@@ -260,7 +264,7 @@ module.exports = {
   getFollowQuery,
   getSpecificTweetQuery,
   getRepliedTweetQuery,
-  getReplyInsertionQuery,
+  getResponseInsertionQuery,
   getRepliesQuery,
   getProfileTweetsQuery,
   getFollowListQuery,

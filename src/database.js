@@ -18,6 +18,5 @@ db.run(schema.hashes, [], throwError);
 db.run(schema.mentions, [], throwError);
 db.run(schema.bookmarks, [], throwError);
 db.run(schema.retweet, [], throwError);
-db.run(schema.retweetWithComment, [], throwError);
 
 module.exports = { db };

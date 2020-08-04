@@ -58,7 +58,7 @@ head
                 path(d="M19.708 21.944H4.292C3.028 21.944 2 20.916 2 19.652V14c0-.414.336-.75.75-.75s.75.336.75.75v5.652c0 .437.355.792.792.792h15.416c.437 0 .792-.355.792-.792V14c0-.414.336-.75.75-.75s.75.336.75.75v5.652c0 1.264-1.028 2.292-2.292 2.292z")
       .retweet-options.hide(id=`retweet-${tweet.id}` onmouseleave=`hide('retweet-${tweet.id}')`)
         div(id=`retweet-without-comment-${tweet.id}` onclick=`updateRetweet('${tweet.id}')`) #{tweet.isRetweeted === 'true' ? 'Undo Retweet': 'Retweet'}
-        div(id=`retweet-comment-${tweet.id}`  onclick=`updateRetweetWithComment('${tweet.id}')`) Retweet with Comment
+        div(id=`retweet-comment-${tweet.id}`  onclick=`showRetweetPopup(${tweet.id}, \`${tweet.content}\`, '${tweet.image_url}', '${tweet.name}')`) Retweet with Comment
       if tweet.isUsersTweet
         .options(onmouseleave=`hideOptions(${tweet.id})` id=`tweetId-${tweet.id}`)
           .delete-tweet(onclick=`deleteTweetPage(${tweet.id})`)

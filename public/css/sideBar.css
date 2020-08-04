@@ -186,7 +186,7 @@ select:focus {
   margin: 0% 0% 0% -10%;
 }
 
-#replyPopup {
+#responsePopup {
   background-color: white;
   display: none;
   top: 50px;
@@ -201,7 +201,7 @@ select:focus {
   box-shadow: 1px 1px 1px 3px lightgrey;
 }
 
-.reply-top-bar {
+.response-top-bar {
   display: flex;
   justify-content: space-between;
   padding: 2%;
@@ -228,7 +228,7 @@ select:focus {
   padding: 5%;
 }
 
-#reply-text-area textarea {
+#response-text-area textarea {
   border: none;
   width: 28vw;
   text-decoration: none;
@@ -238,7 +238,7 @@ select:focus {
   border-bottom: solid lightgray;
 }
 
-#reply-button button {
+#response-button button {
   position: relative;
   font-size: 1.2vw;
   left: 75%;
@@ -251,6 +251,6 @@ select:focus {
   width: 17%;
 }
 
-.reply-top-bar > p {
+.response-top-bar > p {
   cursor: pointer;
 }
