@@ -40,14 +40,16 @@ head
                     span
                     span.time-stamp  &nbsp; #{reference.timeStamp}
                   .content(id=`content-${reference.id}` onclick=`openTweet(${reference.id})`) #{reference.content}
-        .right-side-options(onclick=`showTweetOptions(${tweet.id})`) V
+        if tweet.isUsersTweet
+          .delete-tweet(onclick=`deleteTweetPage(${tweet.id})`)
+            i(class="fas fa-trash")
       .tweet-reactions
-        .retweet-count(onclick=`showRetweetedBy(${tweet.id})`) 
+        .retweet-count(onclick=`showRetweetedBy(${tweet.id})`)
           span(id=`retweet-count-${tweet.id}`) #{tweet.retweetCount} 
-          span &nbsp; Retweets and comments 
+          span Retweets and comments 
         .like-count(onclick=`showLikedBy(${tweet.id})`)
-          span(id=`like-count-${tweet.id}`) #{tweet.likeCount}
-          span &nbsp; Likes
+          span(id=`like-count-${tweet.id}`) #{tweet.likeCount} 
+          span Likes
       .tweet-options
         .option
           .reply-icon(onclick=`showReplyPopup(${tweet.id}, \`${tweet.content}\`, '${tweet.image_url}', '${tweet.name}')`)
@@ -73,11 +75,6 @@ head
       .retweet-options.hide(id=`retweet-${tweet.id}` onmouseleave=`hide('retweet-${tweet.id}')`)
         div(id=`retweet-without-comment-${tweet.id}` onclick=`updateRetweet('${tweet.id}')`) #{tweet.isRetweeted === 'true' ? 'Undo Retweet': 'Retweet'}
         div(id=`retweet-comment-${tweet.id}`  onclick=`showRetweetPopup(${tweet.id}, \`${tweet.content}\`, '${tweet.image_url}', '${tweet.name}')`) Retweet with Comment
-      if tweet.isUsersTweet
-        .options(onmouseleave=`hideOptions(${tweet.id})` id=`tweetId-${tweet.id}`)
-          .delete-tweet(onclick=`deleteTweetPage(${tweet.id})`)
-            span Delete
-            img(src="/assets/delete.png", alt="", srcset="")
     #replies
 #editor-liked.hide
   #edit-panel

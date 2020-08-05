@@ -76,6 +76,8 @@
 .content-section {
   display: flex;
   height: 80%;
+  margin-top: 0%;
+  padding: 2%;
 }
 .dp {
   width: 10%;
@@ -88,7 +90,7 @@
   border-radius: 50%;
 }
 .info {
-  width: 80%;
+  width: 100%;
 }
 .user-info {
   display: flex;
@@ -137,6 +139,7 @@
   display: flex;
   justify-content: space-evenly;
   height: 20%;
+  margin-bottom: 2%;
 }
 .delete-tweet > span {
   font-size: 1vw;
@@ -157,6 +160,7 @@
   margin-left: 36%;
   border-radius: 50%;
   cursor: pointer;
+  margin-bottom: -70%;
 }
 .reply-icon:hover,
 .bookmark-icon:hover {
@@ -187,25 +191,14 @@
   color: gray;
   cursor: pointer;
 }
-.options {
-  display: none;
-  position: relative;
-  height: 18%;
-  width: 16%;
-  margin: -28% 0% 0% 81%;
-  border: 0.1vw solid lightgray;
-  border-radius: 6px;
-  background: white;
-}
+
 .delete-tweet {
   display: flex;
   cursor: pointer;
   justify-content: space-around;
 }
-.delete-tweet img {
-  height: 34px;
-  width: 30px;
-  margin: 2%;
+.delete-tweet i {
+  font-size: 20px;
 }
 .red {
   fill: red;
@@ -285,8 +278,15 @@
 
 .parent-element {
   height: 70%;
+  width: 100%;
   display: flex;
   border: solid 0.2px black;
   border-radius: 10px;
   margin: 2%;
+}
+
+.retweet-count,
+.like-count {
+  margin: 2%;
+  cursor: pointer;
 }

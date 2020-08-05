@@ -188,8 +188,7 @@ const getSpecificTweetQuery = function(tweetId, userId) {
   const t1 = 'Tweets';
   const t2 = 'Tweeter';
   const condition = `ON Tweeter.id is ${t1}.userId
-      WHERE ${t1}.userId IS '${userId}'
-      AND ${t1}.id IS ${tweetId}`;
+      WHERE ${t1}.id IS ${tweetId}`;
   return `WITH ${t1} AS
           (${getUserAction(userId, 'Tweet')})
           ${createUserProjection(condition, t1, t2)}`;
