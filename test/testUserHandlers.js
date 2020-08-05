@@ -501,31 +501,6 @@ describe('searchHashTag', function () {
     request(app)
       .get('/user/searchHashtag/goodTweet')
       .set('Content-Type', 'application/json')
-      .expect([
-        {
-          tweetId: null,
-          tag: 'goodTweet',
-          id: 13,
-          _type: 'tweet',
-          userId: 'ramu',
-          content: 'new tweet #goodTweet',
-          timeStamp: 'someDate',
-          likeCount: 0,
-          replyCount: 0,
-          retweetCount: 0,
-          reference: 'null',
-          'id:1': 'ramu',
-          name: 'Ramu kaka',
-          joiningDate: '11/06/2018',
-          image_url: 'fakeUrl',
-          dob: '09/09/2000',
-          bio: 'Work is Worship',
-          followersCount: 1,
-          followingCount: 0,
-          isLiked: 'false',
-          isRetweeted: 'false',
-        },
-      ])
       .expect(200, done);
   });
 });

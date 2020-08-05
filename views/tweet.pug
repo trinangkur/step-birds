@@ -6,8 +6,10 @@ head
     type="text/javascript")
   script(src="/js/reply.js")
 
-  body(onload=`main(${tweet.id})`)
   include ./commonPart.pug
+  include ./mixins/_rightSide.pug
+
+  body(onload=`main(${tweet.id})`)
 #content-box
   #header()
       a(href=`/user/home`)
@@ -94,3 +96,4 @@ head
       #close(onclick="hide('editor-retweeted')") X
       span.head Retweeted By
     #retweeted-user
++rightSide

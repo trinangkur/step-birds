@@ -1,0 +1,16 @@
+head
+  link(rel="stylesheet", href="/css/home.css")
+  script(src="/js/home.js")
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"
+      type="text/javascript")
+  include ./commonPart.pug
+  include ./mixins/_rightSide.pug
+  include ./mixins/_tweetTemplate.pug
+
+#content-box()
+  #header()
+    span Search
+  #tweets-section
+    each post in posts
+      +tweetTemplate(post)
++rightSide
