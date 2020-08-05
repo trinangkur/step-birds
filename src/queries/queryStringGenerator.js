@@ -1,6 +1,6 @@
 const getInsertTagQuery = function(table, tweetId, tags) {
   const query = `INSERT INTO ${table} (tweetId,tag) VALUES `;
-  const values = tags.map((tag) => `(${tweetId}, '${tag.slice(1)}')`);
+  const values = tags.map(tag => `(${tweetId}, '${tag.slice(1)}')`);
   return query + values.join(',') + ';';
 };
 
@@ -31,7 +31,7 @@ const getDeleteTweetQuery = function(tweetId, reference, type) {
   return query;
 };
 
-const getSelectQuery = function(table, { columns, condition }) {
+const getSelectQuery = function(table, {columns, condition}) {
   return `SELECT ${columns.join(',')} FROM ${table}
              WHERE ${condition}`;
 };
@@ -55,13 +55,14 @@ const createUserProjection = function(condition, t1, t2) {
     ${condition}`;
 };
 
-const getSearchHashtagQuery = function(hashtag) {
-  return `with tweets as(SELECT *
+const getSearchHashtagQuery = function(hashtag, loggedInUser) {
+  return `with details as (with tweets as(SELECT *
           FROM Hashes LEFT JOIN Tweet
           ON Hashes.tweetId = Tweet.id
           WHERE tag is '${hashtag}') 
           SELECT * from tweets left join Tweeter
-          on tweets.userId is Tweeter.id`;
+          on tweets.userId is Tweeter.id
+          ) ${getUserAction(loggedInUser, 'details')}`;
 };
 
 const getUserAction = function(loggedInUser, table) {
@@ -150,7 +151,7 @@ const getProfileInfoQuery = function(tweeterId, userId) {
           where Tweeter.id = '${tweeterId}'`;
 };
 
-const createTweetView = (userId) => `
+const createTweetView = userId => `
     SELECT *
     FROM Tweet LEFT JOIN Followers
     ON Tweet.userId = Followers.followingId OR Tweet.userId = '${userId}'
@@ -256,5 +257,5 @@ module.exports = {
   getDecreaseQuery,
   getActionByQuery,
   getInsertTagQuery,
-  getSearchHashtagQuery,
+  getSearchHashtagQuery
 };
