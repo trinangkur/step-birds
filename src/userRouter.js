@@ -15,13 +15,11 @@ const {
   serveFollowPage,
   serveTweet,
   getLikedBy,
-  serveRepliedTweet,
   serveReplies,
   updateRetweets,
   getRetweetedBy,
   getActivitySpecificTweets,
   searchHashtag,
-  getLatestRetweet,
 } = require('./userHandler');
 
 const userRouter = express.Router();
@@ -59,14 +57,10 @@ userRouter.post('/getRetweetedBy', getRetweetedBy);
 
 userRouter.post('/getReplies', serveReplies);
 
-userRouter.post('/getRepliedTweets', serveRepliedTweet);
-
 userRouter.post('/updateRetweets', updateRetweets);
 
 userRouter.get('/searchProfile/:searchBy', searchProfile);
 
 userRouter.get('/searchHashtag/:searchBy', searchHashtag);
-
-userRouter.get('/getLatestRetweet', getLatestRetweet);
 
 module.exports = { userRouter };

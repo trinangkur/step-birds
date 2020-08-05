@@ -2,8 +2,8 @@ const getAllTweets = function () {
   const url = '/user/getAllTweets';
   sendGETRequest(url, (tweets) => {
     document.getElementById('tweets').innerHTML = '';
-    tweets.forEach((tweet) => {
-      showTweet(tweet, 'tweets');
+    tweets.forEach(({ tweet, reference }) => {
+      showTweet(tweet, 'tweets', reference);
     });
   });
 };

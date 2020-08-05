@@ -49,20 +49,22 @@ describe('/getLatestTweet', () => {
   });
   it('should get all tweets of user', (done) => {
     const expected = {
-      id: 7,
-      userId: 'vikram',
-      _type: 'tweet',
-      reference: null,
-      timeStamp: 'someDate',
-      content: 'My laptop is broken :(',
-      replyCount: 0,
-      retweetCount: 0,
-      likeCount: 1,
-      name: 'Vikram Singh',
-      image_url: 'fakeUrl',
-      isLiked: 'true',
-      isRetweeted: 'false',
-      isUsersTweet: true,
+      tweet: {
+        id: 7,
+        userId: 'vikram',
+        _type: 'tweet',
+        reference: null,
+        timeStamp: 'someDate',
+        content: 'My laptop is broken :(',
+        replyCount: 0,
+        retweetCount: 0,
+        likeCount: 1,
+        name: 'Vikram Singh',
+        image_url: 'fakeUrl',
+        isLiked: 'true',
+        isRetweeted: 'false',
+        isUsersTweet: true,
+      },
     };
     const expectedJson = JSON.stringify(expected);
     request(app)
@@ -177,36 +179,40 @@ describe('/getAllTweets', function () {
   });
   const expected = [
     {
-      id: 7,
-      userId: 'vikram',
-      _type: 'tweet',
-      reference: null,
-      timeStamp: 'someDate',
-      content: 'My laptop is broken :(',
-      replyCount: 0,
-      retweetCount: 0,
-      likeCount: 1,
-      name: 'Vikram Singh',
-      image_url: 'fakeUrl',
-      isLiked: 'true',
-      isRetweeted: 'false',
-      isUsersTweet: true,
+      tweet: {
+        id: 7,
+        userId: 'vikram',
+        _type: 'tweet',
+        reference: null,
+        timeStamp: 'someDate',
+        content: 'My laptop is broken :(',
+        replyCount: 0,
+        retweetCount: 0,
+        likeCount: 1,
+        name: 'Vikram Singh',
+        image_url: 'fakeUrl',
+        isLiked: 'true',
+        isRetweeted: 'false',
+        isUsersTweet: true,
+      },
     },
     {
-      id: 9,
-      userId: 'ramu',
-      _type: 'tweet',
-      reference: null,
-      timeStamp: 'someDate',
-      content: 'I am amazed by the performance',
-      replyCount: 0,
-      retweetCount: 0,
-      likeCount: 0,
-      name: 'Ramu kaka',
-      image_url: 'fakeUrl',
-      isLiked: 'false',
-      isRetweeted: 'false',
-      isUsersTweet: false,
+      tweet: {
+        id: 9,
+        userId: 'ramu',
+        _type: 'tweet',
+        reference: null,
+        timeStamp: 'someDate',
+        content: 'I am amazed by the performance',
+        replyCount: 0,
+        retweetCount: 0,
+        likeCount: 0,
+        name: 'Ramu kaka',
+        image_url: 'fakeUrl',
+        isLiked: 'false',
+        isRetweeted: 'false',
+        isUsersTweet: false,
+      },
     },
   ];
   it('should get tweets for given user', function (done) {
@@ -294,45 +300,6 @@ describe('/user/getReplies', function () {
   });
 });
 
-describe('/user/getRepliedTweets', function () {
-  before(() => {
-    app.locals.sessions = { getUserId: () => 'vikram' };
-  });
-  it('should get all tweets where user have replied', function (done) {
-    const body = {
-      userId: 'vikram',
-    };
-    request(app)
-      .post('/user/getRepliedTweets')
-      .send(body)
-      .expect([
-        {
-          id: 7,
-          userId: 'vikram',
-          content: 'My laptop is broken :(',
-          _type: 'tweet',
-          replyCount: 1,
-          likeCount: 1,
-          retweetCount: 0,
-          'id:1': 'vikram',
-          name: 'Vikram Singh',
-          joiningDate: '11/06/2018',
-          image_url: 'fakeUrl',
-          dob: '09/09/2000',
-          bio: 'My feets are not on ground',
-          followersCount: 0,
-          followingCount: 1,
-          'id:2': 7,
-          tweetId: null,
-          isLiked: 'true',
-          isRetweeted: 'false',
-          isUsersTweet: true,
-        },
-      ])
-      .expect(200, done);
-  });
-});
-
 describe('/user/updateProfile', function () {
   before(() => {
     app.locals.sessions = { getUserId: () => 'vikram' };
@@ -405,20 +372,22 @@ describe('/getActivitySpecificTweets', () => {
     const body = { id: 'vikram', activity: 'tweets' };
     const expected = [
       {
-        id: 7,
-        userId: 'vikram',
-        _type: 'tweet',
-        reference: null,
-        timeStamp: 'someDate',
-        content: 'My laptop is broken :(',
-        replyCount: 1,
-        retweetCount: 0,
-        likeCount: 1,
-        name: 'viky',
-        image_url: 'fakeUrl',
-        isLiked: 'false',
-        isRetweeted: 'false',
-        isUsersTweet: false,
+        tweet: {
+          id: 7,
+          userId: 'vikram',
+          _type: 'tweet',
+          reference: null,
+          timeStamp: 'someDate',
+          content: 'My laptop is broken :(',
+          replyCount: 1,
+          retweetCount: 0,
+          likeCount: 1,
+          name: 'viky',
+          image_url: 'fakeUrl',
+          isLiked: 'false',
+          isRetweeted: 'false',
+          isUsersTweet: false,
+        },
       },
     ];
 
@@ -433,20 +402,22 @@ describe('/getActivitySpecificTweets', () => {
     const body = { id: 'vikram', activity: 'likes' };
     const expected = [
       {
-        id: 7,
-        userId: 'vikram',
-        _type: 'tweet',
-        reference: null,
-        timeStamp: 'someDate',
-        content: 'My laptop is broken :(',
-        replyCount: 1,
-        retweetCount: 0,
-        likeCount: 1,
-        name: 'viky',
-        image_url: 'fakeUrl',
-        isLiked: 'false',
-        isRetweeted: 'false',
-        isUsersTweet: false,
+        tweet: {
+          id: 7,
+          userId: 'vikram',
+          _type: 'tweet',
+          reference: null,
+          timeStamp: 'someDate',
+          content: 'My laptop is broken :(',
+          replyCount: 1,
+          retweetCount: 0,
+          likeCount: 1,
+          name: 'viky',
+          image_url: 'fakeUrl',
+          isLiked: 'false',
+          isRetweeted: 'false',
+          isUsersTweet: false,
+        },
       },
     ];
     request(app)
@@ -507,7 +478,6 @@ describe('updateRetweets', function () {
       .expect(200, done);
   });
 });
-
 describe('searchHashTag', function () {
   before(() => {
     app.locals.sessions = { getUserId: () => 'ramu' };
@@ -527,7 +497,6 @@ describe('searchHashTag', function () {
       .expect({ status: true })
       .expect(200, done);
   });
-
   it('should serve the tweets of the given hashtag', function (done) {
     request(app)
       .get('/user/searchHashtag/goodTweet')

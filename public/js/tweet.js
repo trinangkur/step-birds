@@ -2,7 +2,7 @@ const sendResponse = function (tweetId, type) {
   closeResponsePopup();
   const textArea = 'response-content';
   const callbacks = {
-    retweet: getLatestRetweet,
+    retweet: getLatestTweet,
     reply: (res) => {
       if (res.status) {
         location.reload();
@@ -76,21 +76,11 @@ const hideOptions = function (id) {
 const getLatestTweet = function (res) {
   if (res.status) {
     const url = '/user/getLatestTweet';
-    sendGETRequest(url, (tweet) => {
+    sendGETRequest(url, ({ tweet, reference }) => {
       const pageUserId = document.querySelector('#tweets').getAttribute('name');
       if (pageUserId === tweet.userId) {
-        showTweet(tweet, 'tweets');
+        showTweet(tweet, 'tweets', reference);
       }
-    });
-  }
-};
-
-const getLatestRetweet = function (res) {
-  if (res.status) {
-    const url = '/user/getLatestRetweet';
-    sendGETRequest(url, (res) => {
-      const { retweet, tweet } = res;
-      showTweet(retweet, 'tweets', tweet);
     });
   }
 };

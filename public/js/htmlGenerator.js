@@ -135,7 +135,8 @@ const createParentTweetHtml = function(tweet) {
                 <span></span>
                 <span class="time-stamp"> &nbsp; ${moment(timeStamp).fromNow()}</span>
               </div>
-              <div class="content" id="content-${id}" onClick="openTweet(${id})">${createContent(content)}
+              <div class="content" id="content-${id}" 
+              onClick="openTweet(${id})">${createContent(content)}
               </div>
             </div>
           </div>`;
@@ -145,10 +146,10 @@ const createContentHtml = function(tweet, reference) {
   const parentTweetHtml = reference ? createParentTweetHtml(reference) : '';
   const { id, content } = tweet;
   return `<div class="content">
-            <div id="content-${id}" onClick="openTweet(${id})">
-            ${createContent(content)}</div>
-            ${parentTweetHtml}
-          </div>`;
+            <div id="content-${id}" 
+            onClick="openTweet(${id})">${createContent(content)}</div>
+    ${parentTweetHtml}
+  </div>`;
 };
 
 const createTweetHtml = function(tweet, reference) {

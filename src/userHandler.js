@@ -35,14 +35,14 @@ const deleteTweet = function (req, res) {
 const getLatestTweet = function (req, res) {
   const { dataStore } = req.app.locals;
 
-  dataStore.getUserTweets(req.userId, req.userId).then((tweets) => {
-    const tweet = tweets[tweets.length - 1];
+  dataStore.getUserTweets(req.userId, req.userId).then((posts) => {
+    const { tweet, reference } = posts[posts.length - 1];
     tweet.isUsersTweet = req.userId === tweet.userId;
-    res.json(tweet);
+    res.json({ tweet, reference });
   });
 };
 
-const serveProfile = function(req, res) {
+const serveProfile = function (req, res) {
   const { dataStore } = req.app.locals;
   dataStore.getUserInfo(req.userId).then(([userInfo]) => {
     dataStore
@@ -102,7 +102,7 @@ const toggleFollow = function (req, res) {
 const serveAllTweets = function (req, res) {
   const { dataStore } = req.app.locals;
   dataStore.getAllTweets(req.userId).then((tweets) => {
-    tweets.forEach((tweet) => {
+    tweets.forEach(({ tweet }) => {
       tweet.isUsersTweet = req.userId === tweet.userId;
     });
     res.json(tweets);
@@ -130,7 +130,7 @@ const getActivitySpecificTweets = function (req, res) {
   req.app.locals.dataStore
     .getActivitySpecificTweets(id, activity, req.userId)
     .then((tweets) => {
-      tweets.forEach((tweet) => {
+      tweets.forEach(({ tweet }) => {
         tweet.isUsersTweet = req.userId === tweet.userId;
       });
       res.json(tweets);
@@ -168,7 +168,7 @@ const getRetweetedBy = function (req, res) {
   });
 };
 
-const serveReplies = function(req, res) {
+const serveReplies = function (req, res) {
   const { dataStore } = req.app.locals;
   const { tweetId } = req.body;
   dataStore.getReplies(tweetId).then((replies) => {
@@ -176,17 +176,6 @@ const serveReplies = function(req, res) {
       reply.isUsersTweet = reply.userId === req.userId;
     });
     res.json(replies);
-  });
-};
-
-const serveRepliedTweet = function (req, res) {
-  const { dataStore } = req.app.locals;
-  const { userId } = req.body;
-  dataStore.getRepliedTweet(userId, req.userId).then((tweets) => {
-    tweets.forEach((tweet) => {
-      tweet.isUsersTweet = tweet.userId === req.userId;
-    });
-    res.json(tweets);
   });
 };
 
@@ -200,7 +189,7 @@ const updateRetweets = function (req, res) {
     });
 };
 
-const searchProfile = function(req, res) {
+const searchProfile = function (req, res) {
   const { dataStore } = req.app.locals;
   const { searchBy } = req.params;
   dataStore.getUserProfiles(searchBy).then((profiles) => {
@@ -208,19 +197,11 @@ const searchProfile = function(req, res) {
   });
 };
 
-const searchHashtag = function(req, res) {
+const searchHashtag = function (req, res) {
   const { dataStore } = req.app.locals;
   const { searchBy } = req.params;
   dataStore.searchHashtag(searchBy).then((tweets) => {
-    
     res.json(tweets);
-  });
-};
-
-const getLatestRetweet = function (req, res) {
-  const { dataStore } = req.app.locals;
-  dataStore.getLatestRetweet(req.userId).then((tweetDetails) => {
-    res.json(tweetDetails);
   });
 };
 
@@ -241,10 +222,8 @@ module.exports = {
   serveTweet,
   getLikedBy,
   serveReplies,
-  serveRepliedTweet,
   updateRetweets,
   getRetweetedBy,
   getActivitySpecificTweets,
   searchHashtag,
-  getLatestRetweet,
 };

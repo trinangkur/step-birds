@@ -9,7 +9,6 @@ const {
   getAllTweetsQuery,
   getUpdateProfileQuery,
   getSpecificTweetQuery,
-  getRepliedTweetQuery,
   getRepliesQuery,
   getProfileTweetsQuery,
   getFollowListQuery,
@@ -161,9 +160,14 @@ class DataStore {
     return this.getAllRows(queryString, []);
   }
 
-  getAllTweets(userId) {
-    const queryString = getAllTweetsQuery(userId);
+  getParent(tweetId, userId) {
+    const queryString = getSpecificTweetQuery(tweetId, userId);
     return this.getAllRows(queryString, []);
+  }
+
+  async getAllTweets(userId) {
+    const queryString = getAllTweetsQuery(userId);
+    return this.getTweetWithParentDetail(queryString, userId);
   }
 
   updateProfile(userId, name, bio) {
@@ -176,9 +180,9 @@ class DataStore {
     return this.getAllRows(queryString, []);
   }
 
-  getUserTweets(userId, loggedInUser) {
+  async getUserTweets(userId, loggedInUser) {
     const queryString = getTweetQuery(userId, loggedInUser);
-    return this.getAllRows(queryString, []);
+    return this.getTweetWithParentDetail(queryString, userId);
   }
 
   getActivitySpecificTweets(userId, activity, loggedInUser) {
@@ -187,7 +191,17 @@ class DataStore {
     }
 
     const queryString = getProfileTweetsQuery(userId, activity, loggedInUser);
-    return this.getAllRows(queryString, []);
+    return this.getTweetWithParentDetail(queryString, userId);
+  }
+
+  async getTweetWithParentDetail(queryString, userId) {
+    const tweets = await this.getAllRows(queryString, []);
+    const posts = [];
+    for (const tweet of tweets) {
+      const [reference] = await this.getParent(tweet.reference, userId);
+      posts.push({ tweet, reference });
+    }
+    return posts;
   }
 
   getTweet(tweetId, userId) {
@@ -202,11 +216,6 @@ class DataStore {
 
   getReplies(tweetId) {
     const queryString = getRepliesQuery(tweetId);
-    return this.getAllRows(queryString, []);
-  }
-
-  getRepliedTweet(userId, loggedInUser) {
-    const queryString = getRepliedTweetQuery(userId, loggedInUser);
     return this.getAllRows(queryString, []);
   }
 
@@ -230,19 +239,6 @@ class DataStore {
   searchHashtag(hashTag) {
     const queryString = getSearchHashtagQuery(hashTag);
     return this.getAllRows(queryString, []);
-  }
-
-  getLatestRetweet(userId) {
-    return new Promise((res) => {
-      const queryString = getTweetQuery(userId, userId);
-      this.getAllRows(queryString, []).then((tweets) => {
-        const retweet = tweets[tweets.length - 1];
-        const queryString = getSpecificTweetQuery(retweet.reference, userId);
-        this.getAllRows(queryString, []).then(([tweet]) => {
-          res({ retweet, tweet });
-        });
-      });
-    });
   }
 }
 
