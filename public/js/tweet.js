@@ -102,6 +102,7 @@ const postResponse = function (textArea, reference, type, callback) {
 };
 
 const openTweet = function (id) {
+  event.stopPropagation();
   location.assign(`/user/tweet/${id}`);
 };
 

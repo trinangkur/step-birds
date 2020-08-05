@@ -25,8 +25,21 @@ head
             span.user-id @#{tweet.userId}
             span
             span.time-stamp &nbsp #{tweet.timeStamp}
-
-          .content #{(tweet.content)} 
+          if !reference
+            .content #{tweet.content}
+          else
+            .content
+              div #{tweet.content}
+              .parent-element(id=`content-${reference.id}` onclick=`openTweet(${id})`)
+                .dp(onclick=`getUserProfile('${reference.userId}')`)
+                    img(id=`dp-${reference.userId}` src=`${reference.image_url}` alt='not found')
+                .info
+                  .user-info
+                    span.user-name(onclick=`getUserProfile('${reference.userId}')`) #{reference.name}
+                    span.user-id @#{reference.userId}
+                    span
+                    span.time-stamp  &nbsp; #{reference.timeStamp}
+                  .content(id=`content-${reference.id}` onclick=`openTweet(${reference.id})`) #{reference.content}
         .right-side-options(onclick=`showTweetOptions(${tweet.id})`) V
       .tweet-reactions
         .retweet-count(onclick=`showRetweetedBy(${tweet.id})`) 

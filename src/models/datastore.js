@@ -206,7 +206,7 @@ class DataStore {
 
   getTweet(tweetId, userId) {
     const queryString = getSpecificTweetQuery(tweetId, userId);
-    return this.getAllRows(queryString, []);
+    return this.getTweetWithParentDetail(queryString, userId);
   }
 
   getActionBy(tweetId, table) {

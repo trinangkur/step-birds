@@ -54,7 +54,7 @@ const serveProfile = function (req, res) {
           id: profileInfo.id,
           userId: userInfo.id,
           userUrl: userInfo.image_url,
-          joinedAt: userInfo.joiningDate,
+          joinedAt: new Date(userInfo.joiningDate).toDateString(),
           followingCount: profileInfo.followingCount,
           followersCount: profileInfo.followersCount,
           userOption: profileInfo.userOption,
@@ -140,15 +140,21 @@ const getActivitySpecificTweets = function (req, res) {
 const serveTweet = function (req, res) {
   const { dataStore } = req.app.locals;
   dataStore.getUserInfo(req.userId).then(([userInfo]) => {
-    dataStore.getTweet(req.params.id, req.userId).then(([tweet]) => {
-      tweet.isUsersTweet = tweet.userId === req.userId;
-      tweet.timeStamp = new Date(tweet.timeStamp).toLocaleString();
-      res.render('tweet', {
-        tweet,
-        userId: userInfo.id,
-        userUrl: userInfo.image_url,
+    dataStore
+      .getTweet(req.params.id, req.userId)
+      .then(([{ tweet, reference }]) => {
+        tweet.isUsersTweet = tweet.userId === req.userId;
+        tweet.timeStamp = new Date(tweet.timeStamp).toDateString();
+        if (reference) {
+          reference.timeStamp = new Date(reference.timeStamp).toDateString();
+        }
+        res.render('tweet', {
+          tweet,
+          userId: userInfo.id,
+          userUrl: userInfo.image_url,
+          reference,
+        });
       });
-    });
   });
 };
 
