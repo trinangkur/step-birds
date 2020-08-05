@@ -1,32 +1,34 @@
-const { assert } = require('chai');
+const {assert} = require('chai');
 const sinon = require('sinon');
-const { DataStore } = require('../src/models/datastore');
+const {DataStore} = require('../src/models/datastore');
 
 describe('postResponse', () => {
-  it('should add tweet in database', (done) => {
+  it('should add tweet in database', done => {
     const run = sinon.stub().yields(null);
-    const all = sinon.stub().yields(null, [{ id: 2 }]);
-    const dataStore = new DataStore({ run, all });
+    const all = sinon.stub().yields(null, [{id: 2}]);
+    const exec = sinon.stub().yields(null);
+    const dataStore = new DataStore({run, all, exec});
     const details = {
       userId: 'vikram',
       content: 'Testing tweet',
-      type: 'tweet',
+      type: 'tweet'
     };
-    dataStore.postResponse(details).then((message) => {
+    dataStore.postResponse(details).then(message => {
       assert.strictEqual(message, true);
       done();
     });
   });
-  it('should add tweet with hashtag in database', (done) => {
+  it('should add tweet with hashtag in database', done => {
     const run = sinon.stub().yields(null);
-    const all = sinon.stub().yields(null, [{ id: 2 }]);
-    const dataStore = new DataStore({ run, all });
+    const all = sinon.stub().yields(null, [{id: 2}]);
+    const exec = sinon.stub().yields(null);
+    const dataStore = new DataStore({run, all, exec});
     const details = {
       userId: 'vikram',
       content: 'Testing #hashtag',
-      type: 'tweet',
+      type: 'tweet'
     };
-    dataStore.postResponse(details).then((message) => {
+    dataStore.postResponse(details).then(message => {
       assert.strictEqual(message, true);
       done();
     });
@@ -34,48 +36,48 @@ describe('postResponse', () => {
 });
 
 describe('addTweeter', () => {
-  it('should add a new tweeter in database', (done) => {
+  it('should add a new tweeter in database', done => {
     const run = sinon.stub().yields(null);
-    const dataStore = new DataStore({ run });
+    const dataStore = new DataStore({run});
     dataStore
       .addTweeter({
         login: 'abc',
         avatar_url: 'https://url',
-        name: 'abc',
+        name: 'abc'
       })
-      .then((message) => {
+      .then(message => {
         assert.strictEqual(message, 'OK');
         done();
       });
   });
 
-  it('should should handle err of sql constrain', (done) => {
+  it('should should handle err of sql constrain', done => {
     const err = new Error();
     err.code = 'SQLITE_CONSTRAINT';
     const run = sinon.stub().yields(err);
-    const dataStore = new DataStore({ run });
+    const dataStore = new DataStore({run});
     dataStore
       .addTweeter({
         login: 'abc',
         avatar_url: 'https://url',
-        name: 'abc',
+        name: 'abc'
       })
-      .then((message) => {
+      .then(message => {
         assert.strictEqual(message, 'already have an account');
         done();
       });
   });
 
-  it('should should throw err other than sql constrain', (done) => {
+  it('should should throw err other than sql constrain', done => {
     const run = sinon.stub().yields(new Error());
-    const dataStore = new DataStore({ run });
+    const dataStore = new DataStore({run});
     dataStore
       .addTweeter({
         login: 'abc',
         avatar_url: 'https://url',
-        name: 'abc',
+        name: 'abc'
       })
-      .catch((err) => {
+      .catch(err => {
         assert.isNotNull(err);
         done();
       });
@@ -83,12 +85,12 @@ describe('addTweeter', () => {
 });
 
 describe('getUserTweet', () => {
-  it('should throw error when userId is not defined', (done) => {
+  it('should throw error when userId is not defined', done => {
     const err = new Error();
     err.code = 'user is undefined';
     const all = sinon.stub().yields(err);
-    const dataStore = new DataStore({ all });
-    dataStore.getUserTweets('trinangkur').catch((err) => {
+    const dataStore = new DataStore({all});
+    dataStore.getUserTweets('trinangkur').catch(err => {
       assert.strictEqual(err.code, 'user is undefined');
       done();
     });
@@ -96,7 +98,7 @@ describe('getUserTweet', () => {
 });
 
 describe('toggleFollow', () => {
-  it('should throw if transaction is not propitiate', (done) => {
+  it('should throw if transaction is not propitiate', done => {
     const err = new Error();
     err.code = 'no transaction active';
     const exec = (sql, cb) => {
@@ -104,8 +106,8 @@ describe('toggleFollow', () => {
         throw err;
       }
     };
-    const dataStore = new DataStore({ exec });
-    dataStore.toggleFollow('vikram', 'trinangkur').catch((err) => {
+    const dataStore = new DataStore({exec});
+    dataStore.toggleFollow('vikram', 'trinangkur').catch(err => {
       assert.strictEqual(err.code, 'no transaction active');
       done();
     });

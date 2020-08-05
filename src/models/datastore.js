@@ -59,8 +59,12 @@ class DataStore {
           this.db.exec('ROLLBACK');
           return reject(err);
         }
-        this.db.exec('COMMIT');
-        resolve('OK');
+        this.db.exec('COMMIT', err => {
+          if (err) {
+            reject(err);
+          }
+          resolve('OK');
+        });
       });
     });
   }
@@ -82,6 +86,26 @@ class DataStore {
     });
   }
 
+  add(queryExecuter, query, field, content) {
+    const hashTags = filterBy('#', content);
+    const mentions = filterBy('@', content);
+    return new Promise(res => {
+      queryExecuter(query).then(() => {
+        this.getAllRows(getSelectQuery('Tweet', field)).then(([{id}]) => {
+          let query = 'BEGIN TRANSACTION;';
+          if (hashTags) {
+            query += getInsertTagQuery('Hashes', id, hashTags, 'tag');
+          }
+          if (mentions) {
+            query += getInsertTagQuery('Mentions', id, mentions, 'userId');
+          }
+          this.executeTransaction(query).then(() => res(true));
+          res(true);
+        });
+      });
+    });
+  }
+
   postResponse(details) {
     const {userId, type, content, timeStamp, reference} = details;
     const columns = 'id ,userId, _type, content, timeStamp, reference';
@@ -89,32 +113,23 @@ class DataStore {
      "${reference}"`;
     const condition = `content='${content}' AND timestamp='${timeStamp}'
                        AND _type='${type}';`;
-    const hashTags = filterBy('#', content);
     const field = {columns: ['id'], condition};
     if (type === 'tweet') {
-      return new Promise(res => {
-        this.runQuery(getInsertionQuery('Tweet', columns, values), []).then(
-          () => {
-            this.getAllRows(getSelectQuery('Tweet', field)).then(([{id}]) => {
-              if (hashTags) {
-                const queryString = getInsertTagQuery('Hashes', id, hashTags);
-
-                this.runQuery(queryString).then(() => res(true));
-              }
-              res(true);
-            });
-          }
-        );
-      });
+      const queryString = getInsertionQuery('Tweet', columns, values);
+      return this.add(this.runQuery.bind(this), queryString, field, content);
     }
-
     const queryString = getResponseInsertionQuery(
       columns,
       values,
       reference,
       type
     );
-    return this.executeTransaction(queryString);
+    return this.add(
+      this.executeTransaction.bind(this),
+      queryString,
+      field,
+      content
+    );
   }
 
   deleteTweet(tweetId, reference, type) {

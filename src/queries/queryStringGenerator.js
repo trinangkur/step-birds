@@ -1,5 +1,5 @@
-const getInsertTagQuery = function(table, tweetId, tags) {
-  const query = `INSERT INTO ${table} (tweetId,tag) VALUES `;
+const getInsertTagQuery = function(table, tweetId, tags, field) {
+  const query = `INSERT INTO ${table} (tweetId,${field}) VALUES `;
   const values = tags.map(tag => `(${tweetId}, '${tag.slice(1)}')`);
   return query + values.join(',') + ';';
 };
