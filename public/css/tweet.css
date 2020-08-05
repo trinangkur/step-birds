@@ -116,6 +116,11 @@
   height: 70%;
   padding: 2%;
 }
+
+.tag {
+  color: #4a61c8;
+}
+
 .right-side-options {
   width: 10px;
   height: 10px;

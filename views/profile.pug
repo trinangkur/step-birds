@@ -5,6 +5,8 @@ head
     type="text/javascript")
 
   include ./commonPart.pug
+  include ./mixins/_rightSide.pug
+
 body(onload="main()") 
   div#content-box()
     div#profile-icon
@@ -49,4 +51,4 @@ body(onload="main()")
       .edit-details
         span Your Bio
         textarea#bio(name="bio", cols="28", rows="10")
-  #right-side-bar
++rightSide

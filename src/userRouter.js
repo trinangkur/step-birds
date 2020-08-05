@@ -18,8 +18,9 @@ const {
   serveReplies,
   updateRetweets,
   getRetweetedBy,
-  getActivitySpecificTweets,
   searchHashtag,
+  getActivitySpecificTweets,
+  getMatchingTags,
 } = require('./userHandler');
 
 const userRouter = express.Router();
@@ -62,5 +63,7 @@ userRouter.post('/updateRetweets', updateRetweets);
 userRouter.get('/searchProfile/:searchBy', searchProfile);
 
 userRouter.get('/searchHashtag/:searchBy', searchHashtag);
+
+userRouter.get('/serveHashtag/:searchBy', getMatchingTags);
 
 module.exports = { userRouter };

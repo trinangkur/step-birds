@@ -1,4 +1,4 @@
-const authorizeUser = function (req, res, next) {
+const authorizeUser = function(req, res, next) {
   const { sessions } = req.app.locals;
   const userId = sessions.getUserId(req.cookies._SID);
 
@@ -9,7 +9,7 @@ const authorizeUser = function (req, res, next) {
   res.redirect('/login.html');
 };
 
-const postResponse = function (req, res) {
+const postResponse = function(req, res) {
   const { content, timeStamp, type, reference } = req.body;
   const { dataStore } = req.app.locals;
   const postDetails = {
@@ -24,7 +24,7 @@ const postResponse = function (req, res) {
   });
 };
 
-const deleteTweet = function (req, res) {
+const deleteTweet = function(req, res) {
   const { tweetId, reference, type } = req.body;
   const { dataStore } = req.app.locals;
   dataStore.deleteTweet(tweetId, reference, type).then(() => {
@@ -32,7 +32,7 @@ const deleteTweet = function (req, res) {
   });
 };
 
-const getLatestTweet = function (req, res) {
+const getLatestTweet = function(req, res) {
   const { dataStore } = req.app.locals;
 
   dataStore.getUserTweets(req.userId, req.userId).then((posts) => {
@@ -42,7 +42,7 @@ const getLatestTweet = function (req, res) {
   });
 };
 
-const serveProfile = function (req, res) {
+const serveProfile = function(req, res) {
   const { dataStore } = req.app.locals;
   dataStore.getUserInfo(req.userId).then(([userInfo]) => {
     dataStore
@@ -64,11 +64,11 @@ const serveProfile = function (req, res) {
   });
 };
 
-const redirectUserProfile = function (req, res) {
+const redirectUserProfile = function(req, res) {
   res.redirect(`/user/profile/${req.userId}`);
 };
 
-const serveHome = function (req, res) {
+const serveHome = function(req, res) {
   const { dataStore } = req.app.locals;
   dataStore.getUserInfo(req.userId).then((userInfo) => {
     const { image_url, id } = userInfo[0];
@@ -81,7 +81,7 @@ const serveHome = function (req, res) {
   });
 };
 
-const updateLikes = function (req, res) {
+const updateLikes = function(req, res) {
   const { dataStore } = req.app.locals;
   const { tweetId } = req.body;
   dataStore
@@ -91,7 +91,7 @@ const updateLikes = function (req, res) {
     });
 };
 
-const toggleFollow = function (req, res) {
+const toggleFollow = function(req, res) {
   const { dataStore } = req.app.locals;
   const { tweeter } = req.body;
   dataStore.toggleFollow(tweeter, req.userId).then((status) => {
@@ -99,7 +99,7 @@ const toggleFollow = function (req, res) {
   });
 };
 
-const serveAllTweets = function (req, res) {
+const serveAllTweets = function(req, res) {
   const { dataStore } = req.app.locals;
   dataStore.getAllTweets(req.userId).then((tweets) => {
     tweets.forEach(({ tweet }) => {
@@ -109,7 +109,7 @@ const serveAllTweets = function (req, res) {
   });
 };
 
-const updateProfile = function (req, res) {
+const updateProfile = function(req, res) {
   const { dataStore } = req.app.locals;
   const { name, bio } = req.body;
   dataStore.updateProfile(req.userId, name, bio).then(() => {
@@ -117,7 +117,7 @@ const updateProfile = function (req, res) {
   });
 };
 
-const serveFollowPage = function (req, res) {
+const serveFollowPage = function(req, res) {
   const { dataStore } = req.app.locals;
   const { listName, id } = req.params;
   dataStore.getFollow(listName, id).then((followList) => {
@@ -125,7 +125,7 @@ const serveFollowPage = function (req, res) {
   });
 };
 
-const getActivitySpecificTweets = function (req, res) {
+const getActivitySpecificTweets = function(req, res) {
   const { id, activity } = req.body;
   req.app.locals.dataStore
     .getActivitySpecificTweets(id, activity, req.userId)
@@ -137,7 +137,7 @@ const getActivitySpecificTweets = function (req, res) {
     });
 };
 
-const serveTweet = function (req, res) {
+const serveTweet = function(req, res) {
   const { dataStore } = req.app.locals;
   dataStore.getUserInfo(req.userId).then(([userInfo]) => {
     dataStore
@@ -158,7 +158,7 @@ const serveTweet = function (req, res) {
   });
 };
 
-const getLikedBy = function (req, res) {
+const getLikedBy = function(req, res) {
   const { dataStore } = req.app.locals;
   const { tweetId } = req.body;
   dataStore.getActionBy(tweetId, 'Likes').then((tweeters) => {
@@ -166,7 +166,7 @@ const getLikedBy = function (req, res) {
   });
 };
 
-const getRetweetedBy = function (req, res) {
+const getRetweetedBy = function(req, res) {
   const { dataStore } = req.app.locals;
   const { tweetId } = req.body;
   dataStore.getActionBy(tweetId, 'Retweets').then((tweeters) => {
@@ -174,7 +174,7 @@ const getRetweetedBy = function (req, res) {
   });
 };
 
-const serveReplies = function (req, res) {
+const serveReplies = function(req, res) {
   const { dataStore } = req.app.locals;
   const { tweetId } = req.body;
   dataStore.getReplies(tweetId).then((replies) => {
@@ -185,7 +185,7 @@ const serveReplies = function (req, res) {
   });
 };
 
-const updateRetweets = function (req, res) {
+const updateRetweets = function(req, res) {
   const { dataStore } = req.app.locals;
   const { tweetId } = req.body;
   dataStore
@@ -195,7 +195,7 @@ const updateRetweets = function (req, res) {
     });
 };
 
-const searchProfile = function (req, res) {
+const searchProfile = function(req, res) {
   const { dataStore } = req.app.locals;
   const { searchBy } = req.params;
   dataStore.getUserProfiles(searchBy).then((profiles) => {
@@ -203,11 +203,27 @@ const searchProfile = function (req, res) {
   });
 };
 
-const searchHashtag = function (req, res) {
+const searchHashtag = function(req, res) {
   const { dataStore } = req.app.locals;
   const { searchBy } = req.params;
   dataStore.searchHashtag(searchBy).then((tweets) => {
     res.json(tweets);
+  });
+};
+
+const getMatchingTags = function(req, res) {
+  const { dataStore } = req.app.locals;
+  const { searchBy } = req.params;
+
+  dataStore.getMatchingTags(searchBy).then((tags) => {
+    res.json(tags);
+  });
+};
+
+const getLatestRetweet = function(req, res) {
+  const { dataStore } = req.app.locals;
+  dataStore.getLatestRetweet(req.userId).then((tweetDetails) => {
+    res.json(tweetDetails);
   });
 };
 
@@ -232,4 +248,6 @@ module.exports = {
   getRetweetedBy,
   getActivitySpecificTweets,
   searchHashtag,
+  getLatestRetweet,
+  getMatchingTags,
 };

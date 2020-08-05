@@ -14,7 +14,7 @@ const fillResponsePopup = function(tweetId, content, image_url, name) {
 };
 
 const addResponseButton = function(tweetId, type) {
-  return `<div id="response-button" onclick="sendResponse(${tweetId},'${type.toLowerCase()}')">
+  return `<div id="response-button" onclick="sendResponse('${tweetId}','${type.toLowerCase()}')">
     <button class="primary-btn add-access">${type}</button>
   </div>`;
 };
@@ -111,7 +111,7 @@ const createContent = function(content) {
   return words.reduce((contentHtml, word) => {
     const wordHtml =
       word[0] === '#'
-        ? `<span onclick="serveHashtag('${word}')">
+        ? `<span class="tag" onclick="serveHashtag('${word}')">
         ${word}</span>`
         : word;
     return contentHtml + ' ' + wordHtml;

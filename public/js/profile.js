@@ -77,4 +77,4 @@ const main = function () {
   getActivitySpecificTweets('likes');
 };
 
-// setInterval(main, 5000);
+setInterval(main, 5000);

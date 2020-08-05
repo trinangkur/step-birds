@@ -20,7 +20,7 @@ const {
   getResponseInsertionQuery,
 } = require('../queries/queryStringGenerator');
 
-const filterBy = function (symbol, text) {
+const filterBy = function(symbol, text) {
   const pattern = new RegExp(`${symbol}[A-Z]+`, 'ig');
   return text.match(pattern);
 };
@@ -98,6 +98,7 @@ class DataStore {
             this.getAllRows(getSelectQuery('Tweet', field)).then(([{ id }]) => {
               if (hashTags) {
                 const queryString = getInsertTagQuery('Hashes', id, hashTags);
+
                 this.runQuery(queryString).then(() => res(true));
               }
               res(true);
@@ -106,6 +107,7 @@ class DataStore {
         );
       });
     }
+
     const queryString = getResponseInsertionQuery(
       columns,
       values,
@@ -239,6 +241,28 @@ class DataStore {
   searchHashtag(hashTag) {
     const queryString = getSearchHashtagQuery(hashTag);
     return this.getAllRows(queryString, []);
+  }
+
+  getMatchingTags(tagName) {
+    const condition = `tag like "%${tagName}%"`;
+    const queryString = getSelectQuery('Hashes', {
+      columns: ['DISTINCT(tag)'],
+      condition,
+    });
+    return this.getAllRows(queryString, []);
+  }
+
+  getLatestRetweet(userId) {
+    return new Promise((res) => {
+      const queryString = getTweetQuery(userId, userId);
+      this.getAllRows(queryString, []).then((tweets) => {
+        const retweet = tweets[tweets.length - 1];
+        const queryString = getSpecificTweetQuery(retweet.reference, userId);
+        this.getAllRows(queryString, []).then(([tweet]) => {
+          res({ retweet, tweet });
+        });
+      });
+    });
   }
 }
 

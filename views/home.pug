@@ -4,6 +4,7 @@ head
   script(src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"
       type="text/javascript")
   include ./commonPart.pug
+  include ./mixins/_rightSide.pug
 
 #content-box()
   #header()
@@ -32,4 +33,5 @@ head
             text(x="50%" y="50%" text-anchor="middle"              stroke="black" stroke-width="0.1px" dy=".3em" font-size="8px" id="counter2") 180
     #tweets(name=userId)
       #tweet
-#right-side-bar
++rightSide
+

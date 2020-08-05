@@ -1,24 +1,29 @@
-.profileLink {
+.suggestion {
   display: flex;
-  height: 19%;
+  height: 10%;
   width: 100%;
   margin: 2% 0% 0% 2%;
   cursor: pointer;
   border-bottom: solid 1px lightgrey;
 }
 
-.profileLink > img {
+.suggestion > span {
+  color: #4a61c8;
+  margin: 0 auto;
+}
+
+.suggestion > img {
   border-radius: 50%;
   height: 60%;
 }
 
-.profileLink > p {
+.suggestion > p {
   color: rgb(135, 132, 132);
-  margin: 5% 0% 0% 1%;
+  margin: 4.5% 0% 0% 1%;
 }
 
-.profileLink > h3 {
-  margin: 4.5% 0% 0% 1%;
+.suggestion > h3 {
+  margin: 3.5% 0% 0% 1%;
   font-weight: 500;
 }
 
