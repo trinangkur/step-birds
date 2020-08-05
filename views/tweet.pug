@@ -26,10 +26,14 @@ head
             span
             span.time-stamp &nbsp #{tweet.timeStamp}
           if !reference
-            .content #{tweet.content}
+            .content 
+              include mixins/_showHashTag.pug
+              +createContent(tweet.content)
           else
             .content
-              div #{tweet.content}
+              div 
+                include mixins/_showHashTag.pug
+                +createContent(tweet.content)
               .parent-element(id=`content-${reference.id}` onclick=`openTweet(${id})`)
                 .dp(onclick=`getUserProfile('${reference.userId}')`)
                     img(id=`dp-${reference.userId}` src=`${reference.image_url}` alt='not found')
@@ -39,7 +43,9 @@ head
                     span.user-id @#{reference.userId}
                     span
                     span.time-stamp  &nbsp; #{reference.timeStamp}
-                  .content(id=`content-${reference.id}` onclick=`openTweet(${reference.id})`) #{reference.content}
+                  .content(id=`content-${reference.id}` onclick=`openTweet(${reference.id})`) 
+                    include mixins/_showHashTag.pug
+                    +createContent(reference.content)
         if tweet.isUsersTweet
           .delete-tweet(onclick=`deleteTweetPage(${tweet.id})`)
             i(class="fas fa-trash")

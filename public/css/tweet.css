@@ -280,7 +280,7 @@
   height: 70%;
   width: 100%;
   display: flex;
-  border: solid 0.2px black;
+  border: solid 0.2px lightgray;
   border-radius: 10px;
   margin: 2%;
 }

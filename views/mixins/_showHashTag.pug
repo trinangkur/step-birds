@@ -1,0 +1,7 @@
+mixin createContent(content)
+  - const words = content.split(' ')
+  each word in words
+    if word[0] === '#'
+      span.tag(onclick=`serveHashtag('${word}')`) #{word} 
+    else  
+      span #{word}
