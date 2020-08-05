@@ -25,7 +25,8 @@ head
             span.user-id @#{tweet.userId}
             span
             span.time-stamp &nbsp #{tweet.timeStamp}
-          .content #{tweet.content} 
+
+          .content #{(tweet.content)} 
         .right-side-options(onclick=`showTweetOptions(${tweet.id})`) V
       .tweet-reactions
         .retweet-count(onclick=`showRetweetedBy(${tweet.id})`) 

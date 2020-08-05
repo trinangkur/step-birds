@@ -42,15 +42,7 @@ const getLatestTweet = function (req, res) {
   });
 };
 
-const searchProfile = function (req, res) {
-  const { dataStore } = req.app.locals;
-  const { searchBy } = req.body;
-  dataStore.getUserProfiles(searchBy).then((profiles) => {
-    res.json(profiles);
-  });
-};
-
-const serveProfile = function (req, res) {
+const serveProfile = function(req, res) {
   const { dataStore } = req.app.locals;
   dataStore.getUserInfo(req.userId).then(([userInfo]) => {
     dataStore
@@ -176,7 +168,7 @@ const getRetweetedBy = function (req, res) {
   });
 };
 
-const serveReplies = function (req, res) {
+const serveReplies = function(req, res) {
   const { dataStore } = req.app.locals;
   const { tweetId } = req.body;
   dataStore.getReplies(tweetId).then((replies) => {
@@ -208,10 +200,19 @@ const updateRetweets = function (req, res) {
     });
 };
 
-const searchHashtag = function (req, res) {
+const searchProfile = function(req, res) {
   const { dataStore } = req.app.locals;
-  const { searchBy } = req.body;
+  const { searchBy } = req.params;
+  dataStore.getUserProfiles(searchBy).then((profiles) => {
+    res.json(profiles);
+  });
+};
+
+const searchHashtag = function(req, res) {
+  const { dataStore } = req.app.locals;
+  const { searchBy } = req.params;
   dataStore.searchHashtag(searchBy).then((tweets) => {
+    
     res.json(tweets);
   });
 };

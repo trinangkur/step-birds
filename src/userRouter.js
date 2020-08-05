@@ -29,8 +29,6 @@ userRouter.use(authorizeUser);
 
 userRouter.get('/home', serveHome);
 
-userRouter.post('/searchProfile', searchProfile);
-
 userRouter.get('/profile/:userId', serveProfile);
 
 userRouter.get('/showProfile', redirectUserProfile);
@@ -65,7 +63,9 @@ userRouter.post('/getRepliedTweets', serveRepliedTweet);
 
 userRouter.post('/updateRetweets', updateRetweets);
 
-userRouter.post('/searchHashtag', searchHashtag);
+userRouter.get('/searchProfile/:searchBy', searchProfile);
+
+userRouter.get('/searchHashtag/:searchBy', searchHashtag);
 
 userRouter.get('/getLatestRetweet', getLatestRetweet);
 

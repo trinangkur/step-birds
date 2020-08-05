@@ -81,9 +81,8 @@ describe('searchProfile', function () {
   });
   it('should serve searchProfile', function (done) {
     request(app)
-      .post('/user/searchProfile')
+      .get('/user/searchProfile/rahit')
       .set('Content-Type', 'application/json')
-      .send({ searchBy: 'rahit' })
       .expect([
         { id: 'rahit', name: 'Rahit Kar', image_url: 'fakeUrl' },
         { id: 'rahitkar', name: 'Rahit Kar', image_url: 'fakeUrl' },
@@ -531,13 +530,12 @@ describe('searchHashTag', function () {
 
   it('should serve the tweets of the given hashtag', function (done) {
     request(app)
-      .post('/user/searchHashtag')
+      .get('/user/searchHashtag/goodTweet')
       .set('Content-Type', 'application/json')
-      .send({ searchBy: '#goodTweet' })
       .expect([
         {
           tweetId: 13,
-          tag: '#goodTweet',
+          tag: 'goodTweet',
           id: 'ramu',
           _type: 'tweet',
           userId: 'ramu',
