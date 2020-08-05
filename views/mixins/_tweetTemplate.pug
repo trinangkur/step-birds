@@ -11,20 +11,26 @@ mixin tweetTemplate({tweet, reference})
           span
           span.time-stamp &nbsp #{tweet.timeStamp}
         if !reference
-          .content #{tweet.content}
+          .content 
+            include _showHashTag.pug
+            +createContent(tweet.content)
         else
           .content
-            div #{tweet.content}
+            div 
+              include _showHashTag.pug
+              +createContent(tweet.content)
             .parent-element(id=`content-${reference.id}` onclick=`openTweet(${id})`)
               .dp(onclick=`getUserProfile('${reference.userId}')`)
-                img(id=`dp-${reference.userId}` src=`${reference.image_url}` alt='not found')
+                  img(id=`dp-${reference.userId}` src=`${reference.image_url}` alt='not found')
               .info
                 .user-info
                   span.user-name(onclick=`getUserProfile('${reference.userId}')`) #{reference.name}
                   span.user-id @#{reference.userId}
                   span
                   span.time-stamp  &nbsp; #{reference.timeStamp}
-                .content(id=`content-${reference.id}` onclick=`openTweet(${reference.id})`) #{reference.content}
+                .content(id=`content-${reference.id}` onclick=`openTweet(${reference.id})`) 
+                  include _showHashTag.pug
+                  +createContent(reference.content)
       if tweet.isUsersTweet
         .delete-tweet(onclick=`deleteTweetPage(${tweet.id})`)
           i(class="fas fa-trash")
