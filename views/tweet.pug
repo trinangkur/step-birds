@@ -6,7 +6,9 @@ head
     type="text/javascript")
 
   include ./commonPart.pug
-  include ./mixins/_rightSide.pug
+  include ./mixins/rightSide.pug
+  include mixins/showHashTag.pug
+
   script(src="/js/reply.js")
 
   body(onload=`main(${tweet && tweet.id})`)
@@ -29,12 +31,10 @@ head
             span.time-stamp &nbsp #{tweet.timeStamp}
           if !reference
             .content 
-              include mixins/_showHashTag.pug
               +createContent(tweet.content)
           else
             .content
               div 
-                include mixins/_showHashTag.pug
                 +createContent(tweet.content)
               .parent-element(id=`content-${reference.id}` onclick=`openTweet(${reference.id})`)
                 .dp(onclick=`getUserProfile('${reference.userId}')`)
@@ -46,7 +46,6 @@ head
                     span
                     span.time-stamp  &nbsp; #{reference.timeStamp}
                   .content(id=`content-${reference.id}` onclick=`openTweet(${reference.id})`) 
-                    include mixins/_showHashTag.pug
                     +createContent(reference.content)
         if tweet.isUsersTweet
           .delete-tweet(onclick=`deleteTweetPage(${tweet.id})`)

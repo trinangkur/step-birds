@@ -1,4 +1,5 @@
 mixin tweetTemplate({tweet, reference})
+  include showHashTag.pug
   .tweet
     .content-section
       .dp
@@ -12,12 +13,10 @@ mixin tweetTemplate({tweet, reference})
           span.time-stamp &nbsp #{tweet.timeStamp}
         if !reference
           .content 
-            include _showHashTag.pug
             +createContent(tweet.content)
         else
           .content
             div 
-              include _showHashTag.pug
               +createContent(tweet.content)
             .parent-element(id=`content-${reference.id}` onclick=`openTweet(${id})`)
               .dp(onclick=`getUserProfile('${reference.userId}')`)
@@ -29,7 +28,6 @@ mixin tweetTemplate({tweet, reference})
                   span
                   span.time-stamp  &nbsp; #{reference.timeStamp}
                 .content(id=`content-${reference.id}` onclick=`openTweet(${reference.id})`) 
-                  include _showHashTag.pug
                   +createContent(reference.content)
       if tweet.isUsersTweet
         .delete-tweet(onclick=`deleteTweetPage(${tweet.id})`)
