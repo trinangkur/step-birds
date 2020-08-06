@@ -163,5 +163,3 @@ const updateRetweet = function (tweetId) {
     counterElement.innerText = count - 1;
   });
 };
-
-const updateRetweetWithComments = function (tweetid) {};

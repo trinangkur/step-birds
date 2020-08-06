@@ -20,7 +20,7 @@ const {
   getResponseInsertionQuery,
 } = require('../queries/queryStringGenerator');
 
-const filterBy = function(symbol, text) {
+const filterBy = function (symbol, text) {
   const pattern = new RegExp(`${symbol}[A-Z]+`, 'ig');
   return text.match(pattern);
 };

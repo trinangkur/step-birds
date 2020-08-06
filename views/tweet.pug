@@ -4,12 +4,12 @@ head
   link(href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css' rel='stylesheet')
   script(src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"
     type="text/javascript")
-  script(src="/js/reply.js")
 
   include ./commonPart.pug
   include ./mixins/_rightSide.pug
+  script(src="/js/reply.js")
 
-  body(onload=`main(${tweet.id})`)
+  body(onload=`main(${tweet && tweet.id})`)
 #content-box
   #header()
       a(href=`/user/home`)
@@ -36,7 +36,7 @@ head
               div 
                 include mixins/_showHashTag.pug
                 +createContent(tweet.content)
-              .parent-element(id=`content-${reference.id}` onclick=`openTweet(${id})`)
+              .parent-element(id=`content-${reference.id}` onclick=`openTweet(${reference.id})`)
                 .dp(onclick=`getUserProfile('${reference.userId}')`)
                     img(id=`dp-${reference.userId}` src=`${reference.image_url}` alt='not found')
                 .info

@@ -196,16 +196,6 @@ const createReplyHtml = function (tweet) {
     </div>
     <div class="response-content" id="content-${id}">${content}</div>
   </div>
-  <div class="right-side-options" onclick="showTweetOptions(${id})">v</div>
-  </div>${replyOptions(id, isUsersTweet, reference, _type)}`;
-};
-
-const replyOptions = function (id, isUsersTweet, reference, type) {
-  const deleteOptions = `<div class="reply-options" id="tweetId-${id}" onmouseleave="hideOptions(${id})">
-  <div class="delete-tweet" onclick="deleteTweet(${id}, ${reference}, '${type}')">
-      <span>Delete</span>
-      <img src="/assets/delete.png" alt="N/A"> 
-   </div>
-</div>`;
-  return isUsersTweet ? deleteOptions : '';
+    ${getRightSideOptions(tweet)}
+  </div>`;
 };

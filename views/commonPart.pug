@@ -17,7 +17,7 @@ html(lang="en")
     script(src="/js/htmlGenerator.js")
     title=title
 
-  body(onload="main()")
+  body(onload=`main(${tweet && tweet.id})`)
       #responsePopup
       #tweetPopUp()
         #closeTweetPopUp
