@@ -1,10 +1,10 @@
 const select = document.querySelector.bind(document);
 
-const toggleFollow = function (userOption, status) {
-  let value = 'Unfollow';
+const toggleFollow = function(userOption, status) {
+  let value = 'Follow';
   let count = -1;
   if (status) {
-    value = 'Follow';
+    value = 'Unfollow';
     count = 1;
   }
   userOption.value = value;
@@ -13,7 +13,7 @@ const toggleFollow = function (userOption, status) {
   followers.innerText = followersCount + count;
 };
 
-const userOptions = function (userOption) {
+const userOptions = function(userOption) {
   if (userOption.value !== 'Edit Profile') {
     const tweeter = select('#profile-id').innerText.slice(1);
     const url = '/user/toggleFollowRequest';
@@ -25,7 +25,7 @@ const userOptions = function (userOption) {
   }
 };
 
-const updateProfile = function () {
+const updateProfile = function() {
   const name = select('#name').value;
   const bio = select('#bio').value;
   const url = '/user/updateProfile';
@@ -36,45 +36,48 @@ const updateProfile = function () {
   });
 };
 
-const showFollowList = function (listName, userId) {
+const showFollowList = function(listName, userId) {
   location.assign(`/user/followList/${listName}/${userId}`);
 };
 
-const getActivitySpecificTweets = function (activity) {
+const showRetweets = function(id) {
+  const elements = document.querySelectorAll(`#${id}`);
+  elements.forEach((element) => {
+    element.classList.remove('hide');
+    element.classList.add('show');
+  });
+};
+
+const getActivitySpecificTweets = function(activity) {
   const id = select('#profile-id').innerText.slice(1);
   const url = '/user/getActivitySpecificTweets';
   sendPOSTRequest(url, { id, activity }, (tweets) => {
-    select(`#${activity}`).innerHTML = '';
+    select('#tweets').innerHTML = '';
     tweets.forEach(({ tweet, reference }) => {
-      showTweet(tweet, activity, reference);
+      showTweet(tweet, 'tweets', reference);
     });
   });
 };
 
-const indicate = function (id) {
+const indicate = function(id) {
   const element = select(`#${id}`);
   element.classList.add('indicator');
 };
 
-const removeIndication = function (id) {
+const removeIndication = function(id) {
   const element = select(`#${id}`);
   element.classList.remove('indicator');
 };
 
-const showUserActivities = function (toBeShow) {
+const showUserActivities = function(toBeShow) {
   const activities = ['tweets', 'retweets', 'likes'];
   activities.forEach((activity) => {
-    hide(activity);
     removeIndication(`user-${activity}`);
   });
-  show(toBeShow);
+  getActivitySpecificTweets(toBeShow);
   indicate(`user-${toBeShow}`);
 };
 
-const main = function () {
+const main = function() {
   getActivitySpecificTweets('tweets');
-  getActivitySpecificTweets('retweets');
-  getActivitySpecificTweets('likes');
 };
-
-setInterval(main, 5000);
