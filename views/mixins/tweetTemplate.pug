@@ -30,7 +30,7 @@ mixin tweetTemplate({tweet, reference})
                 .content(id=`content-${reference.id}` onclick=`openTweet(${reference.id})`) 
                   +createContent(reference.content)
       if tweet.isUsersTweet
-        .delete-tweet(onclick=`deleteTweetPage(${tweet.id})`)
+        .delete-tweet(onclick=`deleteTweetPage(${tweet.id}, "${tweet._type}", "${tweet.reference}")`)
           i(class="fas fa-trash")
     .tweet-reactions
       .retweet-count(onclick=`showRetweetedBy(${tweet.id})`)

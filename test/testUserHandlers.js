@@ -25,6 +25,16 @@ describe('/postResponse', () => {
       .expect({ status: true })
       .expect(200, done);
   });
+
+  it('should give 400 status code for wrong parameters', (done) => {
+    app.locals.dataStore = new DataStore(db);
+    const body = {};
+    request(app)
+      .post('/user/postResponse')
+      .set('Content-Type', 'application/json')
+      .send(body)
+      .expect(400, done);
+  });
 });
 
 describe('/deleteTweet', () => {
@@ -36,7 +46,7 @@ describe('/deleteTweet', () => {
     request(app)
       .post('/user/deleteTweet')
       .set('Content-Type', 'application/json')
-      .send({ tweetId: 1, type: 'tweet' })
+      .send({ tweetId: 1, type: 'tweet', reference: null })
       .expect({ status: true })
       .expect(200, done);
   });
@@ -77,11 +87,11 @@ describe('/getLatestTweet', () => {
   });
 });
 
-describe('searchProfile', function () {
+describe('searchProfile', function() {
   before(() => {
     app.locals.sessions = { getUserId: () => 'revathi' };
   });
-  it('should serve searchProfile', function (done) {
+  it('should serve searchProfile', function(done) {
     request(app)
       .get('/user/searchProfile/rahit')
       .set('Content-Type', 'application/json')
@@ -93,11 +103,11 @@ describe('searchProfile', function () {
   });
 });
 
-describe('showProfile', function () {
+describe('showProfile', function() {
   before(() => {
     app.locals.sessions = { getUserId: () => 'revathi' };
   });
-  it('should redirect to user profile', function (done) {
+  it('should redirect to user profile', function(done) {
     request(app)
       .get('/user/showProfile')
       .expect('Location', '/user/profile/revathi')
@@ -105,29 +115,33 @@ describe('showProfile', function () {
   });
 });
 
-describe('/profile/:profileName', function () {
+describe('/profile/:profileName', function() {
   before(() => {
     app.locals.sessions = { getUserId: () => 'revathi' };
   });
-  it('should get user profile', function (done) {
-    request(app).get('/user/profile/revathi').expect(200, done);
+  it('should get user profile', function(done) {
+    request(app)
+      .get('/user/profile/revathi')
+      .expect(200, done);
   });
 });
 
-describe('/profile/:profileName', function () {
+describe('/profile/:profileName', function() {
   before(() => {
     app.locals.sessions = { getUserId: () => 'revathi' };
   });
-  it('should redirect to user profile', function (done) {
-    request(app).get('/user/profile/revathi').expect(200, done);
+  it('should redirect to user profile', function(done) {
+    request(app)
+      .get('/user/profile/revathi')
+      .expect(200, done);
   });
 });
 
-describe('updateLikes', function () {
+describe('updateLikes', function() {
   before(() => {
     app.locals.sessions = { getUserId: () => 'revathi' };
   });
-  it('should like the tweet', function (done) {
+  it('should like the tweet', function(done) {
     request(app)
       .post('/user/updateLikes')
       .set('Content-Type', 'application/json')
@@ -136,7 +150,7 @@ describe('updateLikes', function () {
       .expect(200, done);
   });
 
-  it('should unLike the post', function (done) {
+  it('should unLike the post', function(done) {
     request(app)
       .post('/user/updateLikes')
       .set('Content-Type', 'application/json')
@@ -146,7 +160,7 @@ describe('updateLikes', function () {
   });
 });
 
-describe('/toggleFollowRequest', function () {
+describe('/toggleFollowRequest', function() {
   before(() => {
     app.locals.sessions = { getUserId: () => 'revathi' };
   });
@@ -173,7 +187,7 @@ describe('/toggleFollowRequest', function () {
   });
 });
 
-describe('/getAllTweets', function () {
+describe('/getAllTweets', function() {
   before(() => {
     app.locals.sessions = { getUserId: () => 'vikram' };
   });
@@ -215,8 +229,11 @@ describe('/getAllTweets', function () {
       },
     },
   ];
-  it('should get tweets for given user', function (done) {
-    request(app).get('/user/getAllTweets').expect(expected).expect(200, done);
+  it('should get tweets for given user', function(done) {
+    request(app)
+      .get('/user/getAllTweets')
+      .expect(expected)
+      .expect(200, done);
   });
 });
 
@@ -225,16 +242,18 @@ describe('/user/tweet/:id', () => {
     app.locals.sessions = { getUserId: () => 'vikram' };
   });
   it('should provide tweet page', (done) => {
-    request(app).get('/user/tweet/7').expect(200, done);
+    request(app)
+      .get('/user/tweet/7')
+      .expect(200, done);
   });
 });
 
-describe('/user/postResponse', function () {
+describe('/user/postResponse', function() {
   before(() => {
     app.locals.sessions = { getUserId: () => 'vikram' };
   });
 
-  it('should post a reply', function (done) {
+  it('should post a reply', function(done) {
     const body = {
       content: 'nice reply',
       timeStamp: 'oneTimeStamp',
@@ -258,17 +277,17 @@ describe('/deleteTweet', () => {
     request(app)
       .post('/user/deleteTweet')
       .set('Content-Type', 'application/json')
-      .send({ tweetId: 13, type: 'reply' })
+      .send({ tweetId: 13, type: 'reply', reference: null })
       .expect({ status: true })
       .expect(200, done);
   });
 });
 
-describe('/user/getReplies', function () {
+describe('/user/getReplies', function() {
   before(() => {
     app.locals.sessions = { getUserId: () => 'revathi' };
   });
-  it('should get reply of a given tweet id', function (done) {
+  it('should get reply of a given tweet id', function(done) {
     const body = {
       tweetId: 7,
     };
@@ -300,11 +319,11 @@ describe('/user/getReplies', function () {
   });
 });
 
-describe('/user/updateProfile', function () {
+describe('/user/updateProfile', function() {
   before(() => {
     app.locals.sessions = { getUserId: () => 'vikram' };
   });
-  it('should post a reply', function (done) {
+  it('should post a reply', function(done) {
     const body = {
       name: 'viky',
       bio: 'it is your life make it large',
@@ -317,11 +336,11 @@ describe('/user/updateProfile', function () {
   });
 });
 
-describe('/user/getLikedBy', function () {
+describe('/user/getLikedBy', function() {
   before(() => {
     app.locals.sessions = { getUserId: () => 'vikram' };
   });
-  it('should get the list of user who liked the tweet', function (done) {
+  it('should get the list of user who liked the tweet', function(done) {
     const body = { tweetId: 7 };
     const expected = [
       {
@@ -428,11 +447,11 @@ describe('/getActivitySpecificTweets', () => {
   });
 });
 
-describe('/user/getRetweetedBy', function () {
+describe('/user/getRetweetedBy', function() {
   before(() => {
     app.locals.sessions = { getUserId: () => 'vikram' };
   });
-  it('should get the list of user who retweeted the tweet', function (done) {
+  it('should get the list of user who retweeted the tweet', function(done) {
     const body = { tweetId: 10 };
     const expected = [
       {
@@ -456,11 +475,11 @@ describe('/user/getRetweetedBy', function () {
   });
 });
 
-describe('updateRetweets', function () {
+describe('updateRetweets', function() {
   before(() => {
     app.locals.sessions = { getUserId: () => 'revathi' };
   });
-  it('should retweet the tweet', function (done) {
+  it('should retweet the tweet', function(done) {
     request(app)
       .post('/user/updateRetweets')
       .set('Content-Type', 'application/json')
@@ -469,7 +488,7 @@ describe('updateRetweets', function () {
       .expect(200, done);
   });
 
-  it('should undo the retweet', function (done) {
+  it('should undo the retweet', function(done) {
     request(app)
       .post('/user/updateRetweets')
       .set('Content-Type', 'application/json')
@@ -478,7 +497,7 @@ describe('updateRetweets', function () {
       .expect(200, done);
   });
 });
-describe('searchHashTag', function () {
+describe('searchHashTag', function() {
   before(() => {
     app.locals.sessions = { getUserId: () => 'ramu' };
   });
@@ -497,7 +516,7 @@ describe('searchHashTag', function () {
       .expect({ status: true })
       .expect(200, done);
   });
-  it('should serve the tweets of the given hashtag', function (done) {
+  it('should serve the tweets of the given hashtag', function(done) {
     request(app)
       .get('/user/searchHashtag/goodTweet')
       .set('Content-Type', 'application/json')
@@ -505,11 +524,11 @@ describe('searchHashTag', function () {
   });
 });
 
-describe('get matching tags', function () {
+describe('get matching tags', function() {
   before(() => {
     app.locals.sessions = { getUserId: () => 'revathi' };
   });
-  it('should fetch the tags contenting g', function (done) {
+  it('should fetch the tags contenting g', function(done) {
     request(app)
       .get('/user/serveHashtag/g')
       .set('Content-Type', 'application/json')
@@ -517,7 +536,7 @@ describe('get matching tags', function () {
       .expect(200, done);
   });
 
-  it('should not fetch any tag', function (done) {
+  it('should not fetch any tag', function(done) {
     request(app)
       .get('/user/serveHashtag/notInTheDataBase')
       .set('Content-Type', 'application/json')

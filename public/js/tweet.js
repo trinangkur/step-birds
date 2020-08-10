@@ -50,9 +50,9 @@ const deleteTweet = function(tweetId, reference, type) {
   sendPOSTRequest(url, body, (res) => updateTweets(tweetId, res));
 };
 
-const deleteTweetPage = function(tweetId) {
+const deleteTweetPage = function(tweetId, type, reference) {
   const url = '/user/deleteTweet';
-  const body = { tweetId, type: 'tweet' };
+  const body = { tweetId, type, reference };
   sendPOSTRequest(url, body, (res) => {
     if (res.status) {
       location.assign('/user/home');
