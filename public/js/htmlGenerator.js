@@ -59,7 +59,7 @@ const getTweetReactionHtml = function (tweet, type, colour, count) {
   const svgHandlers = getSvgHandlers(id, content, image_url, name);
   return `
   <div class="option">
-  <div class="${type}-icon" onclick="${svgHandlers[type]}">
+  <div class="${type}-icon option-icon" onclick="${svgHandlers[type]}">
     <svg viewBox="0 0 24 24" class="${type}-svg ${colour}" id="${type}-svg-${id}">
       ${getSvg(type)}
     </svg>
@@ -151,7 +151,6 @@ const createContentHtml = function (tweet, reference) {
 };
 
 const createTweetHtml = function (tweet, reference) {
-  const { id } = tweet;
   const { userId, image_url, name, timeStamp } = tweet;
   return `
   <div class="content-section">

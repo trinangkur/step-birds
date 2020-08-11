@@ -1,8 +1,12 @@
 $searchBoxColour: rgb(75, 74, 74)
-$themeColour:  #4a61c8
+$themeColour:  rgb(74, 97, 200)
 $rapperBackground: rgb(220, 220, 220)
 $skyWhite: rgb(245, 248, 250)
 $skyGray: rgb(101, 119, 135)
+$deepGray: rgb(55, 55, 55)
+$replyColour: rgb(29, 161, 242)
+$retweetColour:rgb(22, 191, 99)
+$likeColour: rgb(228, 73, 121)
 
 @mixin layout ($alignment)
   height: 98vh
@@ -59,11 +63,13 @@ $skyGray: rgb(101, 119, 135)
   display: flex
   justify-content: $type
 
+@mixin svgHighlighter($colour)
+  fill: $colour
+  stroke: $colour
+
 .popup
   height: 100vh
   width: 100vw
   background-color: rgba(0, 0, 0, 0.4)
   position: absolute
   padding: 2%
-  
-  
