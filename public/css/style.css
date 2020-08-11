@@ -3,12 +3,14 @@
   width: 100px;
   background-color: black;
 }
+
 body {
   height: 100vh;
   width: 100vw;
   font-family: sans-serif;
   background-color: whitesmoke;
 }
+
 #logo {
   height: 10%;
   margin: 2% 0% 0% 20%;
@@ -16,13 +18,13 @@ body {
 }
 
 #search-box {
-  height:60%;
+  height: 60%;
   width: 80%;
   border-radius: 50px;
   padding-left: 16px;
   font-size: larger;
   outline: none;
-  color: rgb(75, 74, 74);
+  color: #4b4a4a;
 }
 
 .icon {
@@ -48,7 +50,7 @@ body {
   color: #8296ec;
   fill: #8296ec;
   border-radius: 50px;
-  background-color: rgb(220, 220, 220);
+  background-color: gainsboro;
 }
 
 .sideBarElements {
