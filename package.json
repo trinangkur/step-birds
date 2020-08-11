@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "start": "node server.js",
+    "start": "sass --no-source-map ./sass:./public/css & node server.js",
     "setupTestDB": "mkdir db; sqlite3 db/sb-test.db < sqlScripts/schema.sql && sqlite3 db/sb-test.db < sqlScripts/data.sql",
     "test": " npm run setupTestDB; export STEP_BIRDS_DATABASE='db/sb-test.db' && nyc mocha --recursive",
     "lint": "npx eslint ."
@@ -18,6 +18,7 @@
     "express": "^4.17.1",
     "node-fetch": "^2.6.0",
     "pug": "^3.0.0",
+    "sass": "^1.26.10",
     "sqlite3": "^5.0.0"
   },
   "devDependencies": {
