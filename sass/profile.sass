@@ -1,0 +1,130 @@
+@import basicComponents
+
+#option-bar 
+  @include flexLayout(space-around)
+  border-bottom: 0.5px solid lightgray
+  height: 6%
+
+#user-options 
+  input
+    &:hover
+      color: white
+      background-color: #4a61c8
+    background-color: white
+    border: solid 3px #4a61c8
+    outline: none
+    color: #4a61c8
+    padding: 8px 20px
+    text-align: center
+    text-decoration: none
+    display: inline-block
+    font-size: 18px
+    margin: 4px 2px
+    cursor: pointer
+    border-radius: 50px
+    transition-duration: 0.2s
+
+#profile-icon
+  img
+    @include pictureLayout(70%)
+    margin: 2% 0% 0% 4%
+  height: 25%  
+
+#tweets
+  height: 100%
+  overflow-x: hidden
+  overflow-y: scroll
+
+.tweet 
+  height: 50%
+
+#user-panel 
+  div
+    margin-left: 2%
+    margin-right: 2%
+  @include flexLayout(space-between)
+
+#edit-panel 
+  height: 54vh
+  width: 30vw
+  margin: auto
+  margin-top: 10vw
+  border-radius: 12px
+  background: white
+  padding: 2%
+
+#editor-header 
+  display: flex
+  height: 9%
+  justify-content: space-between
+  margin-bottom: 4%
+
+#close 
+  width: 10%
+  cursor: pointer
+  margin-top: 2.4%
+
+#heading 
+  width: 40%
+  margin: 1%  
+
+#save-button 
+  @include buttonLayout (auto, 17%, 360 , 1.2vw)
+  
+#user-profile 
+  height: 30%
+
+.edit-details 
+  textarea 
+    @include textareaLayout (0, 0, auto)
+    background-color: $skyWhite
+    font-weight: 300
+  span 
+    color: $skyGray
+    margin-bottom: 2%
+  height: 15%
+  display: grid
+  background-color: $skyWhite
+  border-bottom: 2px solid $skyGray
+  padding: 2%
+  margin-bottom: 10%
+
+#user-profile img
+  @include pictureLayout(110px) 
+ 
+#profile-name 
+  font-size: x-large
+
+#profile-id 
+  color: gray
+
+.follow-tags:hover 
+  cursor: pointer
+  color: $themeColour
+
+#user-tweets 
+  width: 30%
+  cursor: pointer
+
+#user-retweets 
+  width: 40%
+  cursor: pointer
+
+#user-likes 
+  width: 30%
+  cursor: pointer
+
+.nav 
+  font-size: larger
+  text-align: center
+  margin-top: 4%
+
+.indicator 
+  border-bottom: solid 2px $themeColour
+
+.like-count > span 
+  cursor: pointer
+
+.like-count > span:hover,
+.retweet-count > span:hover 
+  border-bottom: 0.5px solid gray

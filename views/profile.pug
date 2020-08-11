@@ -10,7 +10,7 @@ head
 body(onload="main()") 
   div#content-box()
     div#profile-icon
-      img#profile-pic(src=image_url, alt="")
+      img(src=image_url, alt="")
     div#user-panel
       div#user-info
         p
@@ -29,15 +29,13 @@ body(onload="main()")
         input(type="button", value=userOption onclick="userOptions(this);")
     div#option-bar
       #user-tweets.indicator(onclick="showUserActivities('tweets')")
-        #option1 Tweets 
+        .nav Tweets 
       #user-retweets(onclick="showUserActivities('retweets')")
-        #option2 Retweets
+        .nav Retweets
       #user-likes(onclick="showUserActivities('likes')")
-        #option3 Likes 
+        .nav Likes 
     div#tweets.show(name=id)
-    //- div#retweets.hide
-    //- div#likes.hide
-  #editor.hide
+  .popup#editor.hide
     #edit-panel
       #editor-header
         #close(onclick="hide('editor')") X

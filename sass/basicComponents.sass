@@ -1,6 +1,8 @@
 $searchBoxColour: rgb(75, 74, 74)
 $themeColour:  #4a61c8
 $rapperBackground: rgb(220, 220, 220)
+$skyWhite: rgb(245, 248, 250)
+$skyGray: rgb(101, 119, 135)
 
 @mixin layout ($alignment)
   height: 98vh
@@ -41,10 +43,27 @@ $rapperBackground: rgb(220, 220, 220)
   border-radius: 10px
   box-shadow: 1px 1px 1px 3px lightgrey
 
-@mixin textareaLayout ($top, $left)
+@mixin textareaLayout ($top, $left, $width)
   border: none
-  width: 28vw
+  width: $width
   text-decoration: none
   font-size: 1.5vw
   margin-top: $top
   margin-left: $left
+
+@mixin  pictureLayout($height)
+  height: $height
+  border-radius: 50%
+
+@mixin flexLayout($type)
+  display: flex
+  justify-content: $type
+
+.popup
+  height: 100vh
+  width: 100vw
+  background-color: rgba(0, 0, 0, 0.4)
+  position: absolute
+  padding: 2%
+  
+  

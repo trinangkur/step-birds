@@ -65,13 +65,13 @@ mixin tweetTemplate({tweet, reference})
       div(id=`retweet-without-comment-${tweet.id}` onclick=`updateRetweet('${tweet.id}')`) #{tweet.isRetweeted === 'true' ? 'Undo Retweet': 'Retweet'}
       div(id=`retweet-comment-${tweet.id}`  onclick=`showRetweetPopup(${tweet.id}, \`${tweet.content}\`, '${tweet.image_url}', '${tweet.name}')`) Retweet with Comment
   #replies
-#editor-liked.hide
+#editor-liked.popup.hide
   #edit-panel
     .popup-header
       #close(onclick="hide('editor-liked')") X
       span.head Liked By
     #liked-user
-#editor-retweeted.hide
+#editor-retweeted.popup.hide
   #edit-panel
     .popup-header
       #close(onclick="hide('editor-retweeted')") X
