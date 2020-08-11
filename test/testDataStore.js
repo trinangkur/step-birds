@@ -1,5 +1,6 @@
 const {assert} = require('chai');
 const sinon = require('sinon');
+const {stub, mock} = require('sinon');
 const {DataStore} = require('../src/models/datastore');
 
 describe('postResponse', () => {
@@ -36,41 +37,58 @@ describe('postResponse', () => {
 });
 
 describe('addTweeter', () => {
-  it('should add a new tweeter in database', done => {
-    const run = sinon.stub().yields(null);
-    const dataStore = new DataStore({run});
-    dataStore
-      .addTweeter({
-        login: 'abc',
-        avatar_url: 'https://url',
-        name: 'abc'
-      })
-      .then(message => {
-        assert.strictEqual(message, 'OK');
-        done();
-      });
+  it('should add a new tweeter in database', async () => {
+    const newDb = stub().returns({
+      insert: mock()
+        .withArgs({
+          id: 'abc',
+          image_url: 'https://url',
+          name: 'abc'
+        })
+        .returns(Promise.resolve())
+    });
+    const dataStore = new DataStore({}, newDb);
+    const status = await dataStore.addTweeter({
+      login: 'abc',
+      avatar_url: 'https://url',
+      name: 'abc'
+    });
+    assert.ok(newDb.calledOnce);
+    assert.ok(status);
   });
 
-  it('should should handle err of sql constrain', done => {
+  it('should should handle err of sql constrain', async () => {
     const err = new Error();
     err.code = 'SQLITE_CONSTRAINT';
-    const run = sinon.stub().yields(err);
-    const dataStore = new DataStore({run});
-    dataStore
-      .addTweeter({
-        login: 'abc',
-        avatar_url: 'https://url',
-        name: 'abc'
-      })
-      .then(message => {
-        assert.strictEqual(message, 'already have an account');
-        done();
-      });
+    const newDb = stub().returns({
+      insert: mock()
+        .withArgs({
+          id: 'abc',
+          image_url: 'https://url',
+          name: 'abc'
+        })
+        .returns(Promise.reject(err))
+    });
+    const dataStore = new DataStore({}, newDb);
+    const message = await dataStore.addTweeter({
+      login: 'abc',
+      avatar_url: 'https://url',
+      name: 'abc'
+    });
+    assert.strictEqual(message, 'already have an account');
   });
 
-  it('should should throw err other than sql constrain', done => {
-    const run = sinon.stub().yields(new Error());
-    const dataStore = new DataStore({run});
+  it('should should throw err other than sql constrain', async () => {
+    const newDb = stub().returns({
+      insert: mock()
+        .withArgs({
+          id: 'abc',
+          image_url: 'https://url',
+          name: 'abc'
+        })
+        .returns(Promise.reject(new Error()))
+    });
+    const dataStore = new DataStore({}, newDb);
     dataStore
       .addTweeter({
         login: 'abc',
@@ -79,7 +97,6 @@ describe('addTweeter', () => {
       })
       .catch(err => {
         assert.isNotNull(err);
-        done();
       });
   });
 });
