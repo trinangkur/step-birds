@@ -47,28 +47,20 @@ body
     background-color: $rapperBackground
 
 #tweetLogo 
-    @include buttonLayout (60%, 161%, 360)
+    @include buttonLayout (60%, 161%, 350, 1.6vw)
     padding-left: 47%
     padding-top: 10%
     margin-left: 10%
 
 #tweetPopUp 
-  background-color: white
-  display: none
-  top: 50px
-  left: 70px
-  right: 0
-  margin: auto
-  position: absolute
-  height: 18vw
-  width: 37vw
-  border: 0.1px solid black
-  border-radius: 10px
-  box-shadow: 1px 1px 1px 3px lightgrey
+  @include popup (18vw, 37vw)
+
+#responsePopup 
+  @include popup (29vw, 37vw)
 
 #popup-top-bar 
   span
-      cursor: pointer
+    cursor: pointer
   height: 10%
   width: 96%
   border-bottom: 0.1vw solid grey
@@ -77,23 +69,16 @@ body
   justify-content: space-between
 
 #tweetArea 
+  img
+    width: 40px
+    margin-top: 1vw
+    margin-left: 1vw
+    border-radius: 50%
+  textarea
+    @include textareaLayout (1vw, 2vw)
   height: 60%
   display: flex
   width: 100%
-
-#tweetArea img 
-  width: 40px
-  margin-top: 1vw
-  margin-left: 1vw
-  border-radius: 50%
-
-#tweetArea textarea 
-  border: none
-  width: 28vw
-  text-decoration: none
-  margin-top: 1vw
-  margin-left: 1vw
-  font-size: 1.5vw
 
 textarea 
   resize: none
@@ -105,9 +90,8 @@ select:focus
   outline: none
 
 #popUpFooter button 
-  @include buttonLayout(13%, 16%, 360)
+  @include buttonLayout(13%, 16%, 360, 1.2vw)
   position: relative
-  font-size: 1.2vw
   left: 77%
   margin: 1% 0% 0% 4%
 
@@ -137,20 +121,6 @@ select:focus
   width: 26px
   margin: 0% 0% 0% -10%
 
-#responsePopup 
-  background-color: white
-  display: none
-  top: 50px
-  left: 70px
-  right: 0
-  margin: auto
-  position: absolute
-  height: 29vw
-  width: 37vw
-  border: 0.1px solid black
-  border-radius: 10px
-  box-shadow: 1px 1px 1px 3px lightgrey
-
 .response-top-bar 
   display: flex
   justify-content: space-between
@@ -173,26 +143,15 @@ select:focus
   height: 23%
   padding: 5%
 
-#response-text-area textarea 
-  border: none
-  width: 28vw
-  text-decoration: none
-  margin-top: 1vw
-  margin-left: 2vw
-  font-size: 1.5vw
+#response-text-area textarea
+  @include textareaLayout (1vw, 2vw)
   border-bottom: solid lightgray
 
-#response-button button 
+#response-button button
+  @include buttonLayout (10%, 17%, 360, 1.2vw)
   position: relative
-  font-size: 1.2vw
   left: 75%
-  border: none
-  color: white
-  outline: none
-  border-radius: 50px
   margin: 1% 0% 0% 4%
-  height: 10%
-  width: 17%
 
 .response-top-bar > p 
   cursor: pointer

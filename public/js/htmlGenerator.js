@@ -15,7 +15,7 @@ const fillResponsePopup = function (tweetId, content, image_url, name) {
 
 const addResponseButton = function (tweetId, type) {
   return `<div id="response-button" onclick="sendResponse(${tweetId},'${type.toLowerCase()}')">
-    <button class="primary-btn add-access">${type}</button>
+    <button>${type}</button>
   </div>`;
 };
 

@@ -15,7 +15,7 @@ $rapperBackground: rgb(220, 220, 220)
   text-align: $alignment
   justify-content: $alignment
 
-@mixin buttonLayout ($height, $width, $weight)
+@mixin buttonLayout ($height, $width, $weight, $size)
   background-color: $themeColour
   cursor: pointer
   border-radius: 50px
@@ -25,3 +25,26 @@ $rapperBackground: rgb(220, 220, 220)
   height: $height
   width: $width
   font-weight: $weight
+  font-size: $size
+
+@mixin popup ($height, $width)
+  background-color: white
+  display: none
+  top: 50px
+  left: 70px
+  right: 0
+  margin: auto
+  position: absolute
+  height: $height
+  width: $width
+  border: 0.1px solid black
+  border-radius: 10px
+  box-shadow: 1px 1px 1px 3px lightgrey
+
+@mixin textareaLayout ($top, $left)
+  border: none
+  width: 28vw
+  text-decoration: none
+  font-size: 1.5vw
+  margin-top: $top
+  margin-left: $left

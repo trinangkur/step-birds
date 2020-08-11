@@ -71,7 +71,8 @@ body {
   outline: none;
   height: 60%;
   width: 161%;
-  font-weight: 360;
+  font-weight: 350;
+  font-size: 1.6vw;
   padding-left: 47%;
   padding-top: 10%;
   margin-left: 10%;
@@ -86,6 +87,21 @@ body {
   margin: auto;
   position: absolute;
   height: 18vw;
+  width: 37vw;
+  border: 0.1px solid black;
+  border-radius: 10px;
+  box-shadow: 1px 1px 1px 3px lightgrey;
+}
+
+#responsePopup {
+  background-color: white;
+  display: none;
+  top: 50px;
+  left: 70px;
+  right: 0;
+  margin: auto;
+  position: absolute;
+  height: 29vw;
   width: 37vw;
   border: 0.1px solid black;
   border-radius: 10px;
@@ -109,21 +125,19 @@ body {
   display: flex;
   width: 100%;
 }
-
 #tweetArea img {
   width: 40px;
   margin-top: 1vw;
   margin-left: 1vw;
   border-radius: 50%;
 }
-
 #tweetArea textarea {
   border: none;
   width: 28vw;
   text-decoration: none;
-  margin-top: 1vw;
-  margin-left: 1vw;
   font-size: 1.5vw;
+  margin-top: 1vw;
+  margin-left: 2vw;
 }
 
 textarea {
@@ -147,8 +161,8 @@ select:focus {
   height: 13%;
   width: 16%;
   font-weight: 360;
-  position: relative;
   font-size: 1.2vw;
+  position: relative;
   left: 77%;
   margin: 1% 0% 0% 4%;
 }
@@ -185,21 +199,6 @@ select:focus {
   margin: 0% 0% 0% -10%;
 }
 
-#responsePopup {
-  background-color: white;
-  display: none;
-  top: 50px;
-  left: 70px;
-  right: 0;
-  margin: auto;
-  position: absolute;
-  height: 29vw;
-  width: 37vw;
-  border: 0.1px solid black;
-  border-radius: 10px;
-  box-shadow: 1px 1px 1px 3px lightgrey;
-}
-
 .response-top-bar {
   display: flex;
   justify-content: space-between;
@@ -231,23 +230,26 @@ select:focus {
   border: none;
   width: 28vw;
   text-decoration: none;
+  font-size: 1.5vw;
   margin-top: 1vw;
   margin-left: 2vw;
-  font-size: 1.5vw;
   border-bottom: solid lightgray;
 }
 
 #response-button button {
-  position: relative;
-  font-size: 1.2vw;
-  left: 75%;
-  border: none;
-  color: white;
-  outline: none;
+  background-color: #4a61c8;
+  cursor: pointer;
   border-radius: 50px;
-  margin: 1% 0% 0% 4%;
+  color: white;
+  border: none;
+  outline: none;
   height: 10%;
   width: 17%;
+  font-weight: 360;
+  font-size: 1.2vw;
+  position: relative;
+  left: 75%;
+  margin: 1% 0% 0% 4%;
 }
 
 .response-top-bar > p {
