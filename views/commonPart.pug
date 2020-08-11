@@ -20,7 +20,7 @@ html(lang="en")
   body(onload=`main(${tweet && tweet.id})`)
       #responsePopup
       #tweetPopUp()
-        #closeTweetPopUp
+        #popup-top-bar
           span(onclick="closeTweetPopUp()") X
           span#user-id @#{userId}
         #tweetArea
@@ -36,7 +36,7 @@ html(lang="en")
         #popUpFooter
           button.primary-btn.add-access(onclick=`postResponse('tweetText1',null, 'tweet', getLatestTweet)
           ;showCharCount('tweetText1','count-indicator1', 'counter1', 'popUpFooter')`) Tweet
-      #left-side-bar()
+      .side-bar()
         img#logo(src="/assets/logo.png", alt="step-birds")
         
         .sideBarElements

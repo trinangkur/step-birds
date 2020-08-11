@@ -1,16 +1,18 @@
 body {
   height: 98vh;
   width: 100vw;
-  font-family: sans-serif;
+  display: flex;
   position: absolute;
   background-color: whitesmoke;
+  font-family: sans-serif;
+  overflow: hidden;
   margin: 0;
   padding: 0;
-  overflow: hidden;
-  display: flex;
+  text-align: start;
+  justify-content: start;
 }
 
-#left-side-bar {
+.side-bar {
   height: 100%;
   width: 25%;
   background-color: white;
@@ -37,7 +39,7 @@ body {
   padding-left: 16px;
   font-size: larger;
   outline: none;
-  color: rgb(75, 74, 74);
+  color: #4b4a4a;
   margin: 8% 0% 0% 0%;
 }
 
@@ -55,31 +57,24 @@ body {
   padding-left: 4%;
   cursor: pointer;
 }
-
 .rapper:hover {
-  color: #8296ec;
   border-radius: 50px;
-  background-color: rgb(220, 220, 220);
+  background-color: gainsboro;
 }
 
 #tweetLogo {
   background-color: #4a61c8;
-  color: white;
-  width: 161%;
-  height: 60%;
   cursor: pointer;
+  border-radius: 50px;
+  color: white;
+  border: none;
+  outline: none;
+  height: 60%;
+  width: 161%;
+  font-weight: 360;
   padding-left: 47%;
   padding-top: 10%;
-  border-radius: 50px;
   margin-left: 10%;
-  font-weight: 100;
-}
-
-#right-side-bar {
-  height: 100%;
-  width: 25%;
-  background-color: white;
-  border-left: solid 0.5px lightgray;
 }
 
 #tweetPopUp {
@@ -97,7 +92,7 @@ body {
   box-shadow: 1px 1px 1px 3px lightgrey;
 }
 
-#closeTweetPopUp {
+#popup-top-bar {
   height: 10%;
   width: 96%;
   border-bottom: 0.1vw solid grey;
@@ -105,8 +100,7 @@ body {
   display: flex;
   justify-content: space-between;
 }
-
-#closeTweetPopUp > span {
+#popup-top-bar span {
   cursor: pointer;
 }
 
@@ -144,15 +138,19 @@ select:focus {
 }
 
 #popUpFooter button {
+  background-color: #4a61c8;
+  cursor: pointer;
+  border-radius: 50px;
+  color: white;
+  border: none;
+  outline: none;
+  height: 13%;
+  width: 16%;
+  font-weight: 360;
   position: relative;
   font-size: 1.2vw;
-  left: 83%;
-  border: none;
-  color: white;
-  outline: none;
-  border-radius: 50px;
+  left: 77%;
   margin: 1% 0% 0% 4%;
-  height: 13%;
 }
 
 .home {

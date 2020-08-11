@@ -3,3 +3,4 @@ db
 .nyc_output/
 commit-template
 .env
+public/css

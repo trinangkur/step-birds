@@ -1,0 +1,27 @@
+$searchBoxColour: rgb(75, 74, 74)
+$themeColour:  #4a61c8
+$rapperBackground: rgb(220, 220, 220)
+
+@mixin layout ($alignment)
+  height: 98vh
+  width: 100vw
+  display: flex
+  position: absolute
+  background-color: whitesmoke
+  font-family: sans-serif
+  overflow: hidden
+  margin: 0
+  padding: 0
+  text-align: $alignment
+  justify-content: $alignment
+
+@mixin buttonLayout ($height, $width, $weight)
+  background-color: $themeColour
+  cursor: pointer
+  border-radius: 50px
+  color: white
+  border: none
+  outline: none
+  height: $height
+  width: $width
+  font-weight: $weight
