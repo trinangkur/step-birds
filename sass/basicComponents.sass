@@ -67,9 +67,32 @@ $likeColour: rgb(228, 73, 121)
   fill: $colour
   stroke: $colour
 
+@mixin userLayout($imgHight, $nameMargin, $idMargin)
+  img
+    @include pictureLayout($imgHight)
+  h3 
+    margin: $nameMargin
+    font-weight: 500
+  p
+    color: gray
+    margin: $idMargin
+
 .popup
   height: 100vh
   width: 100vw
   background-color: rgba(0, 0, 0, 0.4)
   position: absolute
   padding: 2%
+
+#header 
+  span 
+    font-weight: 500
+    font-size: 2vw
+    margin: 1vw
+  a 
+    font-size: 0.8vw
+    margin: 2%
+  border-bottom: solid 0.5px lightgray
+  height: 7%
+  margin-top: 1.5vw
+  width: 100%
