@@ -1,32 +1,31 @@
 const request = require('supertest');
-const { getDB } = require('../config');
-const { DataStore } = require('../src/models/datastore');
-const { app } = require('../src/app');
-const Sqlite3 = require('sqlite3').verbose();
-const db = new Sqlite3.Database(getDB());
+const {DataStore} = require('../src/models/datastore');
+const {app} = require('../src/app');
+const config = require('../knexfile');
+const db = require('knex')(config.test);
 
 describe('/postResponse', () => {
   before(() => {
-    const sessions = { getUserId: () => 'revathi' };
+    const sessions = {getUserId: () => 'revathi'};
     app.locals.sessions = sessions;
   });
-  it('should be able to post a new tweet', (done) => {
+  it('should be able to post a new tweet', done => {
     app.locals.dataStore = new DataStore(db);
     const body = {
       content: 'new tweet',
       timeStamp: 'fake time',
       type: 'tweet',
-      reference: null,
+      reference: null
     };
     request(app)
       .post('/user/postResponse')
       .set('Content-Type', 'application/json')
       .send(body)
-      .expect({ status: true })
+      .expect({status: true})
       .expect(200, done);
   });
 
-  it('should give 400 status code for wrong parameters', (done) => {
+  it('should give 400 status code for wrong parameters', done => {
     app.locals.dataStore = new DataStore(db);
     const body = {};
     request(app)
@@ -39,25 +38,25 @@ describe('/postResponse', () => {
 
 describe('/deleteTweet', () => {
   before(() => {
-    const sessions = { getUserId: () => 'revathi' };
+    const sessions = {getUserId: () => 'revathi'};
     app.locals.sessions = sessions;
   });
-  it('should be able to delete a new tweet', (done) => {
+  it('should be able to delete a new tweet', done => {
     request(app)
       .post('/user/deleteTweet')
       .set('Content-Type', 'application/json')
-      .send({ tweetId: 1, type: 'tweet', reference: null })
-      .expect({ status: true })
+      .send({tweetId: 1, type: 'tweet', reference: null})
+      .expect({status: true})
       .expect(200, done);
   });
 });
 
 describe('/getLatestTweet', () => {
   before(() => {
-    const sessions = { getUserId: () => 'vikram' };
+    const sessions = {getUserId: () => 'vikram'};
     app.locals.sessions = sessions;
   });
-  it('should get all tweets of user', (done) => {
+  it('should get all tweets of user', done => {
     const expected = {
       tweet: {
         id: 7,
@@ -73,14 +72,14 @@ describe('/getLatestTweet', () => {
         image_url: 'fakeUrl',
         isLiked: 'true',
         isRetweeted: 'false',
-        isUsersTweet: true,
-      },
+        isUsersTweet: true
+      }
     };
     const expectedJson = JSON.stringify(expected);
     request(app)
       .get('/user/getLatestTweet')
       .send({
-        userId: 'vikram',
+        userId: 'vikram'
       })
       .expect(200)
       .expect(expectedJson, done);
@@ -89,15 +88,15 @@ describe('/getLatestTweet', () => {
 
 describe('searchProfile', function() {
   before(() => {
-    app.locals.sessions = { getUserId: () => 'revathi' };
+    app.locals.sessions = {getUserId: () => 'revathi'};
   });
   it('should serve searchProfile', function(done) {
     request(app)
       .get('/user/searchProfile/rahit')
       .set('Content-Type', 'application/json')
       .expect([
-        { id: 'rahit', name: 'Rahit Kar', image_url: 'fakeUrl' },
-        { id: 'rahitkar', name: 'Rahit Kar', image_url: 'fakeUrl' },
+        {id: 'rahit', name: 'Rahit Kar', image_url: 'fakeUrl'},
+        {id: 'rahitkar', name: 'Rahit Kar', image_url: 'fakeUrl'}
       ])
       .expect(200, done);
   });
@@ -105,7 +104,7 @@ describe('searchProfile', function() {
 
 describe('showProfile', function() {
   before(() => {
-    app.locals.sessions = { getUserId: () => 'revathi' };
+    app.locals.sessions = {getUserId: () => 'revathi'};
   });
   it('should redirect to user profile', function(done) {
     request(app)
@@ -117,7 +116,7 @@ describe('showProfile', function() {
 
 describe('/profile/:profileName', function() {
   before(() => {
-    app.locals.sessions = { getUserId: () => 'revathi' };
+    app.locals.sessions = {getUserId: () => 'revathi'};
   });
   it('should get user profile', function(done) {
     request(app)
@@ -128,7 +127,7 @@ describe('/profile/:profileName', function() {
 
 describe('/profile/:profileName', function() {
   before(() => {
-    app.locals.sessions = { getUserId: () => 'revathi' };
+    app.locals.sessions = {getUserId: () => 'revathi'};
   });
   it('should redirect to user profile', function(done) {
     request(app)
@@ -139,14 +138,14 @@ describe('/profile/:profileName', function() {
 
 describe('updateLikes', function() {
   before(() => {
-    app.locals.sessions = { getUserId: () => 'revathi' };
+    app.locals.sessions = {getUserId: () => 'revathi'};
   });
   it('should like the tweet', function(done) {
     request(app)
       .post('/user/updateLikes')
       .set('Content-Type', 'application/json')
-      .send({ tweetId: 4, userId: 'revathi' })
-      .expect({ isLiked: true })
+      .send({tweetId: 4, userId: 'revathi'})
+      .expect({isLiked: true})
       .expect(200, done);
   });
 
@@ -154,34 +153,34 @@ describe('updateLikes', function() {
     request(app)
       .post('/user/updateLikes')
       .set('Content-Type', 'application/json')
-      .send({ tweetId: 4, userId: 'revathi' })
-      .expect({ isLiked: false })
+      .send({tweetId: 4, userId: 'revathi'})
+      .expect({isLiked: false})
       .expect(200, done);
   });
 });
 
 describe('/toggleFollowRequest', function() {
   before(() => {
-    app.locals.sessions = { getUserId: () => 'revathi' };
+    app.locals.sessions = {getUserId: () => 'revathi'};
   });
-  it('should be add user as a follower of particular tweeter', (done) => {
+  it('should be add user as a follower of particular tweeter', done => {
     app.locals.dataStore = new DataStore(db);
-    const expected = { status: true };
+    const expected = {status: true};
     request(app)
       .post('/user/toggleFollowRequest')
       .set('Content-Type', 'application/json')
-      .send({ tweeter: 'vikram' })
+      .send({tweeter: 'vikram'})
       .expect(200)
       .expect(expected, done);
   });
 
-  it('should unfollow a particular tweeter', (done) => {
+  it('should unfollow a particular tweeter', done => {
     app.locals.dataStore = new DataStore(db);
-    const expected = { status: false };
+    const expected = {status: false};
     request(app)
       .post('/user/toggleFollowRequest')
       .set('Content-Type', 'application/json')
-      .send({ tweeter: 'vikram' })
+      .send({tweeter: 'vikram'})
       .expect(200)
       .expect(expected, done);
   });
@@ -189,7 +188,7 @@ describe('/toggleFollowRequest', function() {
 
 describe('/getAllTweets', function() {
   before(() => {
-    app.locals.sessions = { getUserId: () => 'vikram' };
+    app.locals.sessions = {getUserId: () => 'vikram'};
   });
   const expected = [
     {
@@ -207,8 +206,8 @@ describe('/getAllTweets', function() {
         image_url: 'fakeUrl',
         isLiked: 'true',
         isRetweeted: 'false',
-        isUsersTweet: true,
-      },
+        isUsersTweet: true
+      }
     },
     {
       tweet: {
@@ -225,9 +224,9 @@ describe('/getAllTweets', function() {
         image_url: 'fakeUrl',
         isLiked: 'false',
         isRetweeted: 'false',
-        isUsersTweet: false,
-      },
-    },
+        isUsersTweet: false
+      }
+    }
   ];
   it('should get tweets for given user', function(done) {
     request(app)
@@ -237,20 +236,9 @@ describe('/getAllTweets', function() {
   });
 });
 
-describe('/user/tweet/:id', () => {
-  before(() => {
-    app.locals.sessions = { getUserId: () => 'vikram' };
-  });
-  it('should provide tweet page', (done) => {
-    request(app)
-      .get('/user/tweet/7')
-      .expect(200, done);
-  });
-});
-
 describe('/user/postResponse', function() {
   before(() => {
-    app.locals.sessions = { getUserId: () => 'vikram' };
+    app.locals.sessions = {getUserId: () => 'vikram'};
   });
 
   it('should post a reply', function(done) {
@@ -258,38 +246,38 @@ describe('/user/postResponse', function() {
       content: 'nice reply',
       timeStamp: 'oneTimeStamp',
       reference: 7,
-      type: 'reply',
+      type: 'reply'
     };
     request(app)
       .post('/user/postResponse')
       .send(body)
-      .expect({ status: true })
+      .expect({status: true})
       .expect(200, done);
   });
 });
 
 describe('/deleteTweet', () => {
   before(() => {
-    const sessions = { getUserId: () => 'revathi' };
+    const sessions = {getUserId: () => 'revathi'};
     app.locals.sessions = sessions;
   });
-  it('should be able to delete a reply', (done) => {
+  it('should be able to delete a reply', done => {
     request(app)
       .post('/user/deleteTweet')
       .set('Content-Type', 'application/json')
-      .send({ tweetId: 13, type: 'reply', reference: null })
-      .expect({ status: true })
+      .send({tweetId: 13, type: 'reply', reference: null})
+      .expect({status: true})
       .expect(200, done);
   });
 });
 
 describe('/user/getReplies', function() {
   before(() => {
-    app.locals.sessions = { getUserId: () => 'revathi' };
+    app.locals.sessions = {getUserId: () => 'revathi'};
   });
   it('should get reply of a given tweet id', function(done) {
     const body = {
-      tweetId: 7,
+      tweetId: 7
     };
     request(app)
       .post('/user/getReplies')
@@ -312,8 +300,8 @@ describe('/user/getReplies', function() {
           bio: 'My feets are not on ground',
           followersCount: 0,
           followingCount: 1,
-          isUsersTweet: false,
-        },
+          isUsersTweet: false
+        }
       ])
       .expect(200, done);
   });
@@ -321,27 +309,27 @@ describe('/user/getReplies', function() {
 
 describe('/user/updateProfile', function() {
   before(() => {
-    app.locals.sessions = { getUserId: () => 'vikram' };
+    app.locals.sessions = {getUserId: () => 'vikram'};
   });
   it('should post a reply', function(done) {
     const body = {
       name: 'viky',
-      bio: 'it is your life make it large',
+      bio: 'it is your life make it large'
     };
     request(app)
       .post('/user/updateProfile')
       .send(body)
-      .expect({ status: true })
+      .expect({status: true})
       .expect(200, done);
   });
 });
 
 describe('/user/getLikedBy', function() {
   before(() => {
-    app.locals.sessions = { getUserId: () => 'vikram' };
+    app.locals.sessions = {getUserId: () => 'vikram'};
   });
   it('should get the list of user who liked the tweet', function(done) {
-    const body = { tweetId: 7 };
+    const body = {tweetId: 7};
     const expected = [
       {
         tweetId: 7,
@@ -353,8 +341,8 @@ describe('/user/getLikedBy', function() {
         dob: '09/09/2000',
         bio: 'it is your life make it large',
         followersCount: 0,
-        followingCount: 1,
-      },
+        followingCount: 1
+      }
     ];
     request(app)
       .post('/user/getLikedBy')
@@ -366,16 +354,16 @@ describe('/user/getLikedBy', function() {
 
 describe('/followList/:listName/:id', () => {
   before(() => {
-    app.locals.sessions = { getUserId: () => 'ramu' };
+    app.locals.sessions = {getUserId: () => 'ramu'};
   });
-  it('should give the list of follower of user', (done) => {
+  it('should give the list of follower of user', done => {
     request(app)
       .get('/user/followList/follower/ramu')
       .expect(/vikram/)
       .expect(200, done);
   });
 
-  it('should give the list of user whom user is following', (done) => {
+  it('should give the list of user whom user is following', done => {
     request(app)
       .get('/user/followList/following/vikram')
       .expect(/ramu/)
@@ -385,10 +373,10 @@ describe('/followList/:listName/:id', () => {
 
 describe('/getActivitySpecificTweets', () => {
   before(() => {
-    app.locals.sessions = { getUserId: () => 'ramu' };
+    app.locals.sessions = {getUserId: () => 'ramu'};
   });
-  it('should give all the tweets of user', (done) => {
-    const body = { id: 'vikram', activity: 'tweets' };
+  it('should give all the tweets of user', done => {
+    const body = {id: 'vikram', activity: 'tweets'};
     const expected = [
       {
         tweet: {
@@ -405,9 +393,9 @@ describe('/getActivitySpecificTweets', () => {
           image_url: 'fakeUrl',
           isLiked: 'false',
           isRetweeted: 'false',
-          isUsersTweet: false,
-        },
-      },
+          isUsersTweet: false
+        }
+      }
     ];
 
     request(app)
@@ -417,8 +405,8 @@ describe('/getActivitySpecificTweets', () => {
       .expect(expected, done);
   });
 
-  it('should give all the tweets of which user Liked', (done) => {
-    const body = { id: 'vikram', activity: 'likes' };
+  it('should give all the tweets of which user Liked', done => {
+    const body = {id: 'vikram', activity: 'likes'};
     const expected = [
       {
         tweet: {
@@ -435,9 +423,9 @@ describe('/getActivitySpecificTweets', () => {
           image_url: 'fakeUrl',
           isLiked: 'false',
           isRetweeted: 'false',
-          isUsersTweet: false,
-        },
-      },
+          isUsersTweet: false
+        }
+      }
     ];
     request(app)
       .post('/user/getActivitySpecificTweets')
@@ -449,10 +437,10 @@ describe('/getActivitySpecificTweets', () => {
 
 describe('/user/getRetweetedBy', function() {
   before(() => {
-    app.locals.sessions = { getUserId: () => 'vikram' };
+    app.locals.sessions = {getUserId: () => 'vikram'};
   });
   it('should get the list of user who retweeted the tweet', function(done) {
-    const body = { tweetId: 10 };
+    const body = {tweetId: 10};
     const expected = [
       {
         tweetId: 10,
@@ -464,8 +452,8 @@ describe('/user/getRetweetedBy', function() {
         dob: '09/09/2000',
         bio: 'it is your life make it large',
         followersCount: 0,
-        followingCount: 1,
-      },
+        followingCount: 1
+      }
     ];
     request(app)
       .post('/user/getRetweetedBy')
@@ -477,14 +465,14 @@ describe('/user/getRetweetedBy', function() {
 
 describe('updateRetweets', function() {
   before(() => {
-    app.locals.sessions = { getUserId: () => 'revathi' };
+    app.locals.sessions = {getUserId: () => 'revathi'};
   });
   it('should retweet the tweet', function(done) {
     request(app)
       .post('/user/updateRetweets')
       .set('Content-Type', 'application/json')
-      .send({ tweetId: 4, userId: 'revathi' })
-      .expect({ isRetweeted: true })
+      .send({tweetId: 4, userId: 'revathi'})
+      .expect({isRetweeted: true})
       .expect(200, done);
   });
 
@@ -492,16 +480,16 @@ describe('updateRetweets', function() {
     request(app)
       .post('/user/updateRetweets')
       .set('Content-Type', 'application/json')
-      .send({ tweetId: 4, userId: 'revathi' })
-      .expect({ isRetweeted: false })
+      .send({tweetId: 4, userId: 'revathi'})
+      .expect({isRetweeted: false})
       .expect(200, done);
   });
 });
 describe('searchHashTag', function() {
   before(() => {
-    app.locals.sessions = { getUserId: () => 'ramu' };
+    app.locals.sessions = {getUserId: () => 'ramu'};
   });
-  it('should be able to post a new tweet', (done) => {
+  it('should be able to post a new tweet', done => {
     app.locals.dataStore = new DataStore(db);
     request(app)
       .post('/user/postResponse')
@@ -511,9 +499,9 @@ describe('searchHashTag', function() {
         timeStamp: 'someDate',
         type: 'tweet',
         reference: null,
-        userId: 'revathi',
+        userId: 'revathi'
       })
-      .expect({ status: true })
+      .expect({status: true})
       .expect(200, done);
   });
   it('should serve the tweets of the given hashtag', function(done) {
@@ -522,17 +510,54 @@ describe('searchHashTag', function() {
       .set('Content-Type', 'application/json')
       .expect(200, done);
   });
+  it('should be able to post a retweet', done => {
+    app.locals.dataStore = new DataStore(db);
+    const body = {
+      content: 'a new #retweet',
+      timeStamp: 'fake time',
+      type: 'retweet',
+      reference: 13
+    };
+    request(app)
+      .post('/user/postResponse')
+      .set('Content-Type', 'application/json')
+      .send(body)
+      .expect({status: true})
+      .expect(200, done);
+  });
+  it('should serve the retweets also of the given hashtag', function(done) {
+    request(app)
+      .get('/user/searchHashtag/retweet')
+      .set('Content-Type', 'application/json')
+      .expect(200, done);
+  });
+});
+
+describe('/user/tweet/:id', () => {
+  before(() => {
+    app.locals.sessions = {getUserId: () => 'vikram'};
+  });
+  it('should provide tweet page', done => {
+    request(app)
+      .get('/user/tweet/14')
+      .expect(200, done);
+  });
+  it('should provide tweet page', done => {
+    request(app)
+      .get('/user/tweet/7')
+      .expect(200, done);
+  });
 });
 
 describe('get matching tags', function() {
   before(() => {
-    app.locals.sessions = { getUserId: () => 'revathi' };
+    app.locals.sessions = {getUserId: () => 'revathi'};
   });
   it('should fetch the tags contenting g', function(done) {
     request(app)
       .get('/user/serveHashtag/g')
       .set('Content-Type', 'application/json')
-      .expect([{ tag: 'goodTweet' }])
+      .expect([{tag: 'goodTweet'}])
       .expect(200, done);
   });
 
@@ -542,5 +567,16 @@ describe('get matching tags', function() {
       .set('Content-Type', 'application/json')
       .expect([])
       .expect(200, done);
+  });
+
+  it('should fetch the all tags', function(done) {
+    request(app)
+      .get('/user/serveHashtag/*')
+      .set('Content-Type', 'application/json')
+      .expect([{tag: 'goodTweet'}, {tag: 'retweet'}])
+      .expect(200, done);
+  });
+  after(async () => {
+    db.destroy();
   });
 });

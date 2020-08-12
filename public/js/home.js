@@ -1,14 +1,14 @@
-const getAllTweets = function () {
+const getAllTweets = function() {
   const url = '/user/getAllTweets';
-  sendGETRequest(url, (tweets) => {
+  sendGETRequest(url, tweets => {
     document.getElementById('tweets').innerHTML = '';
-    tweets.forEach(({ tweet, reference }) => {
+    tweets.forEach(({tweet, reference}) => {
       showTweet(tweet, 'tweets', reference);
     });
   });
 };
 
-const main = function () {
+const main = function() {
   getAllTweets();
   // setInterval(getAllTweets, 5000);
 };

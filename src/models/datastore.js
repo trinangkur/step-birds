@@ -1,23 +1,9 @@
 const {
-  getInsertionQuery,
-  getDeleteTweetQuery,
-  getSelectQuery,
   getTweetQuery,
-  getAddFollowerQuery,
-  getRemoveFollowerQuery,
-  getProfileInfoQuery,
   getAllTweetsQuery,
-  getUpdateProfileQuery,
   getSpecificTweetQuery,
-  getRepliesQuery,
   getProfileTweetsQuery,
-  getFollowListQuery,
-  getIncreaseQuery,
-  getDecreaseQuery,
-  getActionByQuery,
-  getInsertTagQuery,
-  getSearchHashtagQuery,
-  getResponseInsertionQuery
+  getSearchHashtagQuery
 } = require('../queries/queryStringGenerator');
 
 const filterBy = function(symbol, text) {
@@ -25,55 +11,36 @@ const filterBy = function(symbol, text) {
   return text.match(pattern);
 };
 
+const getHashtagValues = function(hashTags, id) {
+  return hashTags.map(tag => {
+    return {tag: tag.slice(1), tweetId: id};
+  });
+};
+
+const updateFollowCount = function(trx, tweeterId, userId, value) {
+  return new Promise((res, rej) => {
+    trx('Tweeter')
+      .where('id', '=', tweeterId)
+      .increment('followersCount', value)
+      .then(() => {
+        return trx('Tweeter')
+          .where('id', '=', userId)
+          .increment('followingCount', value);
+      })
+      .then(res())
+      .catch(rej());
+  });
+};
+
 class DataStore {
-  constructor(db, newDb) {
-    this.db = db;
-    this.newDb = newDb;
-  }
-
-  runQuery(queryString, params) {
-    return new Promise((resolve, reject) => {
-      this.db.run(queryString, params, err => {
-        if (err) {
-          reject(err);
-        }
-        resolve('OK');
-      });
-    });
-  }
-
-  getAllRows(queryString, params) {
-    return new Promise((resolve, reject) => {
-      this.db.all(queryString, params, (err, rows) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(rows);
-      });
-    });
-  }
-
-  executeTransaction(transaction) {
-    return new Promise((resolve, reject) => {
-      this.db.exec(transaction, err => {
-        if (err) {
-          this.db.exec('ROLLBACK');
-          return reject(err);
-        }
-        this.db.exec('COMMIT', err => {
-          if (err) {
-            reject(err);
-          }
-          resolve('OK');
-        });
-      });
-    });
+  constructor(newDb) {
+    this.db = newDb;
   }
 
   addTweeter(details) {
     const {login, avatar_url, name} = details;
     return new Promise((res, rej) => {
-      this.newDb('Tweeter')
+      this.db('Tweeter')
         .insert({id: login, image_url: avatar_url, name: name})
         .then(() => res(true))
         .catch(err => {
@@ -85,100 +52,128 @@ class DataStore {
     });
   }
 
-  add(queryExecuter, query, field, content) {
+  postResponse(details) {
+    const {userId, type, content, timeStamp, reference} = details;
     const hashTags = filterBy('#', content);
-    const mentions = filterBy('@', content);
-    return new Promise(res => {
-      queryExecuter(query).then(() => {
-        this.getAllRows(getSelectQuery('Tweet', field)).then(([{id}]) => {
-          let query = 'BEGIN TRANSACTION;';
+    return this.db.transaction(trx => {
+      return trx('Tweet')
+        .insert({
+          userId,
+          _type: type,
+          content,
+          timeStamp,
+          reference
+        })
+        .then(ids => {
           if (hashTags) {
-            query += getInsertTagQuery('Hashes', id, hashTags, 'tag');
+            const hashTagValues = getHashtagValues(hashTags, ids[0]);
+            return trx('Hashes').insert(hashTagValues);
           }
-          if (mentions) {
-            query += getInsertTagQuery('Mentions', id, mentions, 'userId');
+        })
+        .then(() => {
+          if (type !== 'tweet') {
+            return trx('Tweet')
+              .where('id', '=', reference)
+              .increment(`${type}Count`, 1);
           }
-          this.executeTransaction(query).then(() => res(true));
-          res(true);
-        });
+        })
+        .then(trx.commit)
+        .catch(trx.rollback);
+    });
+  }
+
+  deleteTweet(tweetId, reference, type) {
+    return this.db.transaction(trx => {
+      return trx('Tweet')
+        .where('id', '=', tweetId)
+        .orWhere('reference', '=', tweetId)
+        .del()
+        .then(() => {
+          return trx('Likes')
+            .where('tweetId', '=', tweetId)
+            .del();
+        })
+        .then(() => {
+          return trx('Retweets')
+            .where('tweetId', '=', tweetId)
+            .del();
+        })
+        .then(() => {
+          if (type !== 'tweet') {
+            return trx('Tweet')
+              .where('id', '=', reference)
+              .decrement(`${type}Count`, 1);
+          }
+        })
+        .then(trx.commit)
+        .catch(trx.rollback);
+    });
+  }
+
+  getUserProfiles(name) {
+    return this.db
+      .select('id', 'name', 'image_url')
+      .from('Tweeter')
+      .where('id', 'like', `%${name}`)
+      .orWhere('name', 'like', `%${name}%`);
+  }
+
+  getUserInfo(userId) {
+    return this.db
+      .select()
+      .from('Tweeter')
+      .where('id', '=', userId);
+  }
+
+  toggleFollow(tweeterId, userId) {
+    const fields = {followerId: userId, followingId: tweeterId};
+    return new Promise((res, rej) => {
+      this.db.transaction(trx => {
+        return updateFollowCount(trx, tweeterId, userId, +1)
+          .then(() => {
+            return trx('Followers').insert(fields);
+          })
+          .then(() => {
+            trx.commit;
+            res(true);
+          })
+          .catch(() => {
+            trx.rollback;
+            this.db.transaction(trx => {
+              return updateFollowCount(trx, tweeterId, userId, -2).then(() => {
+                return trx('Followers')
+                  .where(fields)
+                  .del()
+                  .then(() => {
+                    trx.commit;
+                    res(false);
+                  });
+              });
+            });
+          });
       });
     });
   }
 
-  postResponse(details) {
-    const {userId, type, content, timeStamp, reference} = details;
-    const columns = 'id ,userId, _type, content, timeStamp, reference';
-    const values = `?,"${userId}", "${type}", "${content}", "${timeStamp}",
-     "${reference}"`;
-    const condition = `content='${content}' AND timestamp='${timeStamp}'
-                       AND _type='${type}';`;
-    const field = {columns: ['id'], condition};
-    if (type === 'tweet') {
-      const queryString = getInsertionQuery('Tweet', columns, values);
-      return this.add(this.runQuery.bind(this), queryString, field, content);
-    }
-    const queryString = getResponseInsertionQuery(
-      columns,
-      values,
-      reference,
-      type
-    );
-    return this.add(
-      this.executeTransaction.bind(this),
-      queryString,
-      field,
-      content
-    );
-  }
-
-  deleteTweet(tweetId, reference, type) {
-    const queryString = getDeleteTweetQuery(tweetId, reference, type);
-    return this.executeTransaction(queryString, []);
-  }
-
-  getUserProfiles(name) {
-    const condition = `id like "%${name}%" OR name like "%${name}%"`;
-    const columns = ['id', 'name', 'image_url'];
-    const queryString = getSelectQuery('Tweeter', {columns, condition});
-    return this.getAllRows(queryString, []);
-  }
-
-  getUserInfo(userId) {
-    const queryString = getSelectQuery('Tweeter', {
-      columns: ['*'],
-      condition: `id="${userId}"`
-    });
-
-    return this.getAllRows(queryString, []);
-  }
-
-  toggleFollow(tweeterId, userId) {
-    return new Promise((resolve, reject) => {
-      const addFollowerSql = getAddFollowerQuery(tweeterId, userId);
-
-      this.executeTransaction(addFollowerSql)
-        .then(() => resolve(true))
-        .catch(err => {
-          if (err.code === 'SQLITE_CONSTRAINT') {
-            const removeFollowerSql = getRemoveFollowerQuery(tweeterId, userId);
-            this.executeTransaction(removeFollowerSql).then(() =>
-              resolve(false)
-            );
-          } else {
-            reject(err);
-          }
-        });
-    });
-  }
-
   getProfileInfo(tweeterId, userId) {
-    const queryString = getProfileInfoQuery(tweeterId, userId);
-    return this.getAllRows(queryString, []);
+    const cases = this.db.raw(` *,
+    CASE
+      WHEN Tweeter.id = '${userId}'
+      THEN 'Edit Profile'
+      WHEN Tweeter.id = Followers.followingId
+        AND Followers.followerId = '${userId}'
+      THEN 'Unfollow'
+      ELSE 'Follow'
+      end userOption`);
+    return this.db('Tweeter')
+      .select(cases)
+      .leftJoin('Followers', 'Followers.followingId', 'Tweeter.id')
+      .where({'Tweeter.id': tweeterId});
   }
 
   getParent(tweetId, userId) {
     const queryString = getSpecificTweetQuery(tweetId, userId);
-    return this.getAllRows(queryString, []);
+    return this.db.raw(queryString);
   }
 
   async getAllTweets(userId) {
@@ -187,13 +182,18 @@ class DataStore {
   }
 
   updateProfile(userId, name, bio) {
-    const queryString = getUpdateProfileQuery(userId, name, bio);
-    return this.runQuery(queryString, []);
+    return this.db('Tweeter')
+      .update({name, bio})
+      .where('id', '=', userId);
   }
 
   getFollow(listName, userId) {
-    const queryString = getFollowListQuery(listName, userId);
-    return this.getAllRows(queryString, []);
+    const column = listName === 'following' ? 'follower' : 'following';
+    return this.db
+      .select()
+      .from('Followers')
+      .leftJoin('Tweeter', 'Tweeter.id', `Followers.${listName}Id`)
+      .where(`Followers.${column}Id`, '=', userId);
   }
 
   async getUserTweets(userId, loggedInUser) {
@@ -211,8 +211,9 @@ class DataStore {
   }
 
   async getTweetWithParentDetail(queryString, userId) {
-    const tweets = await this.getAllRows(queryString, []);
+    const tweets = await this.db.raw(queryString);
     const posts = [];
+
     for (const tweet of tweets) {
       const [reference] = await this.getParent(tweet.reference, userId);
       posts.push({tweet, reference});
@@ -226,29 +227,54 @@ class DataStore {
   }
 
   getActionBy(tweetId, table) {
-    const queryString = getActionByQuery(tweetId, table);
-    return this.getAllRows(queryString, []);
+    return this.db
+      .select('*')
+      .from(table)
+      .leftJoin('Tweeter', 'Tweeter.id', `${table}.userId`)
+      .where(`${table}.tweetId`, '=', tweetId);
   }
 
   getReplies(tweetId) {
-    const queryString = getRepliesQuery(tweetId);
-    return this.getAllRows(queryString, []);
+    return this.db
+      .select('*')
+      .column({id: 'Tweet.id'})
+      .from('Tweet')
+      .leftJoin('Tweeter', 'Tweet.userId', 'Tweeter.id')
+      .where({'Tweet._type': 'reply', 'Tweet.reference': tweetId});
   }
 
   updateAction(tweetId, userId, table, field) {
-    return new Promise(res => {
-      const increaseLikeSql = getIncreaseQuery(tweetId, userId, table, field);
-      this.executeTransaction(increaseLikeSql)
-        .then(() => res(true))
-        .catch(() => {
-          const decreaseLikeSql = getDecreaseQuery(
-            tweetId,
-            userId,
-            table,
-            field
-          );
-          this.executeTransaction(decreaseLikeSql).then(() => res(false));
-        });
+    return new Promise((res, rej) => {
+      this.db.transaction(trx => {
+        return trx(table)
+          .insert({tweetId, userId})
+          .then(() => {
+            return trx('Tweet')
+              .increment(field, 1)
+              .where('id', '=', tweetId);
+          })
+          .then(() => {
+            trx.commit;
+            res(true);
+          })
+          .catch(() => {
+            trx.rollback;
+            this.db.transaction(trx => {
+              return trx(table)
+                .where({userId, tweetId})
+                .del()
+                .then(() => {
+                  return trx('Tweet')
+                    .decrement(field, 1)
+                    .where('id', '=', tweetId)
+                    .then(() => {
+                      trx.commit;
+                      res(false);
+                    });
+                });
+            });
+          });
+      });
     });
   }
 
@@ -258,25 +284,10 @@ class DataStore {
   }
 
   getMatchingTags(tag) {
-    const condition = tag !== '*' ? `tag like "%${tag}%"` : 'tag like "%"';
-    const queryString = getSelectQuery('Hashes', {
-      columns: ['DISTINCT(tag)'],
-      condition
-    });
-    return this.getAllRows(queryString, []);
-  }
-
-  getLatestRetweet(userId) {
-    return new Promise(res => {
-      const queryString = getTweetQuery(userId, userId);
-      this.getAllRows(queryString, []).then(tweets => {
-        const retweet = tweets[tweets.length - 1];
-        const queryString = getSpecificTweetQuery(retweet.reference, userId);
-        this.getAllRows(queryString, []).then(([tweet]) => {
-          res({retweet, tweet});
-        });
-      });
-    });
+    const pattern = tag !== '*' ? `%${tag}%` : '%';
+    return this.db('Hashes')
+      .distinct('tag')
+      .where('tag', 'like', pattern);
   }
 }
 

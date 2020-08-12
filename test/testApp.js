@@ -1,14 +1,11 @@
-const sqlite3 = require('sqlite3');
 const request = require('supertest');
 
 const {app} = require('../src/app');
 const {DataStore} = require('../src/models/datastore');
 const config = require('../knexfile');
-const newDb = require('knex')(config.test);
-const {getDB} = require('../config');
+const db = require('knex')(config.test);
 
-const db = new sqlite3.Database(getDB());
-app.locals.dataStore = new DataStore(db, newDb);
+app.locals.dataStore = new DataStore(db);
 
 const loginInteractor = {clientId: '1234'};
 loginInteractor.getAccessToken = () => {
@@ -89,7 +86,7 @@ describe('verify', () => {
     app.locals.sessions = sessions;
   });
   after(async () => {
-    newDb.destroy();
+    db.destroy();
   });
 
   it('should verify user when requested for /verify', done => {
