@@ -115,24 +115,34 @@ const createContent = function (content) {
   }, '');
 };
 
+const createImageHtml = function (userId, image_url) {
+  return `
+  <div class="dp" onclick="getUserProfile('${userId}')">
+    <img
+      id="dp-${userId}"
+      src="${image_url}"
+      alt="not found"
+    />
+</div>`;
+};
+
+const createUserInfoHtml = function (userId, name, timeStamp) {
+  return `
+  <div class="user-info">
+    <span class="user-name" onclick="getUserProfile('${userId}')">${name}</span>
+    <span class="user-id">@${userId}</span>
+    <span></span>
+    <span class="time-stamp"> &nbsp;
+    ${moment(timeStamp).fromNow()}</span>
+  </div>`;
+};
+
 const createParentTweetHtml = function (tweet) {
   const { id, name, content, userId, timeStamp, image_url } = tweet;
   return `<div class="parent-element" id="content-${id}" onClick="openTweet(${id})">
-            <div class="dp" onclick="getUserProfile('${userId}')">
-              <img
-                id="dp-${userId}"
-                src="${image_url}"
-                alt="not found"
-              />
-            </div>
+            ${createImageHtml(userId, image_url)}
             <div class="info">
-              <div class="user-info">
-                <span class="user-name" onclick="getUserProfile('${userId}')">${name}</span>
-                <span class="user-id">@${userId}</span>
-                <span></span>
-                <span class="time-stamp"> &nbsp; 
-                ${moment(timeStamp).fromNow()}</span>
-              </div>
+              ${createUserInfoHtml(userId, name, timeStamp)}
               <div class="content" id="content-${id}" 
               onClick="openTweet(${id})">${createContent(content)}
               </div>
@@ -154,20 +164,9 @@ const createTweetHtml = function (tweet, reference) {
   const { userId, image_url, name, timeStamp } = tweet;
   return `
   <div class="content-section">
-    <div class="dp" onclick="getUserProfile('${userId}')">
-      <img
-        id="dp-${userId}"
-        src="${image_url}"
-        alt="not found"
-      />
-    </div>
+    ${createImageHtml(userId, image_url)}
     <div class="info">
-      <div class="user-info">
-        <span class="user-name" onclick="getUserProfile('${userId}')">${name}</span>
-        <span class="user-id">@${userId}</span>
-        <span></span>
-        <span class="time-stamp"> &nbsp; ${moment(timeStamp).fromNow()}</span>
-      </div>
+      ${createUserInfoHtml(userId, name, timeStamp)}
       ${createContentHtml(tweet, reference)}
     </div>
     ${getRightSideOptions(tweet)}
@@ -178,21 +177,12 @@ const createTweetHtml = function (tweet, reference) {
 };
 
 const createReplyHtml = function (tweet) {
-  const { userId, image_url, name, reference, _type } = tweet;
-  const { id, timeStamp, content, isUsersTweet } = tweet;
+  const { userId, image_url, name } = tweet;
+  const { id, timeStamp, content } = tweet;
   return `<div class="reply-content-section">
-  <div class="dp" onclick="getUserProfile('${userId}')">
-    <img
-      src="${image_url}"
-      alt="not found"
-    />
-  </div>
+  ${createImageHtml(userId, image_url)}
   <div class="info">
-    <div class="user-info">
-      <span class="user-name" onclick="getUserProfile('${userId}')">${name}</span>
-      <span class="user-id">@${userId}</span>
-      <span class="time-stamp"> &nbsp; ${moment(timeStamp).fromNow()}</span>
-    </div>
+    ${createUserInfoHtml(userId, name, timeStamp)}
     <div class="response-content" id="content-${id}">${content}</div>
   </div>
     ${getRightSideOptions(tweet)}
