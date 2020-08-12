@@ -127,7 +127,7 @@ class DataStore {
 
   toggleFollow(tweeterId, userId) {
     const fields = {followerId: userId, followingId: tweeterId};
-    return new Promise((res, rej) => {
+    return new Promise(res => {
       this.db.transaction(trx => {
         return updateFollowCount(trx, tweeterId, userId, +1)
           .then(() => {
@@ -244,7 +244,7 @@ class DataStore {
   }
 
   updateAction(tweetId, userId, table, field) {
-    return new Promise((res, rej) => {
+    return new Promise(res => {
       this.db.transaction(trx => {
         return trx(table)
           .insert({tweetId, userId})
