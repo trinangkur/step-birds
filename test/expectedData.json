@@ -1,0 +1,151 @@
+{
+  "latestTweet": {
+    "tweet": {
+      "id": 7,
+      "userId": "vikram",
+      "_type": "tweet",
+      "reference": null,
+      "timeStamp": "someDate",
+      "content": "My laptop is broken :(",
+      "replyCount": 0,
+      "retweetCount": 0,
+      "likeCount": 1,
+      "name": "Vikram Singh",
+      "image_url": "fakeUrl",
+      "isLiked": "true",
+      "isRetweeted": "false",
+      "isUsersTweet": true
+    }
+  },
+  "getAllTweets": [
+    {
+      "tweet": {
+        "id": 7,
+        "userId": "vikram",
+        "_type": "tweet",
+        "reference": null,
+        "timeStamp": "someDate",
+        "content": "My laptop is broken :(",
+        "replyCount": 0,
+        "retweetCount": 0,
+        "likeCount": 1,
+        "name": "Vikram Singh",
+        "image_url": "fakeUrl",
+        "isLiked": "true",
+        "isRetweeted": "false",
+        "isUsersTweet": true
+      }
+    },
+    {
+      "tweet": {
+        "id": 9,
+        "userId": "ramu",
+        "_type": "tweet",
+        "reference": null,
+        "timeStamp": "someDate",
+        "content": "I am amazed by the performance",
+        "replyCount": 0,
+        "retweetCount": 0,
+        "likeCount": 0,
+        "name": "Ramu kaka",
+        "image_url": "fakeUrl",
+        "isLiked": "false",
+        "isRetweeted": "false",
+        "isUsersTweet": false
+      }
+    }
+  ],
+  "getReplies": [
+    {
+      "id": 12,
+      "_type": "reply",
+      "userId": "vikram",
+      "content": "nice reply",
+      "timeStamp": "oneTimeStamp",
+      "likeCount": 0,
+      "replyCount": 0,
+      "retweetCount": 0,
+      "reference": 7,
+      "name": "Vikram Singh",
+      "joiningDate": "11/06/2018",
+      "image_url": "fakeUrl",
+      "dob": "09/09/2000",
+      "bio": "My feets are not on ground",
+      "followersCount": 0,
+      "followingCount": 1,
+      "isUsersTweet": false
+    }
+  ],
+  "getLikedBy": [
+    {
+      "tweetId": 7,
+      "userId": "vikram",
+      "id": "vikram",
+      "name": "viky",
+      "joiningDate": "11/06/2018",
+      "image_url": "fakeUrl",
+      "dob": "09/09/2000",
+      "bio": "it is your life make it large",
+      "followersCount": 0,
+      "followingCount": 1
+    }
+  ],
+  "getAllUserSpecificTweet": [
+    {
+      "tweet": {
+        "id": 7,
+        "userId": "vikram",
+        "_type": "tweet",
+        "reference": null,
+        "timeStamp": "someDate",
+        "content": "My laptop is broken :(",
+        "replyCount": 1,
+        "retweetCount": 0,
+        "likeCount": 1,
+        "name": "viky",
+        "image_url": "fakeUrl",
+        "isLiked": "false",
+        "isRetweeted": "false",
+        "isUsersTweet": false
+      }
+    }
+  ],
+  "getAllUserLikedTweet": [
+    {
+      "tweet": {
+        "id": 7,
+        "userId": "vikram",
+        "_type": "tweet",
+        "reference": null,
+        "timeStamp": "someDate",
+        "content": "My laptop is broken :(",
+        "replyCount": 1,
+        "retweetCount": 0,
+        "likeCount": 1,
+        "name": "viky",
+        "image_url": "fakeUrl",
+        "isLiked": "false",
+        "isRetweeted": "false",
+        "isUsersTweet": false
+      }
+    }
+  ],
+  "getRetweetedBy": [
+    {
+      "tweetId": 10,
+      "userId": "vikram",
+      "id": "vikram",
+      "name": "viky",
+      "joiningDate": "11/06/2018",
+      "image_url": "fakeUrl",
+      "dob": "09/09/2000",
+      "bio": "it is your life make it large",
+      "followersCount": 0,
+      "followingCount": 1
+    }
+  ],
+  "profiles": [
+    {"id": "rahit", "name": "Rahit Kar", "image_url": "fakeUrl"},
+    {"id": "rahitkar", "name": "Rahit Kar", "image_url": "fakeUrl"}
+  ]
+}

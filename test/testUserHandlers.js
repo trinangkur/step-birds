@@ -3,6 +3,7 @@ const {DataStore} = require('../src/models/datastore');
 const {app} = require('../src/app');
 const config = require('../knexfile');
 const db = require('knex')(config.test);
+const expected = require('./expectedData.json');
 
 describe('/postResponse', () => {
   before(() => {
@@ -27,11 +28,10 @@ describe('/postResponse', () => {
 
   it('should give 400 status code for wrong parameters', done => {
     app.locals.dataStore = new DataStore(db);
-    const body = {};
     request(app)
       .post('/user/postResponse')
       .set('Content-Type', 'application/json')
-      .send(body)
+      .send({})
       .expect(400, done);
   });
 });
@@ -57,32 +57,11 @@ describe('/getLatestTweet', () => {
     app.locals.sessions = sessions;
   });
   it('should get all tweets of user', done => {
-    const expected = {
-      tweet: {
-        id: 7,
-        userId: 'vikram',
-        _type: 'tweet',
-        reference: null,
-        timeStamp: 'someDate',
-        content: 'My laptop is broken :(',
-        replyCount: 0,
-        retweetCount: 0,
-        likeCount: 1,
-        name: 'Vikram Singh',
-        image_url: 'fakeUrl',
-        isLiked: 'true',
-        isRetweeted: 'false',
-        isUsersTweet: true
-      }
-    };
-    const expectedJson = JSON.stringify(expected);
     request(app)
       .get('/user/getLatestTweet')
-      .send({
-        userId: 'vikram'
-      })
+      .send({userId: 'vikram'})
       .expect(200)
-      .expect(expectedJson, done);
+      .expect(expected.latestTweet, done);
   });
 });
 
@@ -94,10 +73,7 @@ describe('searchProfile', function() {
     request(app)
       .get('/user/searchProfile/rahit')
       .set('Content-Type', 'application/json')
-      .expect([
-        {id: 'rahit', name: 'Rahit Kar', image_url: 'fakeUrl'},
-        {id: 'rahitkar', name: 'Rahit Kar', image_url: 'fakeUrl'}
-      ])
+      .expect(expected.profiles)
       .expect(200, done);
   });
 });
@@ -165,24 +141,22 @@ describe('/toggleFollowRequest', function() {
   });
   it('should be add user as a follower of particular tweeter', done => {
     app.locals.dataStore = new DataStore(db);
-    const expected = {status: true};
     request(app)
       .post('/user/toggleFollowRequest')
       .set('Content-Type', 'application/json')
       .send({tweeter: 'vikram'})
       .expect(200)
-      .expect(expected, done);
+      .expect({status: true}, done);
   });
 
   it('should unfollow a particular tweeter', done => {
     app.locals.dataStore = new DataStore(db);
-    const expected = {status: false};
     request(app)
       .post('/user/toggleFollowRequest')
       .set('Content-Type', 'application/json')
       .send({tweeter: 'vikram'})
       .expect(200)
-      .expect(expected, done);
+      .expect({status: false}, done);
   });
 });
 
@@ -190,48 +164,10 @@ describe('/getAllTweets', function() {
   before(() => {
     app.locals.sessions = {getUserId: () => 'vikram'};
   });
-  const expected = [
-    {
-      tweet: {
-        id: 7,
-        userId: 'vikram',
-        _type: 'tweet',
-        reference: null,
-        timeStamp: 'someDate',
-        content: 'My laptop is broken :(',
-        replyCount: 0,
-        retweetCount: 0,
-        likeCount: 1,
-        name: 'Vikram Singh',
-        image_url: 'fakeUrl',
-        isLiked: 'true',
-        isRetweeted: 'false',
-        isUsersTweet: true
-      }
-    },
-    {
-      tweet: {
-        id: 9,
-        userId: 'ramu',
-        _type: 'tweet',
-        reference: null,
-        timeStamp: 'someDate',
-        content: 'I am amazed by the performance',
-        replyCount: 0,
-        retweetCount: 0,
-        likeCount: 0,
-        name: 'Ramu kaka',
-        image_url: 'fakeUrl',
-        isLiked: 'false',
-        isRetweeted: 'false',
-        isUsersTweet: false
-      }
-    }
-  ];
   it('should get tweets for given user', function(done) {
     request(app)
       .get('/user/getAllTweets')
-      .expect(expected)
+      .expect(expected.getAllTweets)
       .expect(200, done);
   });
 });
@@ -276,33 +212,10 @@ describe('/user/getReplies', function() {
     app.locals.sessions = {getUserId: () => 'revathi'};
   });
   it('should get reply of a given tweet id', function(done) {
-    const body = {
-      tweetId: 7
-    };
     request(app)
       .post('/user/getReplies')
-      .send(body)
-      .expect([
-        {
-          id: 12,
-          _type: 'reply',
-          userId: 'vikram',
-          content: 'nice reply',
-          timeStamp: 'oneTimeStamp',
-          likeCount: 0,
-          replyCount: 0,
-          retweetCount: 0,
-          reference: 7,
-          name: 'Vikram Singh',
-          joiningDate: '11/06/2018',
-          image_url: 'fakeUrl',
-          dob: '09/09/2000',
-          bio: 'My feets are not on ground',
-          followersCount: 0,
-          followingCount: 1,
-          isUsersTweet: false
-        }
-      ])
+      .send({tweetId: 7})
+      .expect(expected.getReplies)
       .expect(200, done);
   });
 });
@@ -329,25 +242,10 @@ describe('/user/getLikedBy', function() {
     app.locals.sessions = {getUserId: () => 'vikram'};
   });
   it('should get the list of user who liked the tweet', function(done) {
-    const body = {tweetId: 7};
-    const expected = [
-      {
-        tweetId: 7,
-        userId: 'vikram',
-        id: 'vikram',
-        name: 'viky',
-        joiningDate: '11/06/2018',
-        image_url: 'fakeUrl',
-        dob: '09/09/2000',
-        bio: 'it is your life make it large',
-        followersCount: 0,
-        followingCount: 1
-      }
-    ];
     request(app)
       .post('/user/getLikedBy')
-      .send(body)
-      .expect(expected)
+      .send({tweetId: 7})
+      .expect(expected.getLikedBy)
       .expect(200, done);
   });
 });
@@ -376,62 +274,19 @@ describe('/getActivitySpecificTweets', () => {
     app.locals.sessions = {getUserId: () => 'ramu'};
   });
   it('should give all the tweets of user', done => {
-    const body = {id: 'vikram', activity: 'tweets'};
-    const expected = [
-      {
-        tweet: {
-          id: 7,
-          userId: 'vikram',
-          _type: 'tweet',
-          reference: null,
-          timeStamp: 'someDate',
-          content: 'My laptop is broken :(',
-          replyCount: 1,
-          retweetCount: 0,
-          likeCount: 1,
-          name: 'viky',
-          image_url: 'fakeUrl',
-          isLiked: 'false',
-          isRetweeted: 'false',
-          isUsersTweet: false
-        }
-      }
-    ];
-
     request(app)
       .post('/user/getActivitySpecificTweets')
-      .send(body)
+      .send({id: 'vikram', activity: 'tweets'})
       .expect(200)
-      .expect(expected, done);
+      .expect(expected.getAllUserSpecificTweet, done);
   });
 
   it('should give all the tweets of which user Liked', done => {
-    const body = {id: 'vikram', activity: 'likes'};
-    const expected = [
-      {
-        tweet: {
-          id: 7,
-          userId: 'vikram',
-          _type: 'tweet',
-          reference: null,
-          timeStamp: 'someDate',
-          content: 'My laptop is broken :(',
-          replyCount: 1,
-          retweetCount: 0,
-          likeCount: 1,
-          name: 'viky',
-          image_url: 'fakeUrl',
-          isLiked: 'false',
-          isRetweeted: 'false',
-          isUsersTweet: false
-        }
-      }
-    ];
     request(app)
       .post('/user/getActivitySpecificTweets')
-      .send(body)
+      .send({id: 'vikram', activity: 'likes'})
       .expect(200)
-      .expect(expected, done);
+      .expect(expected.getAllUserLikedTweet, done);
   });
 });
 
@@ -440,25 +295,10 @@ describe('/user/getRetweetedBy', function() {
     app.locals.sessions = {getUserId: () => 'vikram'};
   });
   it('should get the list of user who retweeted the tweet', function(done) {
-    const body = {tweetId: 10};
-    const expected = [
-      {
-        tweetId: 10,
-        userId: 'vikram',
-        id: 'vikram',
-        name: 'viky',
-        joiningDate: '11/06/2018',
-        image_url: 'fakeUrl',
-        dob: '09/09/2000',
-        bio: 'it is your life make it large',
-        followersCount: 0,
-        followingCount: 1
-      }
-    ];
     request(app)
       .post('/user/getRetweetedBy')
-      .send(body)
-      .expect(expected)
+      .send({tweetId: 10})
+      .expect(expected.getRetweetedBy)
       .expect(200, done);
   });
 });
@@ -491,16 +331,17 @@ describe('searchHashTag', function() {
   });
   it('should be able to post a new tweet', done => {
     app.locals.dataStore = new DataStore(db);
+    const details = {
+      content: 'new tweet #goodTweet',
+      timeStamp: 'someDate',
+      type: 'tweet',
+      reference: null,
+      userId: 'revathi'
+    };
     request(app)
       .post('/user/postResponse')
       .set('Content-Type', 'application/json')
-      .send({
-        content: 'new tweet #goodTweet',
-        timeStamp: 'someDate',
-        type: 'tweet',
-        reference: null,
-        userId: 'revathi'
-      })
+      .send(details)
       .expect({status: true})
       .expect(200, done);
   });
